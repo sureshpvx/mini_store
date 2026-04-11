@@ -1,0 +1,74 @@
+<div class="bg-[#0e0e13] text-white min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
+  <!-- Neon Background -->
+  <div class="absolute w-[500px] h-[500px] rounded-full blur-[120px] bg-purple-400/30 -top-48 -left-48"></div>
+  <div class="absolute w-[400px] h-[400px] rounded-full blur-[120px] bg-cyan-400/30 -bottom-24 -right-24"></div>
+  <div class="absolute w-[300px] h-[300px] rounded-full blur-[120px] bg-pink-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+  <main class="w-full max-w-xl">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl md:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-cyan-300 mb-4">
+        MINI STORE
+      </h1>
+      <p class="text-gray-400 text-lg tracking-wide uppercase font-medium">
+        Experience premium shopping
+      </p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white/5 backdrop-blur-xl rounded-[2rem] p-8 md:p-12 shadow-2xl border border-white/10">
+      <div class="mb-10">
+        <h2 class="text-3xl font-bold tracking-tight mb-2">Create Account</h2>
+        <p class="text-gray-400 text-sm font-medium">Join the future of shopping.</p>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Email -->
+        <div class="space-y-2">
+          <%= f.label :email, class: "text-xs uppercase tracking-widest text-cyan-300 font-bold px-1" %>
+          <%= f.email_field :email,
+                            autofocus: true,
+                            autocomplete: "email",
+                            placeholder: "you@example.com",
+                            class: "w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-purple-400/40 focus:outline-none transition-all text-white placeholder:text-gray-500 font-medium" %>
+        </div>
+
+        <!-- Password -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <%= f.label :password, class: "text-xs uppercase tracking-widest text-cyan-300 font-bold px-1" %>
+            <%= f.password_field :password,
+                                 autocomplete: "new-password",
+                                 placeholder: "••••••••",
+                                 class: "w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-purple-400/40 focus:outline-none transition-all text-white placeholder:text-gray-500 font-medium" %>
+          </div>
+
+          <div class="space-y-2">
+            <%= f.label :password_confirmation, "Confirm", class: "text-xs uppercase tracking-widest text-cyan-300 font-bold px-1" %>
+            <%= f.password_field :password_confirmation,
+                                 autocomplete: "new-password",
+                                 placeholder: "••••••••",
+                                 class: "w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-purple-400/40 focus:outline-none transition-all text-white placeholder:text-gray-500 font-medium" %>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-4">
+          <%= f.submit "Create Account",
+                       class: "w-full bg-gradient-to-r from-purple-300 to-purple-500 text-black font-bold text-lg py-5 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg uppercase tracking-widest" %>
+        </div>
+      <% end %>
+
+      <!-- Footer -->
+      <div class="mt-10 flex items-center justify-between pt-8 border-t border-white/10">
+        <p class="text-gray-400 text-sm">Already a member?</p>
+        <%= link_to new_session_path(resource_name), class: "text-cyan-300 text-sm uppercase font-bold tracking-tight hover:text-purple-300 transition-colors flex items-center gap-2 group" do %>
+          Sign In
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        <% end %>
+      </div>
+    </div>
+  </main>
+</div>

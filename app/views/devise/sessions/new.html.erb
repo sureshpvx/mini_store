@@ -1,0 +1,65 @@
+<div class="bg-[#0e0e13] text-white min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
+  <!-- Neon Background -->
+  <div class="absolute w-[500px] h-[500px] rounded-full blur-[120px] bg-purple-400/30 -top-48 -left-48"></div>
+  <div class="absolute w-[400px] h-[400px] rounded-full blur-[120px] bg-cyan-400/30 -bottom-24 -right-24"></div>
+  <div class="absolute w-[300px] h-[300px] rounded-full blur-[120px] bg-pink-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+  <main class="relative z-10 w-full max-w-md">
+    <!-- Brand -->
+    <div class="text-center mb-10">
+      <h1 class="text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 mb-2">
+        MINI STORE
+      </h1>
+      <p class="text-cyan-300 text-xs uppercase tracking-[0.3em] font-medium">
+        Premium Shopping Access
+      </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-white/5 backdrop-blur-2xl p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-2xl">
+      <div class="mb-8">
+        <h2 class="text-3xl font-bold tracking-tight">Welcome Back</h2>
+        <p class="text-gray-400 mt-2">Login to continue shopping.</p>
+      </div>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+        <!-- Email -->
+        <div class="space-y-2">
+          <%= f.label :email, "Email Address", class: "text-xs uppercase tracking-widest text-cyan-300/80 ml-1" %>
+          <%= f.email_field :email,
+                            autofocus: true,
+                            autocomplete: "email",
+                            placeholder: "you@example.com",
+                            class: "w-full bg-white/5 rounded-2xl py-4 px-4 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-purple-400/20 focus:outline-none transition-all" %>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-end px-1">
+            <%= f.label :password, class: "text-xs uppercase tracking-widest text-cyan-300/80" %>
+            <%= link_to "Forgot Password?", new_password_path(resource_name),
+                        class: "text-xs uppercase tracking-wider text-gray-400 hover:text-cyan-300 transition-colors" %>
+          </div>
+
+          <%= f.password_field :password,
+                               autocomplete: "current-password",
+                               placeholder: "••••••••",
+                               class: "w-full bg-white/5 rounded-2xl py-4 px-4 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-purple-400/20 focus:outline-none transition-all" %>
+        </div>
+
+        <!-- Submit -->
+        <%= f.submit "Login",
+                     class: "w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-300 to-cyan-500 text-black font-bold text-lg tracking-tight hover:scale-[1.02] active:scale-[0.98] transition-all mt-8" %>
+      <% end %>
+
+      <!-- Footer -->
+      <div class="mt-10 text-center">
+        <p class="text-gray-400 text-sm">
+          New here?
+          <%= link_to "Create Account", new_registration_path(resource_name),
+                      class: "text-purple-300 font-bold ml-1 hover:underline underline-offset-4" %>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
