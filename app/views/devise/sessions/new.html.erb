@@ -1,65 +1,83 @@
-<div class="bg-[#0e0e13] text-white min-h-screen flex flex-col items-center justify-center relative px-6 overflow-hidden">
-  <!-- Neon Background -->
-  <div class="absolute w-[500px] h-[500px] rounded-full blur-[120px] bg-purple-400/30 -top-48 -left-48"></div>
-  <div class="absolute w-[400px] h-[400px] rounded-full blur-[120px] bg-cyan-400/30 -bottom-24 -right-24"></div>
-  <div class="absolute w-[300px] h-[300px] rounded-full blur-[120px] bg-pink-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+<% content_for :auth_page, true %>
 
-  <main class="relative z-10 w-full max-w-md">
-    <!-- Brand -->
-    <div class="text-center mb-10">
-      <h1 class="text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 mb-2">
-        MINI STORE
+<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 py-10">
+  <main class="w-full max-w-md">
+
+    <!-- Header -->
+    <div class="text-center mb-8 sm:mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">
+        Hypee
       </h1>
-      <p class="text-cyan-300 text-xs uppercase tracking-[0.3em] font-medium">
-        Premium Shopping Access
+
+      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6">
+        Sign In
+      </h2>
+
+      <p class="text-gray-400 text-sm">
+        Welcome back to Hypee
       </p>
     </div>
 
-    <!-- Login Card -->
-    <div class="bg-white/5 backdrop-blur-2xl p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-2xl">
-      <div class="mb-8">
-        <h2 class="text-3xl font-bold tracking-tight">Welcome Back</h2>
-        <p class="text-gray-400 mt-2">Login to continue shopping.</p>
-      </div>
-
+    <!-- Form -->
+    <div class="border border-white/10 p-4 sm:p-8">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+
         <!-- Email -->
-        <div class="space-y-2">
-          <%= f.label :email, "Email Address", class: "text-xs uppercase tracking-widest text-cyan-300/80 ml-1" %>
-          <%= f.email_field :email,
-                            autofocus: true,
-                            autocomplete: "email",
-                            placeholder: "you@example.com",
-                            class: "w-full bg-white/5 rounded-2xl py-4 px-4 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-purple-400/20 focus:outline-none transition-all" %>
-        </div>
+        <%= f.email_field :email,
+                          placeholder: "Email address",
+                          class: "w-full bg-transparent border-0 border-b border-[#1A1A1A] py-4 px-0 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
 
         <!-- Password -->
-        <div class="space-y-2">
-          <div class="flex justify-between items-end px-1">
-            <%= f.label :password, class: "text-xs uppercase tracking-widest text-cyan-300/80" %>
-            <%= link_to "Forgot Password?", new_password_path(resource_name),
-                        class: "text-xs uppercase tracking-wider text-gray-400 hover:text-cyan-300 transition-colors" %>
-          </div>
+        <%= f.password_field :password,
+                             placeholder: "Password",
+                             class: "w-full bg-transparent border-0 border-b border-[#1A1A1A] py-4 px-0 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
 
-          <%= f.password_field :password,
-                               autocomplete: "current-password",
-                               placeholder: "••••••••",
-                               class: "w-full bg-white/5 rounded-2xl py-4 px-4 text-white placeholder:text-gray-500 focus:ring-2 focus:ring-purple-400/20 focus:outline-none transition-all" %>
+        <!-- Remember + Forgot -->
+        <div class="flex justify-between items-center text-[10px] sm:text-xs uppercase text-gray-400">
+          <label class="flex items-center gap-2">
+            <%= f.check_box :remember_me, class: "bg-transparent border-white/20" %>
+            Remember
+          </label>
+
+          <%= link_to "Forgot?", new_password_path(resource_name),
+                      class: "underline hover:text-white transition" %>
         </div>
 
-        <!-- Submit -->
-        <%= f.submit "Login",
-                     class: "w-full py-5 rounded-2xl bg-gradient-to-r from-cyan-300 to-cyan-500 text-black font-bold text-lg tracking-tight hover:scale-[1.02] active:scale-[0.98] transition-all mt-8" %>
+        <!-- Button -->
+        <%= f.submit "Sign In",
+                     class: "w-full bg-white text-black uppercase py-4 mt-4 sm:mt-6 active:scale-95 transition" %>
+
       <% end %>
 
-      <!-- Footer -->
-      <div class="mt-10 text-center">
-        <p class="text-gray-400 text-sm">
-          New here?
-          <%= link_to "Create Account", new_registration_path(resource_name),
-                      class: "text-purple-300 font-bold ml-1 hover:underline underline-offset-4" %>
-        </p>
+      <!-- Divider -->
+      <div class="my-6 sm:my-8 relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-[#1A1A1A]"></div>
+        </div>
+        <div class="relative text-center">
+          <span class="bg-black px-4 text-[10px] sm:text-xs uppercase text-gray-500">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="grid grid-cols-2 gap-3">
+        <button class="border border-white/20 py-3 text-xs sm:text-sm uppercase active:scale-95 transition">
+          Google
+        </button>
+        <button class="border border-white/20 py-3 text-xs sm:text-sm uppercase active:scale-95 transition">
+          Apple
+        </button>
       </div>
     </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-6 sm:mt-8 text-[10px] sm:text-xs uppercase text-gray-400">
+      Don’t have an account?
+      <%= link_to "Create Account", new_registration_path(resource_name),
+                  class: "underline ml-1 hover:text-white transition" %>
+    </div>
+
   </main>
 </div>

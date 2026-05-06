@@ -1,0 +1,24 @@
+<div
+  data-modal-target="overlay"
+  class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+  data-action="click->modal#close">
+
+  <div
+    data-modal-target="panel"
+    data-action="click->modal#stop"
+    class="w-full max-w-5xl border border-white/10 bg-[#0A0A0A]/90 backdrop-blur-md shadow-[0_0_60px_rgba(0,0,0,0.6)]">
+
+    <div class="flex items-center justify-between border-b border-white/10 px-10 py-6">
+      <h2 class="text-sm uppercase tracking-widest text-white">
+        <%= title %>
+      </h2>
+
+      <button data-action="click->modal#close" class="text-xl">✕</button>
+    </div>
+
+    <div class="mt-6">
+      <%= yield %>
+    </div>
+
+  </div>
+</div>

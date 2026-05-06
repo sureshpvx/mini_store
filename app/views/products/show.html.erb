@@ -1,0 +1,46 @@
+<div class="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+  <!-- LEFT: Images -->
+  <div>
+    <% if @product.images.attached? %>
+      <!-- Main Image -->
+      <div class="mb-4">
+        <%= image_tag @product.images.first, class: "w-full rounded-lg shadow" %>
+      </div>
+
+      <!-- Thumbnail Images -->
+      <div class="flex gap-2">
+        <% @product.images.each do |img| %>
+          <%= image_tag img, class: "w-20 h-20 object-cover border rounded" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- RIGHT: Product Info -->
+  <div>
+    <h1 class="text-2xl font-bold mb-2"><%= @product.name %></h1>
+
+    <p class="text-gray-600 mb-4"><%= @product.description %></p>
+
+    <p class="text-xl font-semibold text-green-600 mb-4">
+      ₹ <%= @product.price %>
+    </p>
+
+    <!-- Video -->
+    <% if @product.video.attached? %>
+      <div class="mt-6">
+        <h3 class="font-semibold mb-2">Product Video</h3>
+        <video controls class="w-full rounded-lg">
+          <source src="<%= url_for(@product.video) %>" type="video/mp4">
+        </video>
+      </div>
+    <% end %>
+
+    <!-- Button (future use) -->
+    <button class="mt-6 bg-black text-white px-6 py-2 rounded">
+      Add to Cart
+    </button>
+  </div>
+
+</div>

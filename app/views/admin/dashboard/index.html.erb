@@ -1,4 +1,152 @@
-<div>
-  <h1 class="font-bold text-4xl">Admin::Dashboard#index</h1>
-  <p>Find me in app/views/admin/dashboard/index.html.erb</p>
+<div class="min-h-screen flex bg-black text-white">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="w-64 bg-black border-r border-white/10 flex flex-col px-6 py-8">
+
+    <div>
+      <h1 class="text-2xl font-bold uppercase tracking-tight">
+        Hypee
+      </h1>
+      <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1">
+        Admin Panel
+      </p>
+    </div>
+
+    <nav class="mt-12 space-y-2 text-sm uppercase tracking-widest">
+
+      <a href="#" class="block px-4 py-3 bg-white/5 text-white">
+        Dashboard
+      </a>
+
+      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Catalog</a>
+      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Orders</a>
+      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Customers</a>
+      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Analytics</a>
+      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Settings</a>
+
+    </nav>
+
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="flex-1 px-10 py-8">
+
+    <!-- Topbar -->
+    <div class="flex items-center justify-between border-b border-white/10 pb-6">
+
+      <input
+        type="text"
+        placeholder="Search..."
+        class="w-[360px] bg-[#0A0A0A] px-5 py-3 text-sm border border-white/10 outline-none placeholder:text-gray-500"
+        />
+
+      <div data-controller="modal">
+
+        <!-- BUTTON -->
+        <button
+          data-action="click->modal#open"
+          class="mt-auto w-full py-3 px-4 border border-white text-sm uppercase">
+          + Add Product
+        </button>
+
+        <!-- MODAL -->
+        <%= render "shared/modal", title: "Add Product" do %>
+          <%= render "admin/products/form", product: @product %>
+        <% end %>
+
+      </div>
+
+    </div>
+
+    <!-- Heading -->
+    <section class="mt-10">
+      <h1 class="text-4xl font-bold uppercase tracking-tight">
+        Dashboard
+      </h1>
+      <p class="text-gray-500 mt-2 text-sm">
+        Overview of your store performance.
+      </p>
+    </section>
+
+    <!-- KPI Cards -->
+    <section class="grid grid-cols-3 gap-6 mt-10">
+
+      <div class="bg-[#0A0A0A] border border-white/10 p-6">
+        <p class="text-xs uppercase tracking-widest text-gray-500">Revenue</p>
+        <h2 class="text-3xl font-bold mt-4">$1.2M</h2>
+        <p class="text-[#A89B8C] text-sm mt-2">+24.8%</p>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/10 p-6">
+        <p class="text-xs uppercase tracking-widest text-gray-500">Orders</p>
+        <h2 class="text-3xl font-bold mt-4">42,892</h2>
+        <p class="text-[#A89B8C] text-sm mt-2">Today: 112</p>
+      </div>
+
+      <div class="bg-[#0A0A0A] border border-white/10 p-6">
+        <p class="text-xs uppercase tracking-widest text-gray-500">Customers</p>
+        <h2 class="text-3xl font-bold mt-4">18.4K</h2>
+      </div>
+
+    </section>
+
+    <!-- Products Table -->
+    <section class="mt-14">
+
+      <div class="flex items-end justify-between">
+        <h2 class="text-2xl font-bold uppercase tracking-tight">
+          Products
+        </h2>
+
+        <button class="text-sm text-gray-400 hover:text-white">
+          Export
+        </button>
+      </div>
+
+      <div class="mt-6 border border-white/10">
+
+        <table class="w-full text-sm">
+
+          <thead class="text-gray-500 uppercase text-xs border-b border-white/10">
+          <tr>
+            <th class="px-6 py-4 text-left">Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+
+          <tbody>
+
+          <tr class="border-t border-white/10">
+            <td class="px-6 py-4">Architect Trench</td>
+            <td>Outerwear</td>
+            <td>$890</td>
+            <td class="text-[#A89B8C]">In Stock</td>
+          </tr>
+
+          <tr class="border-t border-white/10">
+            <td class="px-6 py-4">Monolith Bag</td>
+            <td>Accessories</td>
+            <td>$620</td>
+            <td class="text-red-400">Low Stock</td>
+          </tr>
+
+          <tr class="border-t border-white/10">
+            <td class="px-6 py-4">Void Knit</td>
+            <td>Knitwear</td>
+            <td>$340</td>
+            <td class="text-[#A89B8C]">In Stock</td>
+          </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
 </div>

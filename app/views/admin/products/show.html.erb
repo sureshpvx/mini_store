@@ -1,0 +1,80 @@
+<div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+
+  <!-- LEFT: Images -->
+  <div>
+
+    <!-- Main Image -->
+    <div class="border border-white/10 bg-black">
+      <% if @product.images.attached? %>
+        <%= image_tag @product.images.first, class: "w-full h-[500px] object-cover" %>
+      <% end %>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="flex gap-4 mt-4">
+      <% @product.images.each do |img| %>
+        <%= image_tag img, class: "w-20 h-20 object-cover border border-white/10 hover:border-[#A89B8C] cursor-pointer" %>
+      <% end %>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Details -->
+  <div class="flex flex-col gap-6">
+
+    <!-- Title -->
+    <h1 class="text-2xl md:text-3xl font-semibold tracking-wide">
+      <%= @product.name %>
+    </h1>
+
+    <!-- Price + Stock -->
+    <div class="flex items-center gap-4">
+      <p class="text-xl">₹ <%= @product.price %></p>
+
+      <% if @product.stock.to_i > 0 %>
+        <span class="text-xs text-green-400 border border-green-400/30 px-2 py-1">
+          In Stock
+        </span>
+      <% else %>
+        <span class="text-xs text-red-400 border border-red-400/30 px-2 py-1">
+          Out of Stock
+        </span>
+      <% end %>
+    </div>
+
+    <!-- Description -->
+    <p class="text-gray-400 leading-relaxed text-sm">
+      <%= @product.description %>
+    </p>
+
+    <!-- Divider -->
+    <div class="border-t border-white/10"></div>
+
+    <!-- Admin Actions -->
+    <div class="flex gap-4">
+
+      <%= link_to "Edit",
+                  edit_admin_product_path(@product),
+                  class: "px-6 py-2 border border-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition" %>
+
+      <%= link_to "Delete",
+                  admin_product_path(@product),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "px-6 py-2 border border-red-500 text-red-500 text-sm uppercase tracking-widest hover:bg-red-500 hover:text-white transition" %>
+
+    </div>
+
+    <!-- Video -->
+    <% if @product.video.attached? %>
+      <div class="mt-6">
+        <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Video</p>
+
+        <video controls class="w-full border border-white/10">
+          <source src="<%= url_for(@product.video) %>" type="video/mp4">
+        </video>
+      </div>
+    <% end %>
+
+  </div>
+
+</div>

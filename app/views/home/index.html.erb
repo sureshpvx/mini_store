@@ -1,25 +1,153 @@
-<div class="container">
-  <h1>Welcome</h1>
-  <div class="user-section">
-    <% if user_signed_in? %>
-      <div class="user-info">
-        <% unless current_user.admin? %>
-          <p>
-            Logged in as: <strong><%= current_user.email %></strong>
-          </p>
+<section class="relative min-h-screen w-full bg-black overflow-hidden">
+
+  <!-- Image -->
+  <%= image_tag "rootimage.jpg",
+                class: "absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center grayscale" %>
+
+  <!-- Gradient -->
+  <div class="absolute inset-0
+    bg-gradient-to-t from-black via-black/90 to-black/20
+    md:bg-gradient-to-r md:from-black md:via-black/80 md:to-transparent">
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 flex items-end md:items-center h-full">
+
+    <!-- Safe container -->
+    <div class="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-24 md:pt-0">
+
+      <div class="max-w-md md:max-w-xl text-left pt-50">
+
+        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold uppercase leading-[0.95] mb-6">
+          DEFINE <br> YOUR EDGE
+        </h1>
+
+        <p class="text-gray-300 mb-8 text-sm sm:text-base">
+          Uncompromising aesthetics for the modern minimalist.
+          Structured silhouettes, premium materials, quiet dominance.
+        </p>
+
+        <%= link_to products_path(filter: "all"),
+                    class: "inline-block border border-white px-8 py-4 uppercase tracking-widest hover:bg-white hover:text-black transition" do %>
+          Explore Collection
         <% end %>
-        <% unless current_user.admin? %>
-          <%= button_to "Logout",
-                       destroy_user_session_path,
-                       method: :delete,
-                        class: "btn btn-danger",
-                        data: { confirm: "Are you sure you want to logout?" } %>
-        <% end %>
+
       </div>
-    <% else %>
-      <p>You are not logged in.</p>
-      <%= link_to "Login", new_user_session_path, class: "btn btn-primary" %>
-      <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+
+    </div>
+
+  </div>
+
+</section>
+<section class="py-16 sm:py-20 px-4 sm:px-10 bg-[#0e0e0e]">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
+
+    <%# Added 'filter' key to match your URL parameters %>
+    <% categories = [
+      { name: "Men", image: "men.jpg", filter: "men" },
+      { name: "Women", image: "women.jpg", filter: "women" },
+      { name: "Accessories", image: "acc.jpg", filter: "accessories" }
+    ] %>
+
+    <% categories.each do |cat| %>
+      <%# Wrap the entire card in the link_to block %>
+      <%= link_to products_path(filter: cat[:filter]),
+                  class: "relative group overflow-hidden bg-black h-[220px] sm:h-[300px] md:h-[550px] block" do %>
+
+        <%# Background Image %>
+        <%= image_tag cat[:image], loading: "lazy",
+                      class: "absolute inset-0 w-full h-full object-cover grayscale opacity-70 group-hover:opacity-100 group-hover:scale-105 transition duration-700" %>
+
+        <%# Dark Overlay %>
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition"></div>
+
+        <%# Category Text %>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <h2 class="text-xl sm:text-3xl uppercase font-bold tracking-widest text-white">
+            <%= cat[:name] %>
+          </h2>
+        </div>
+
+      <% end %>
+    <% end %>
+
+  </div>
+</section>
+
+<section class="py-12 sm:py-20 px-4 sm:px-10 bg-[#0e0e0e] border-t border-white/5">
+
+  <div class="flex flex-col sm:flex-row justify-between items-center sm:items-baseline gap-4 mb-10 sm:mb-16">
+    <h2 class="text-3xl sm:text-5xl font-medium uppercase tracking-tight text-white">
+      New Arrivals
+    </h2>
+
+    <%= link_to products_path(filter: "new"), class: "text-gray-500 hover:text-white text-[10px] uppercase tracking-[0.3em] transition" do %>
+      View All
     <% end %>
   </div>
-</div>
+
+  <%# grid-cols-2 is the key change here for mobile %>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 sm:gap-8">
+    <% @new_arrivals.each do |product| %>
+      <%= link_to product_path(product), class: "group flex flex-col" do %>
+
+        <%# Reduced padding (p-4) for mobile so the product stays visible in a smaller box %>
+        <div class="relative aspect-[3/4] bg-black overflow-hidden mb-4 sm:mb-6 flex items-center justify-center border border-white/[0.03]">
+          <% if product.images.attached? %>
+            <%= image_tag product.images.first, loading: "lazy",
+                          class: "w-full h-full object-contain p-4 sm:p-10 grayscale opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" %>
+          <% else %>
+            <div class="text-gray-800 uppercase text-[8px] tracking-widest">No Image</div>
+          <% end %>
+        </div>
+
+        <%# TEXT LAYOUT: Using text-[9px] on mobile to keep it from wrapping too much %>
+        <div class="flex flex-col gap-1 px-1">
+          <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-baseline gap-1">
+            <h3 class="uppercase text-[9px] sm:text-[11px] tracking-[0.15em] font-medium text-white group-hover:text-gray-400 transition truncate w-full">
+              <%= product.name %>
+            </h3>
+            <span class="text-[9px] sm:text-[11px] text-white font-light">
+              <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
+            </span>
+          </div>
+
+          <% if product.description.present? %>
+            <p class="hidden sm:block text-[10px] text-gray-500 tracking-wide font-light">
+              <%= product.description.truncate(35) %>
+            </p>
+          <% end %>
+        </div>
+
+      <% end %>
+    <% end %>
+  </div>
+</section><section class="relative h-[450px] md:h-[500px] flex items-center border-t border-white/5 overflow-hidden">
+
+  <!-- Image -->
+  <div class="absolute inset-0 w-full md:w-1/2 ml-auto mb-20">
+    <%= image_tag "girl.jpg",
+                  class: "w-full h-full object-cover object-[65%_center] md:object-center grayscale opacity-80" %>
+  </div>
+
+  <!-- Gradient -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent md:bg-gradient-to-r md:from-black md:via-black/80 md:to-transparent "></div>
+
+  <!-- Content -->
+  <div class="relative px-6 sm:px-10 max-w-xl">
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase mb-6 leading-tight">
+      Crafted <br> For The Bold
+    </h2>
+
+    <p class="text-gray-400 mb-6 text-sm sm:text-base">
+      Reject the superfluous. Embrace the essential. Our latest collection is
+      an exercise in restraint and precision.
+    </p>
+
+    <%= link_to "#",
+                class: "inline-block bg-white text-black px-6 py-3 uppercase text-sm tracking-widest hover:bg-opacity-90 transition" do %>
+      Read the Journal
+    <% end %>
+  </div>
+
+</section>
