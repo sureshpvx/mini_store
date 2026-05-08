@@ -15,6 +15,9 @@ class CartsController < ApplicationController
 
     cart_item.save!
 
-    redirect_back fallback_location: root_path
+    redirect_back(
+      fallback_location: root_path,
+      notice: "#{product.name} added to your collection"
+    )
   end
 end

@@ -1,43 +1,78 @@
 class Admin::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
+  before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    @products = Product.all
+    @products = Product.all.order(created_at: :desc)
   end
 
   def new
     @product = Product.new
-    @categories = Category.includes(:subcategories).where(parent_id: nil)
-
-  end
-
-  def show
-    @product = Product.find(params[:id])
+    load_categories
   end
 
   def create
     @product = Product.new(product_params)
 
     if @product.save
-      redirect_to admin_product_path(@product), notice: "Product created successfully"
+      redirect_to admin_product_path(@product),
+                  notice: "#{@product.name} added to collection"
     else
-      @categories = Category.includes(:subcategories).where(parent_id: nil)
+      load_categories
       render :new, status: :unprocessable_entity
     end
   end
 
+  def show
+  end
+
+  def edit
+    load_categories
+  end
+
+  def update
+    if @product.update(product_params)
+      redirect_to admin_product_path(@product),
+                  notice: "#{@product.name} updated successfully"
+    else
+      load_categories
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @product.destroy
+
+    redirect_to admin_products_path,
+                notice: "Product removed from collection"
+  end
+
   private
 
+  def set_product
+    @product = Product.find(params[:id])
+  end
+
+  def load_categories
+    @categories = Category.includes(:subcategories)
+                          .where(parent_id: nil)
+  end
+
   def require_admin
-    redirect_to root_path, alert: "Not authorized" unless current_user.admin?
+    redirect_to root_path,
+                alert: "Not authorized" unless current_user.admin?
   end
 
   def product_params
     params.require(:product).permit(
-      :name, :description, :price, :stock,
+      :name,
+      :description,
+      :price,
+      :stock,
       :category_id,
-      :video, images: []
+      :video,
+      images: []
     )
   end
 end

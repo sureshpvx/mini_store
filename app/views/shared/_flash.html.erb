@@ -1,0 +1,101 @@
+<div
+  class="fixed top-6 right-6 z-[100] space-y-3">
+
+  <% flash.each do |type, message| %>
+
+    <% bg =
+         case type.to_sym
+         when :notice
+           "border-white/15 bg-[#111111]/95"
+         when :alert
+           "border-red-500/20 bg-red-500/10"
+         else
+           "border-white/10 bg-[#111111]/95"
+         end
+    %>
+
+    <div
+      data-controller="flash"
+      class="
+        w-[360px]
+        border
+        backdrop-blur-xl
+        shadow-[0_0_40px_rgba(0,0,0,0.45)]
+        rounded-2xl
+        px-5 py-4
+        text-sm text-white
+        flex items-start gap-4
+        animate-in
+        slide-in-from-right-5
+        duration-300
+        <%= bg %>
+      ">
+
+      <!-- ICON -->
+      <div class="mt-0.5">
+
+        <% if type.to_sym == :notice %>
+
+          <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-4 h-4 text-white"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="2">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7" />
+
+            </svg>
+
+          </div>
+
+        <% else %>
+
+          <div class="w-8 h-8 rounded-full border border-red-500/20 flex items-center justify-center">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-4 h-4 text-red-400"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="2">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12" />
+
+            </svg>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+      <!-- CONTENT -->
+      <div class="flex-1">
+
+        <p class="leading-relaxed text-sm text-white">
+          <%= message %>
+        </p>
+
+      </div>
+
+      <!-- CLOSE -->
+      <button
+        data-action="click->flash#close"
+        class="text-gray-600 hover:text-white transition">
+
+        ✕
+
+      </button>
+
+    </div>
+
+  <% end %>
+
+</div>

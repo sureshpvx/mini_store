@@ -1,145 +1,394 @@
-<%= form_with scope: :product,
-              url: admin_products_path,
-              method: :post,
+<%= form_with model: [:admin, product],
               local: true,
-              html: { multipart: true },
-              class: "w-full" do |f| %>
+              html: {
+                multipart: true,
+                class: "w-full"
+              } do |f| %>
 
-  <div class="px-8 py-10">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-      <!-- BODY -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
-        <!-- LEFT SIDE -->
-        <div class="space-y-10">
+    <!-- ===================================================== -->
+    <!-- LEFT SIDE -->
+    <!-- ===================================================== -->
 
-          <!-- Name -->
-          <div>
-            <%= f.label :name, class: "text-xs uppercase tracking-widest text-gray-400 mb-3 block" %>
-            <%= f.text_field :name,
-                             class: "w-full bg-transparent border-b border-white/20 py-3 text-sm focus:border-white focus:outline-none" %>
-          </div>
+    <div class="space-y-7 text-left">
 
-          <!-- Description -->
-          <div>
-            <%= f.label :description, class: "text-xs uppercase tracking-widest text-gray-400 mb-3 block" %>
-            <%= f.text_area :description,
-                            rows: 4,
-                            class: "w-full bg-transparent border-b border-white/20 py-3 text-sm focus:border-white focus:outline-none resize-none" %>
-          </div>
+      <!-- NAME -->
+      <div>
 
-          <!-- Price + Stock -->
-          <div class="grid grid-cols-2 gap-10">
-            <div>
-              <%= f.label :price, class: "text-xs uppercase tracking-widest text-gray-400 mb-3 block" %>
-              <%= f.number_field :price,
-                                 class: "w-full bg-transparent border-b border-white/20 py-3 text-sm focus:border-white focus:outline-none" %>
-            </div>
+        <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+          Name
+        </label>
 
-            <div>
-              <%= f.label :stock, class: "text-xs uppercase tracking-widest text-gray-400 mb-3 block" %>
-              <%= f.number_field :stock,
-                                 class: "w-full bg-transparent border-b border-white/20 py-3 text-sm focus:border-white focus:outline-none" %>
-            </div>
-          </div>
+        <%= f.text_field :name,
+                         class: "
+                           w-full
+                           text-left
+                           bg-transparent
+                           border-0 border-b border-white/10
+                           pb-4
+                           text-white
+                           text-lg
+                           outline-none
+                           focus:border-white/40
+                           transition-all
+                         " %>
 
-          <!-- Category -->
-          <div>
-            <%= f.label :category_id, class: "text-xs uppercase tracking-widest text-gray-400 mb-3 block" %>
+      </div>
 
-            <%= f.grouped_collection_select :category_id,
-                                            Category.where(parent_id: nil),
-                                            :subcategories,
-                                            :name,
-                                            :id,
-                                            :full_name,
-                                            { prompt: "Select Category" },
-                                            class: "w-full bg-transparent border-b border-white/20 py-3 text-sm focus:border-white focus:outline-none appearance-none" %>
-          </div>
+      <!-- DESCRIPTION -->
+      <div>
+
+        <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+          Description
+        </label>
+
+        <%= f.text_area :description,
+                        rows: 5,
+                        class: "
+                          w-full
+                          text-left
+                          bg-transparent
+                          border-0 border-b border-white/10
+                          pb-4
+                          text-white
+                          leading-relaxed
+                          outline-none
+                          resize-none
+                          focus:border-white/40
+                          transition-all
+                        " %>
+
+      </div>
+
+      <!-- PRICE + STOCK -->
+      <div class="grid grid-cols-2 gap-6">
+
+        <!-- PRICE -->
+        <div class="text-left">
+
+          <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+            Price
+          </label>
+
+          <%= f.number_field :price,
+                             step: 0.01,
+                             class: "
+                               w-full
+                               text-left
+                               bg-transparent
+                               border-0 border-b border-white/10
+                               pb-4
+                               text-white
+                               text-lg
+                               outline-none
+                               focus:border-white/40
+                               transition-all
+                             " %>
 
         </div>
 
-        <!-- RIGHT SIDE -->
-        <div class="space-y-10">
+        <!-- STOCK -->
+        <div class="text-left">
 
-          <!-- IMAGES -->
-          <div data-controller="upload">
+          <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+            Stock
+          </label>
 
-            <input type="file"
-                   name="product[images][]"
-                   multiple
-                   accept="image/*"
-                   data-upload-target="input"
-                   class="hidden" />
-
-            <div data-upload-target="dropzone"
-                 data-action="click->upload#open"
-                 class="upload-box w-full h-52 border border-dashed border-white/20 bg-[#0D0D0D] flex items-center justify-center cursor-pointer hover:border-white/50 transition relative overflow-hidden">
-
-              <!-- Placeholder -->
-              <div data-upload-target="placeholder" class="text-center">
-                <p class="text-sm text-gray-400">
-                  Drag & drop or <span class="underline">browse</span>
-                </p>
-                <p class="text-xs text-gray-600 mt-1">Images only</p>
-              </div>
-
-              <!-- Preview container INSIDE -->
-              <div data-upload-target="preview"
-                   class="absolute inset-0 hidden p-2 flex flex-wrap gap-2">
-              </div>
-
-            </div>
-          </div>
-
-          <!-- VIDEO -->
-          <div data-controller="upload">
-            <label class="text-xs uppercase tracking-widest text-gray-400 mb-4 block">
-              Product Video
-            </label>
-
-            <input type="file"
-                   name="product[video]"
-                   accept="video/*"
-                   data-upload-target="input"
-                   class="hidden" />
-
-            <div data-upload-target="dropzone"
-                 data-action="click->upload#open"
-                 class="w-full h-44 border border-dashed border-white/20 bg-[#0D0D0D] flex items-center justify-center cursor-pointer hover:border-white/50 transition relative overflow-hidden">
-
-              <!-- Placeholder -->
-              <div data-upload-target="placeholder" class="text-center">
-                <p class="text-sm text-gray-400">
-                  Upload video
-                </p>
-                <p class="text-xs text-gray-600 mt-1">
-                  MP4 recommended
-                </p>
-              </div>
-
-              <!-- Preview INSIDE dropzone -->
-              <div data-upload-target="preview"
-                   class="absolute inset-0 hidden">
-              </div>
-
-            </div>
-          </div>
+          <%= f.number_field :stock,
+                             class: "
+                               w-full
+                               text-left
+                               bg-transparent
+                               border-0 border-b border-white/10
+                               pb-4
+                               text-white
+                               text-lg
+                               outline-none
+                               focus:border-white/40
+                               transition-all
+                             " %>
 
         </div>
 
       </div>
 
-      <!-- FOOTER -->
-    <div class="flex justify-between items-center pt-8 border-t border-white/10 mt-10">
-      <button type="button"
-                data-action="click->modal#close"
-                class="text-sm uppercase tracking-widest text-gray-400 hover:text-white">
-          Cancel
-        </button>
+      <!-- CATEGORY -->
+      <div class="text-left">
 
-        <%= f.submit "Create",
-                     class: "px-10 py-3 border border-white text-sm uppercase tracking-widest hover:bg-white hover:text-black transition" %>
+        <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+          Category
+        </label>
+
+        <%= f.collection_select :category_id,
+                                Category.where.not(parent_id: nil),
+                                :id,
+                                :full_name,
+                                { prompt: "Select Category" },
+                                {
+                                  class: "
+                                    w-full
+                                    text-left
+                                    bg-transparent
+                                    border-0 border-b border-white/10
+                                    pb-4
+                                    text-white
+                                    outline-none
+                                    focus:border-white/40
+                                    transition-all
+                                  "
+                                } %>
+
       </div>
 
     </div>
+
+    <!-- ===================================================== -->
+    <!-- RIGHT SIDE -->
+    <!-- ===================================================== -->
+
+    <div class="space-y-7 text-left">
+
+      <!-- ===================================================== -->
+      <!-- IMAGES -->
+      <!-- ===================================================== -->
+
+      <div data-controller="upload">
+
+        <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+          Product Images
+        </label>
+
+        <input
+          type="file"
+          name="product[images][]"
+          multiple
+          accept="image/*"
+          data-upload-target="input"
+          class="hidden" />
+
+        <!-- DROPZONE -->
+        <div
+          data-upload-target="dropzone"
+          data-action="click->upload#open"
+          class="
+            relative
+            h-[220px]
+            border border-dashed border-white/10
+            bg-[#0A0A0A]
+            overflow-y-auto
+            cursor-pointer
+            hover:border-white/30
+            transition-all duration-300
+          ">
+
+          <!-- PLACEHOLDER -->
+          <div
+            data-upload-target="placeholder"
+            class="
+              absolute inset-0
+              flex flex-col items-center justify-center
+              text-center
+            ">
+
+            <p class="text-sm text-gray-400">
+              Drag & drop or
+              <span class="underline">browse</span>
+            </p>
+
+            <p class="text-xs text-gray-600 mt-2">
+              Images only
+            </p>
+
+          </div>
+
+          <!-- PREVIEW -->
+          <div
+            data-upload-target="preview"
+            data-has-existing="<%= product.images.attached? %>"
+            class="
+              absolute inset-0
+              p-4
+              flex flex-wrap gap-3 content-start
+            ">
+
+            <% if product.persisted? && product.images.attached? %>
+
+              <% product.images.each_with_index do |image, index| %>
+
+                <div
+                  data-existing="true"
+                  class="
+                    relative
+                    w-[90px]
+                    h-[90px]
+                    bg-black
+                    overflow-hidden
+                    border border-white/10
+                  ">
+
+                  <%= image_tag image,
+                                class: "w-full h-full object-cover" %>
+
+                  <% if index == 0 %>
+
+                    <div
+                      class="
+                        absolute bottom-1 left-1
+                        text-[9px]
+                        bg-white text-black
+                        px-2 py-0.5
+                        uppercase tracking-widest
+                      ">
+
+                      Primary
+
+                    </div>
+
+                  <% end %>
+
+                </div>
+
+              <% end %>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- VIDEO -->
+      <!-- ===================================================== -->
+
+      <div data-controller="upload">
+
+        <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
+          Product Video
+        </label>
+
+        <input
+          type="file"
+          name="product[video]"
+          accept="video/*"
+          data-upload-target="input"
+          class="hidden" />
+
+        <!-- DROPZONE -->
+        <div
+          data-upload-target="dropzone"
+          data-action="click->upload#open"
+          class="
+            relative
+            h-[220px]
+            border border-dashed border-white/10
+            bg-[#0A0A0A]
+            overflow-hidden
+            cursor-pointer
+            hover:border-white/30
+            transition-all duration-300
+          ">
+
+          <!-- PLACEHOLDER -->
+          <div
+            data-upload-target="placeholder"
+            class="
+              absolute inset-0
+              flex flex-col items-center justify-center
+              text-center
+            ">
+
+            <p class="text-sm text-gray-400">
+              Upload video
+            </p>
+
+            <p class="text-xs text-gray-600 mt-2">
+              MP4 recommended
+            </p>
+
+          </div>
+
+          <!-- PREVIEW -->
+          <div
+            data-upload-target="preview"
+            data-has-existing="<%= product.video.attached? %>"
+            class="absolute inset-0 p-4">
+
+            <% if product.persisted? && product.video.attached? %>
+
+              <div
+                data-existing="true"
+                class="
+                  w-full
+                  h-full
+                  overflow-hidden
+                  border border-white/10
+                ">
+
+                <%= video_tag url_for(product.video),
+                              controls: true,
+                              class: "w-full h-full object-cover" %>
+
+              </div>
+
+            <% end %>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- FOOTER -->
+  <!-- ===================================================== -->
+
+  <div
+    class="
+      mt-8
+      pt-6
+      border-t border-white/10
+      flex items-center justify-between
+    ">
+
+    <!-- CANCEL -->
+    <button
+      type="button"
+      data-action="click->modal#close"
+      class="
+        text-[11px]
+        uppercase
+        tracking-[0.35em]
+        text-gray-500
+        hover:text-white
+        transition-all
+      ">
+
+      Cancel
+
+    </button>
+
+    <!-- SUBMIT -->
+    <%= f.submit product.persisted? ? "Update Product" : "Create Product",
+                 class: "
+                   px-10 py-4
+                   border border-white
+                   text-[11px]
+                   uppercase
+                   tracking-[0.35em]
+                   text-white
+                   hover:bg-white
+                   hover:text-black
+                   transition-all duration-300
+                   cursor-pointer
+                 " %>
+
+  </div>
+
 <% end %>

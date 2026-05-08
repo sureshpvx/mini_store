@@ -71,10 +71,13 @@ export default class extends Controller {
 
   // 🔥 RENDER
   render() {
-    const files = this.files
     this.previewTarget.innerHTML = ""
 
-    if (files.length === 0) {
+    // Existing previews
+    const existing = this.previewTarget.querySelectorAll("[data-existing]")
+    existing.forEach(el => el.remove())
+
+    if (this.files.length === 0 && this.previewTarget.dataset.hasExisting !== "true") {
       this.placeholderTarget.classList.remove("hidden")
       this.previewTarget.classList.add("hidden")
       return
@@ -83,7 +86,7 @@ export default class extends Controller {
     this.placeholderTarget.classList.add("hidden")
     this.previewTarget.classList.remove("hidden")
 
-    files.forEach((file, index) => {
+    this.files.forEach((file, index) => {
       const el = this.createPreview(file, index)
       this.previewTarget.appendChild(el)
     })

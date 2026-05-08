@@ -2,6 +2,8 @@ class Admin::DashboardController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
   def index
+    @product = Product.new
+
   end
 
   private
