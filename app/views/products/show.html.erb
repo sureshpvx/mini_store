@@ -38,9 +38,10 @@
     <% end %>
 
     <!-- Button (future use) -->
-    <button class="mt-6 bg-black text-white px-6 py-2 rounded">
-      Add to Cart
-    </button>
+    <%= button_to "Add To Cart",
+                  add_item_cart_path(product_id: @product.id),
+                  method: :post,
+                  class: "mt-3 w-full border border-white/20 py-3 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition" %>
   </div>
 
 </div>

@@ -7,7 +7,10 @@ Rails.application.routes.draw do
     root "dashboard#index"
     resources :products
     resources :categories
+  end
 
+  resource :cart, only: [:show] do
+    post :add_item
   end
 
   resources :products, only: [:index, :show]

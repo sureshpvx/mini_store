@@ -6,12 +6,17 @@ class ApplicationController < ActionController::Base
   protected
 
   def current_cart
-    if session[:cart_id]
+    # ✅ logged in customer ALWAYS uses own cart
+    if user_signed_in? && current_user.customer?
+      current_user.cart
+
+      # ✅ guest cart
+    elsif session[:cart_id].present?
       Cart.find_by(id: session[:cart_id])
+
+      # ✅ create guest cart
     else
-      cart = Cart.create(
-        user: current_user
-      )
+      cart = Cart.create!
 
       session[:cart_id] = cart.id
 

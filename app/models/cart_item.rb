@@ -5,4 +5,8 @@ class CartItem < ApplicationRecord
   validates :quantity, numericality: {
     greater_than: 0
   }
+
+  def total_price
+    product.price * quantity
+  end
 end
