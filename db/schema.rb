@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_14_075845) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_14_091550) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_075845) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "full_name", null: false
+    t.string "phone_number", null: false
+    t.string "address_line_1", null: false
+    t.string "address_line_2"
+    t.string "city", null: false
+    t.string "state", null: false
+    t.string "postal_code", null: false
+    t.string "country", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -86,6 +101,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_075845) do
     t.integer "payment_status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "shipping_full_name"
+    t.string "shipping_phone_number"
+    t.string "shipping_address_line_1"
+    t.string "shipping_address_line_2"
+    t.string "shipping_city"
+    t.string "shipping_state"
+    t.string "shipping_postal_code"
+    t.string "shipping_country"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -115,6 +138,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_075845) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "users"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"

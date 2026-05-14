@@ -253,18 +253,17 @@
     </div>
 
     <!-- CHECKOUT -->
-    <%= button_to "Checkout",
-                  checkout_path,
-                  method: :post,
-                  data: { turbo: false },
-                  class: "w-full h-16
-                     border border-white
-                     uppercase tracking-[0.45em]
-                     text-sm
-                     rounded-full
-                     hover:bg-white hover:text-black
-                     hover:shadow-[0_0_30px_rgba(255,255,255,0.15)]
-                     transition-all duration-500" %>
+    <%= link_to "Checkout",
+                checkout_path,
+                data: { turbo: false },
+                class: "w-full h-16
+                   border border-white
+                   rounded-full
+                   flex items-center justify-center
+                   uppercase tracking-[0.45em]
+                   text-sm text-white
+                   hover:bg-white hover:text-black
+                   transition-all duration-500" %>
     <!-- FOOT NOTE -->
     <p
       class="text-center text-[10px]

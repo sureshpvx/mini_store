@@ -16,8 +16,22 @@ class OrdersController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
+
+      address = current_user.addresses.find(params[:address_id])
+
       order = current_user.orders.create!(
-        total_price: cart.total_price
+        total_price: cart.total_price,
+
+        shipping_full_name: address.full_name,
+        shipping_phone_number: address.phone_number,
+
+        shipping_address_line_1: address.address_line_1,
+        shipping_address_line_2: address.address_line_2,
+
+        shipping_city: address.city,
+        shipping_state: address.state,
+        shipping_postal_code: address.postal_code,
+        shipping_country: address.country
       )
 
       cart.cart_items.each do |cart_item|

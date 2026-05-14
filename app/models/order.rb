@@ -6,7 +6,7 @@ class Order < ApplicationRecord
 
   enum :status, {
     pending: 0,
-    confirmed: 1,
+    processing: 1,
     shipped: 2,
     delivered: 3,
     cancelled: 4
@@ -15,6 +15,7 @@ class Order < ApplicationRecord
   enum :payment_status, {
     unpaid: 0,
     paid: 1,
-    failed: 2
+    failed: 2,
+    refunded: 3
   }
 end
