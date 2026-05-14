@@ -1,0 +1,233 @@
+<div class="max-w-5xl mx-auto px-6 py-16">
+
+  <!-- HEADER -->
+  <div class="mb-14">
+
+    <div class="flex items-center gap-4 mb-4">
+
+      <div class="w-12 h-12 rounded-full
+                  border border-green-500/30
+                  bg-green-500/10
+                  flex items-center justify-center">
+
+        <span class="text-green-400 text-xl">
+          ✓
+        </span>
+
+      </div>
+
+      <div>
+        <h1 class="text-4xl font-semibold text-white">
+          Order Confirmed
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+          Your order has been placed successfully.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="flex flex-wrap gap-4 mt-8">
+
+      <div class="border border-white/10
+                  bg-white/[0.02]
+                  px-5 py-3 rounded-2xl">
+
+        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+          Order ID
+        </p>
+
+        <p class="text-white font-medium">
+          #HYPEE-<%= @order.id.to_s.rjust(4, "0") %>
+        </p>
+
+      </div>
+
+      <div class="border border-white/10
+                  bg-white/[0.02]
+                  px-5 py-3 rounded-2xl">
+
+        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+          Status
+        </p>
+
+        <p class="text-yellow-400 font-medium capitalize">
+          <%= @order.status %>
+        </p>
+
+      </div>
+
+      <div class="border border-white/10
+                  bg-white/[0.02]
+                  px-5 py-3 rounded-2xl">
+
+        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+          Payment
+        </p>
+
+        <p class="text-red-400 font-medium capitalize">
+          <%= @order.payment_status %>
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ORDER ITEMS -->
+  <div class="space-y-6">
+
+    <% @order.order_items.each do |item| %>
+
+      <div class="border border-white/10
+                  bg-[#070707]
+                  rounded-3xl
+                  p-6
+                  flex flex-col md:flex-row gap-6
+                  items-start md:items-center
+                  justify-between">
+
+        <!-- LEFT -->
+        <div class="flex gap-5 items-start">
+
+          <!-- IMAGE -->
+          <div class="w-28 h-32 overflow-hidden rounded-2xl bg-black">
+
+            <% if item.product.images.attached? %>
+
+              <%= image_tag item.product.images.first,
+                            class: "w-full h-full object-cover" %>
+
+            <% end %>
+
+          </div>
+
+          <!-- INFO -->
+          <div>
+
+            <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-3">
+              Product
+            </p>
+
+            <h2 class="text-2xl text-white font-light uppercase tracking-wide">
+              <%= item.product.name %>
+            </h2>
+
+            <div class="mt-5 space-y-2">
+
+              <p class="text-gray-400">
+                Quantity:
+                <span class="text-white font-medium">
+                  <%= item.quantity %>
+                </span>
+              </p>
+
+              <p class="text-gray-400">
+                Unit Price:
+                <span class="text-white font-medium">
+                  ₹ <%= item.price.to_f.round(2) %>
+                </span>
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="text-right">
+
+          <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-3">
+            Subtotal
+          </p>
+
+          <p class="text-3xl text-white font-light">
+            ₹ <%= item.total_price.to_f.round(2) %>
+          </p>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="mt-14 border-t border-white/10 pt-10">
+
+    <div class="max-w-xl ml-auto space-y-5">
+
+      <div class="flex justify-between text-gray-400 text-lg">
+
+        <span>
+          Subtotal
+        </span>
+
+        <span>
+          ₹ <%= @order.total_price.to_f.round(2) %>
+        </span>
+
+      </div>
+
+      <div class="flex justify-between text-gray-400 text-lg">
+
+        <span>
+          Shipping
+        </span>
+
+        <span>
+          Free
+        </span>
+
+      </div>
+
+      <div class="flex justify-between items-center
+                  border-t border-white/10
+                  pt-6">
+
+        <span class="text-xl uppercase tracking-[0.3em] text-white">
+          Total
+        </span>
+
+        <span class="text-4xl text-white font-light">
+          ₹ <%= @order.total_price.to_f.round(2) %>
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="mt-16 flex flex-col md:flex-row gap-5">
+
+    <%= link_to "Continue Shopping",
+                root_path,
+                class: "flex-1 h-16
+                       border border-white/15
+                       rounded-full
+                       flex items-center justify-center
+                       uppercase tracking-[0.35em]
+                       text-sm text-white
+                       hover:bg-white hover:text-black
+                       transition-all duration-500" %>
+
+    <%= link_to "View Collection",
+                products_path,
+                class: "flex-1 h-16
+                       bg-white text-black
+                       rounded-full
+                       flex items-center justify-center
+                       uppercase tracking-[0.35em]
+                       text-sm
+                       hover:opacity-90
+                       transition-all duration-500" %>
+
+  </div>
+
+</div>
