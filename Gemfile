@@ -65,3 +65,9 @@ group :test do
 end
 
 gem "devise", "~> 5.0"
+
+gem "friendly_id", "~> 5.7"
+
+gem "razorpay", "~> 3.2"
+
+gem "dotenv-rails", "~> 3.2"

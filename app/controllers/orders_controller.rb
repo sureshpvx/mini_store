@@ -31,7 +31,10 @@ class OrdersController < ApplicationController
         shipping_city: address.city,
         shipping_state: address.state,
         shipping_postal_code: address.postal_code,
-        shipping_country: address.country
+        shipping_country: address.country,
+
+        payment_status: :unpaid,
+        status: :pending
       )
 
       cart.cart_items.each do |cart_item|
@@ -42,10 +45,21 @@ class OrdersController < ApplicationController
         )
       end
 
-      cart.cart_items.destroy_all
+      # CREATE RAZORPAY ORDER
+      razorpay_order = Razorpay::Order.create(
+        amount: (order.total_price * 100).to_i,
+        currency: "INR",
+        receipt: "order_#{order.id}"
+      )
+
+      order.update!(
+        razorpay_order_id: razorpay_order.id
+      )
+
+      # cart.cart_items.destroy_all
 
       redirect_to order_path(order),
-                  notice: "Order placed successfully"
+                  notice: "Order created. Ready for payment."
     end
   end
 
