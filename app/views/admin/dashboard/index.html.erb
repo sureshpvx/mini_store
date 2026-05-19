@@ -1,147 +1,470 @@
-<div class="min-h-screen flex bg-black text-white">
+<div class="min-h-screen bg-black text-white flex">
 
   <!-- ================= SIDEBAR ================= -->
-  <aside class="w-64 bg-black border-r border-white/10 flex flex-col px-6 py-8">
+  <aside class="w-72 border-r border-white/10 bg-[#050505] px-8 py-10 flex flex-col justify-between">
 
     <div>
-      <h1 class="text-2xl font-bold uppercase tracking-tight">
-        Hypee
-      </h1>
-      <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1">
-        Admin Panel
-      </p>
+
+      <div>
+
+        <h1 class="text-3xl font-black uppercase tracking-tight">
+          Hypee
+        </h1>
+
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.35em]
+                  text-gray-600 mt-2">
+
+          Commerce Control Node
+
+        </p>
+
+      </div>
+
+      <nav class="mt-14 space-y-2">
+
+        <a href="#"
+           class="flex items-center justify-between
+                  px-5 py-4
+                  bg-white text-black
+                  text-[11px]
+                  uppercase tracking-[0.25em]">
+
+          Dashboard
+
+          <span>01</span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center justify-between
+                  px-5 py-4
+                  text-gray-500
+                  hover:text-white
+                  transition">
+
+          <span class="text-[11px] uppercase tracking-[0.25em]">
+            Catalog
+          </span>
+
+          <span class="text-[10px]">
+            <%= Product.count %>
+          </span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center justify-between
+                  px-5 py-4
+                  text-gray-500
+                  hover:text-white
+                  transition">
+
+          <span class="text-[11px] uppercase tracking-[0.25em]">
+            Orders
+          </span>
+
+          <span class="text-[10px]">
+            <%= Order.count %>
+          </span>
+
+        </a>
+
+        <a href="#"
+           class="flex items-center justify-between
+                  px-5 py-4
+                  text-gray-500
+                  hover:text-white
+                  transition">
+
+          <span class="text-[11px] uppercase tracking-[0.25em]">
+            Customers
+          </span>
+
+          <span class="text-[10px]">
+            <%= User.count %>
+          </span>
+
+        </a>
+
+      </nav>
+
     </div>
 
-    <nav class="mt-12 space-y-2 text-sm uppercase tracking-widest">
+    <!-- SYSTEM STATUS -->
+    <div class="border border-white/10 bg-[#0A0A0A] p-5">
 
-      <a href="#" class="block px-4 py-3 bg-white/5 text-white">
-        Dashboard
-      </a>
+      <div class="flex items-center gap-3">
 
-      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Catalog</a>
-      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Orders</a>
-      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Customers</a>
-      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Analytics</a>
-      <a href="#" class="block px-4 py-3 text-gray-500 hover:text-white">Settings</a>
+        <span class="relative flex h-2 w-2">
 
-    </nav>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+
+        </span>
+
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-500">
+
+          System Operational
+
+        </p>
+
+      </div>
+
+      <div class="mt-5 space-y-3">
+
+        <div class="flex justify-between text-[10px] uppercase tracking-widest">
+
+          <span class="text-gray-600">
+            Inventory
+          </span>
+
+          <span class="text-white">
+            Active
+          </span>
+
+        </div>
+
+        <div class="flex justify-between text-[10px] uppercase tracking-widest">
+
+          <span class="text-gray-600">
+            Payments
+          </span>
+
+          <span class="text-green-400">
+            Razorpay Live
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </aside>
 
   <!-- ================= MAIN ================= -->
-  <main class="flex-1 px-10 py-8">
+  <main class="flex-1 px-10 py-10">
 
-    <!-- Topbar -->
-    <div class="flex items-center justify-between border-b border-white/10 pb-6">
+    <!-- TOPBAR -->
+    <div class="flex flex-col lg:flex-row
+                lg:items-center
+                lg:justify-between
+                gap-6
+                border-b border-white/10
+                pb-8">
 
-      <input
-        type="text"
-        placeholder="Search..."
-        class="w-[360px] bg-[#0A0A0A] px-5 py-3 text-sm border border-white/10 outline-none placeholder:text-gray-500"
-        />
+      <div>
 
-      <div data-controller="modal">
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.4em]
+                  text-gray-600 mb-3">
 
-        <!-- BUTTON -->
-        <button
-          data-action="click->modal#open"
-          class="mt-auto w-full py-3 px-4 border border-white text-sm uppercase">
-          + Add Product
-        </button>
+          Commerce Analytics
 
-        <!-- MODAL -->
-        <%= render "shared/modal", title: "Add Product" do %>
-          <%= render "admin/products/form", product: @product %>
-        <% end %>
+        </p>
+
+        <h1 class="text-5xl font-black uppercase tracking-tight">
+
+          Dashboard
+
+        </h1>
+
+      </div>
+
+      <div class="flex items-center gap-4">
+
+        <div class="hidden lg:flex items-center
+                    border border-white/10
+                    bg-[#0A0A0A]
+                    px-5 h-14 w-[320px]">
+
+          <input type="text"
+                 placeholder="Search products, orders..."
+                 class="bg-transparent
+                        w-full
+                        outline-none
+                        text-sm
+                        placeholder:text-gray-600">
+
+        </div>
+
+        <!-- ADD PRODUCT -->
+        <div data-controller="modal">
+
+          <button
+            data-action="click->modal#open"
+            class="group relative overflow-hidden
+                   bg-white text-black
+                   px-8 h-14
+                   uppercase tracking-[0.25em]
+                   text-[11px]
+                   font-semibold">
+
+            <span class="relative z-10">
+              + Add Product
+            </span>
+
+          </button>
+
+          <%= render "shared/modal",
+                     title: "Add Product" do %>
+
+            <%= render "admin/products/form",
+                       product: @product %>
+
+          <% end %>
+
+        </div>
 
       </div>
 
     </div>
 
-    <!-- Heading -->
-    <section class="mt-10">
-      <h1 class="text-4xl font-bold uppercase tracking-tight">
-        Dashboard
-      </h1>
-      <p class="text-gray-500 mt-2 text-sm">
-        Overview of your store performance.
-      </p>
-    </section>
+    <!-- KPI GRID -->
+    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10">
 
-    <!-- KPI Cards -->
-    <section class="grid grid-cols-3 gap-6 mt-10">
+      <!-- REVENUE -->
+      <div class="border border-white/10 bg-[#080808] p-7">
 
-      <div class="bg-[#0A0A0A] border border-white/10 p-6">
-        <p class="text-xs uppercase tracking-widest text-gray-500">Revenue</p>
-        <h2 class="text-3xl font-bold mt-4">$1.2M</h2>
-        <p class="text-[#A89B8C] text-sm mt-2">+24.8%</p>
-      </div>
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-600">
 
-      <div class="bg-[#0A0A0A] border border-white/10 p-6">
-        <p class="text-xs uppercase tracking-widest text-gray-500">Orders</p>
-        <h2 class="text-3xl font-bold mt-4">42,892</h2>
-        <p class="text-[#A89B8C] text-sm mt-2">Today: 112</p>
-      </div>
+          Revenue
 
-      <div class="bg-[#0A0A0A] border border-white/10 p-6">
-        <p class="text-xs uppercase tracking-widest text-gray-500">Customers</p>
-        <h2 class="text-3xl font-bold mt-4">18.4K</h2>
-      </div>
+        </p>
 
-    </section>
+        <h2 class="text-4xl font-light mt-5">
 
-    <!-- Products Table -->
-    <section class="mt-14">
+          <%= number_to_currency(
+                Order.paid.sum(:total_price),
+                unit: "₹",
+                precision: 0
+              ) %>
 
-      <div class="flex items-end justify-between">
-        <h2 class="text-2xl font-bold uppercase tracking-tight">
-          Products
         </h2>
 
-        <button class="text-sm text-gray-400 hover:text-white">
-          Export
-        </button>
+        <p class="text-green-400 text-sm mt-4">
+          Paid commerce volume
+        </p>
+
       </div>
 
-      <div class="mt-6 border border-white/10">
+      <!-- ORDERS -->
+      <div class="border border-white/10 bg-[#080808] p-7">
 
-        <table class="w-full text-sm">
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-600">
 
-          <thead class="text-gray-500 uppercase text-xs border-b border-white/10">
-          <tr>
-            <th class="px-6 py-4 text-left">Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Status</th>
-          </tr>
-          </thead>
+          Orders
 
-          <tbody>
+        </p>
 
-          <tr class="border-t border-white/10">
-            <td class="px-6 py-4">Architect Trench</td>
-            <td>Outerwear</td>
-            <td>$890</td>
-            <td class="text-[#A89B8C]">In Stock</td>
-          </tr>
+        <h2 class="text-4xl font-light mt-5">
 
-          <tr class="border-t border-white/10">
-            <td class="px-6 py-4">Monolith Bag</td>
-            <td>Accessories</td>
-            <td>$620</td>
-            <td class="text-red-400">Low Stock</td>
-          </tr>
+          <%= Order.count %>
 
-          <tr class="border-t border-white/10">
-            <td class="px-6 py-4">Void Knit</td>
-            <td>Knitwear</td>
-            <td>$340</td>
-            <td class="text-[#A89B8C]">In Stock</td>
-          </tr>
+        </h2>
 
-          </tbody>
+        <p class="text-gray-500 text-sm mt-4">
 
-        </table>
+          <%= Order.processing.count %>
+          processing orders
+
+        </p>
+
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="border border-white/10 bg-[#080808] p-7">
+
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-600">
+
+          Products
+
+        </p>
+
+        <h2 class="text-4xl font-light mt-5">
+
+          <%= Product.count %>
+
+        </h2>
+
+        <p class="text-gray-500 text-sm mt-4">
+
+          <%= Product.where("stock < ?", 10).count %>
+          low stock alerts
+
+        </p>
+
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div class="border border-white/10 bg-[#080808] p-7">
+
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-600">
+
+          Customers
+
+        </p>
+
+        <h2 class="text-4xl font-light mt-5">
+
+          <%= User.count %>
+
+        </h2>
+
+        <p class="text-gray-500 text-sm mt-4">
+          Registered users
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- LOWER GRID -->
+    <section class="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-12">
+
+      <!-- RECENT ORDERS -->
+      <div class="xl:col-span-2 border border-white/10 bg-[#050505]">
+
+        <div class="flex items-center justify-between px-8 py-6 border-b border-white/10">
+
+          <div>
+
+            <p class="text-[10px]
+                      uppercase
+                      tracking-[0.3em]
+                      text-gray-600 mb-2">
+
+              Fulfillment Queue
+
+            </p>
+
+            <h2 class="text-2xl font-bold uppercase tracking-tight">
+              Recent Orders
+            </h2>
+
+          </div>
+
+        </div>
+
+        <div class="divide-y divide-white/5">
+
+          <% Order.order(created_at: :desc).limit(5).each do |order| %>
+
+            <div class="flex items-center justify-between px-8 py-6 hover:bg-white/[0.02] transition">
+
+              <div>
+
+                <p class="text-sm font-medium">
+                  #HYPEE-<%= order.id.to_s.rjust(4, "0") %>
+                </p>
+
+                <p class="text-[10px]
+                          uppercase
+                          tracking-[0.25em]
+                          text-gray-600 mt-2">
+
+                  <%= order.shipping_full_name %>
+
+                </p>
+
+              </div>
+
+              <div class="text-right">
+
+                <p class="text-sm">
+                  <%= number_to_currency(
+                        order.total_price,
+                        unit: "₹",
+                        precision: 0
+                      ) %>
+                </p>
+
+                <p class="text-[10px]
+                          uppercase
+                          tracking-[0.25em]
+                          mt-2
+                          <%= order.payment_status == 'paid' ? 'text-green-400' : 'text-yellow-400' %>">
+
+                  <%= order.payment_status %>
+
+                </p>
+
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+      <!-- INVENTORY STATUS -->
+      <div class="border border-white/10 bg-[#050505] p-8">
+
+        <p class="text-[10px]
+                  uppercase
+                  tracking-[0.3em]
+                  text-gray-600 mb-3">
+
+          Inventory Watch
+
+        </p>
+
+        <h2 class="text-2xl font-bold uppercase tracking-tight mb-8">
+          Low Stock
+        </h2>
+
+        <div class="space-y-5">
+
+          <% Product.where("stock < ?", 10).limit(6).each do |product| %>
+
+            <div>
+
+              <div class="flex items-center justify-between mb-2">
+
+                <p class="text-sm">
+                  <%= product.name %>
+                </p>
+
+                <p class="text-xs text-orange-400 font-mono">
+                  <%= product.stock %>
+                </p>
+
+              </div>
+
+              <div class="h-[1px] bg-white/10 relative overflow-hidden">
+
+                <div class="absolute left-0 top-0 h-full bg-orange-500"
+                     style="width: <%= [product.stock * 10, 100].min %>%">
+                </div>
+
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
 
       </div>
 

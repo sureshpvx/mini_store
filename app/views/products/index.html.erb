@@ -1,72 +1,197 @@
 <div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-12 sm:py-20 bg-black">
 
-  <div class="mb-12 sm:mb-20 border-b border-white/5 pb-10">
+  <!-- HEADER -->
+  <div class="mb-12 sm:mb-20 border-b border-white/[0.04] pb-10">
+
     <h1 class="text-3xl sm:text-5xl font-medium uppercase tracking-tight text-white">
       <%= params[:filter]&.titleize || "All Products" %>
     </h1>
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mt-4">
-      <p class="text-gray-500 text-xs sm:text-sm uppercase tracking-widest leading-relaxed max-w-md">
+
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-5 mt-5">
+
+      <p class="text-gray-500 text-[11px] sm:text-sm uppercase tracking-[0.22em] leading-relaxed max-w-md">
         Curated pieces for modern minimal style. Engineered for the contemporary silhouette.
       </p>
-      <span class="text-[10px] text-gray-600 uppercase tracking-[0.2em]">
+
+      <span class="text-[10px] text-gray-700 uppercase tracking-[0.25em]">
         Showing
-        <span class="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] font-medium">
+        <span class="text-white font-medium">
           <%= @products.count %>
         </span>
         items
       </span>
+
     </div>
+
   </div>
 
   <% if @products.any? %>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 sm:gap-y-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-14 sm:gap-y-20">
 
       <% @products.each do |product| %>
-        <%= link_to product_path(product), class: "group flex flex-col border-r border-b border-white/5 transition hover:bg-[#0c0c0c]" do %>
 
-          <div class="relative aspect-[3/4] bg-black overflow-hidden mb-6 flex items-center justify-center">
+        <%= link_to product_path(product),
+                    class: "
+                      group
+                      flex
+                      flex-col
+                    " do %>
+
+          <!-- PRODUCT IMAGE -->
+          <div class="
+                relative
+                aspect-[3/4]
+                bg-black
+                overflow-hidden
+                mb-5
+                flex
+                items-center
+                justify-center
+                border
+                border-white/[0.04]
+                transition-all
+                duration-500
+                group-hover:border-white/[0.08]
+              ">
+
+            <!-- subtle hover glow -->
+            <div class="
+                  absolute
+                  inset-0
+                  opacity-0
+                  group-hover:opacity-100
+                  transition
+                  duration-700
+                  bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]
+                ">
+            </div>
+
             <% if product.images.attached? %>
-              <%# p-8 to p-12 creates that internal black frame you liked %>
-              <%= image_tag product.images.first, loading: "lazy",
-                            class: "w-full h-full object-contain p-8 sm:p-12 grayscale opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-700 ease-in-out" %>
-            <% else %>
-              <div class="text-gray-800 uppercase text-[10px] tracking-widest">No Image</div>
-            <% end %>
 
+              <%= image_tag product.images.first,
+                            loading: "lazy",
+                            class: "
+                              w-full
+                              h-full
+                              object-contain
+                              p-8 sm:p-10
+                              transition-all
+                              duration-700
+                              ease-out
+                              group-hover:scale-[1.03]
+                            " %>
+
+            <% else %>
+
+              <div class="
+                    text-gray-800
+                    uppercase
+                    text-[10px]
+                    tracking-[0.3em]
+                  ">
+                No Image
+              </div>
+
+            <% end %>
 
           </div>
 
-          <div class="flex flex-col gap-1 px-1">
-            <div class="flex justify-between items-baseline">
-              <h3 class="uppercase text-[11px] sm:text-xs tracking-[0.15em] font-medium text-white group-hover:text-gray-400 transition">
+          <!-- PRODUCT INFO -->
+          <div class="flex flex-col gap-2 px-[2px]">
+
+            <div class="flex justify-between items-start gap-3">
+
+              <h3 class="
+                    uppercase
+                    text-[11px]
+                    sm:text-xs
+                    tracking-[0.18em]
+                    font-medium
+                    text-white
+                    transition
+                    duration-300
+                    group-hover:text-gray-300
+                  ">
                 <%= product.name %>
               </h3>
-              <span class="text-[11px] sm:text-xs text-white font-light">
+
+              <span class="
+                    text-[11px]
+                    sm:text-xs
+                    text-white
+                    font-light
+                    tracking-wide
+                    whitespace-nowrap
+                  ">
                 <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
               </span>
+
             </div>
 
             <% if product.description.present? %>
-              <p class="text-[10px] sm:text-[11px] text-gray-500 tracking-wide font-light leading-relaxed italic">
-                <%= product.description.truncate(45) %>
+
+              <p class="
+                    text-[10px]
+                    sm:text-[11px]
+                    text-gray-600
+                    tracking-wide
+                    font-light
+                    leading-relaxed
+                  ">
+                <%= product.description.truncate(48) %>
               </p>
+
             <% end %>
+
           </div>
 
         <% end %>
+
       <% end %>
 
     </div>
 
   <% else %>
 
-    <div class="flex flex-col items-center justify-center py-32 border border-dashed border-white/10">
-      <p class="text-gray-500 text-xs uppercase tracking-[0.3em] mb-6">
+    <div class="
+          flex
+          flex-col
+          items-center
+          justify-center
+          py-32
+          border
+          border-dashed
+          border-white/10
+        ">
+
+      <p class="
+            text-gray-500
+            text-xs
+            uppercase
+            tracking-[0.35em]
+            mb-6
+          ">
         The archive is currently empty
       </p>
-      <%= link_to "Return to Shop", root_path,
-                  class: "text-[10px] text-white border border-white px-8 py-3 uppercase tracking-widest hover:bg-white hover:text-black transition" %>
+
+      <%= link_to "Return to Shop",
+                  root_path,
+                  class: "
+                    text-[10px]
+                    text-white
+                    border
+                    border-white
+                    px-8
+                    py-3
+                    uppercase
+                    tracking-[0.3em]
+                    transition-all
+                    duration-300
+                    hover:bg-white
+                    hover:text-black
+                  " %>
+
     </div>
 
   <% end %>

@@ -1,78 +1,55 @@
-<%= form_with model: @address,
-              class: "space-y-6" do |f| %>
-
-  <div>
-    <%= f.label :full_name,
-                class: "block text-sm text-gray-400 mb-2" %>
+<%= form_with model: address,
+              local: true do |f| %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     <%= f.text_field :full_name,
-                     class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-  </div>
-
-  <div>
-    <%= f.label :phone_number,
-                class: "block text-sm text-gray-400 mb-2" %>
+                     placeholder: "Full Name",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
     <%= f.text_field :phone_number,
-                     class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-  </div>
-
-  <div>
-    <%= f.label :address_line_1,
-                class: "block text-sm text-gray-400 mb-2" %>
+                     placeholder: "Phone Number",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
     <%= f.text_field :address_line_1,
-                     class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-  </div>
-
-  <div>
-    <%= f.label :address_line_2,
-                class: "block text-sm text-gray-400 mb-2" %>
+                     placeholder: "Address Line 1",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white md:col-span-2" %>
 
     <%= f.text_field :address_line_2,
-                     class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-  </div>
+                     placeholder: "Address Line 2",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white md:col-span-2" %>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <%= f.text_field :city,
+                     placeholder: "City",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
-    <div>
-      <%= f.label :city,
-                  class: "block text-sm text-gray-400 mb-2" %>
+    <%= f.text_field :state,
+                     placeholder: "State",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
-      <%= f.text_field :city,
-                       class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-    </div>
+    <%= f.text_field :postal_code,
+                     placeholder: "Postal Code",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
-    <div>
-      <%= f.label :state,
-                  class: "block text-sm text-gray-400 mb-2" %>
-
-      <%= f.text_field :state,
-                       class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-    </div>
-
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <div>
-      <%= f.label :postal_code,
-                  class: "block text-sm text-gray-400 mb-2" %>
-
-      <%= f.text_field :postal_code,
-                       class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-    </div>
-
-    <div>
-      <%= f.label :country,
-                  class: "block text-sm text-gray-400 mb-2" %>
-
-      <%= f.text_field :country,
-                       class: "w-full bg-black border border-white/10 rounded-xl px-5 py-4 text-white" %>
-    </div>
+    <%= f.text_field :country,
+                     placeholder: "Country",
+                     value: "India",
+                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
 
   </div>
 
-  <%= f.submit class: "w-full h-14 bg-white text-black rounded-full uppercase tracking-[0.35em] text-sm hover:opacity-90 transition-all duration-500" %>
+  <%= f.submit "Save Address",
+               class: "
+                 mt-8
+                 w-full
+                 h-14
+                 rounded-full
+                 bg-white
+                 text-black
+                 uppercase
+                 tracking-[0.3em]
+                 text-sm
+                 hover:opacity-90
+                 transition-all
+               " %>
 
 <% end %>

@@ -14,8 +14,7 @@ class AddressesController < ApplicationController
     @address = current_user.addresses.new(address_params)
 
     if @address.save
-      redirect_to addresses_path,
-                  notice: "Address added successfully"
+      redirect_to checkout_path
     else
       render :new, status: :unprocessable_entity
     end

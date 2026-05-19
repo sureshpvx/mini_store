@@ -5,7 +5,7 @@
                 class: "w-full"
               } do |f| %>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
     <!-- ===================================================== -->
     <!-- LEFT SIDE -->
@@ -120,24 +120,58 @@
           Category
         </label>
 
-        <%= f.collection_select :category_id,
-                                Category.where.not(parent_id: nil),
-                                :id,
-                                :full_name,
-                                { prompt: "Select Category" },
-                                {
-                                  class: "
-                                    w-full
-                                    text-left
-                                    bg-transparent
-                                    border-0 border-b border-white/10
-                                    pb-4
-                                    text-white
-                                    outline-none
-                                    focus:border-white/40
-                                    transition-all
-                                  "
-                                } %>
+        <div class="relative">
+
+          <%= f.select :category_id,
+
+                       Category.where(parent_id: nil).map { |parent|
+                         [
+                           parent.name,
+
+                           parent.subcategories.map { |sub|
+                             [sub.name, sub.id]
+                           }
+                         ]
+                       },
+
+                       { prompt: "Select Category" },
+
+                       {
+                         class: "
+                     w-full
+                     text-left
+                     bg-transparent
+                     border-0
+                     border-b
+                     border-white/10
+                     pb-4
+                     pr-10
+                     text-white
+                     outline-none
+                     focus:border-white/40
+                     transition-all
+                   "
+                       } %>
+
+          <!-- ARROW -->
+          <div class="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-white/70">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7" />
+
+            </svg>
+
+          </div>
+
+        </div>
 
       </div>
 

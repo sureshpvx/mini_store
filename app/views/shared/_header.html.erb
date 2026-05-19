@@ -50,7 +50,8 @@
         </button>
 
         <!-- Cart -->
-        <button
+        <% unless current_user&.role == 'admin' %>
+          <button
           data-action="click->cart#open"
           class="relative text-gray-400 hover:text-white transition">
 
@@ -68,6 +69,7 @@
           </svg>
 
         </button>
+        <% end %>
 
         <!-- CART DRAWER -->
         <%= render "carts/drawer" %>

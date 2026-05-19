@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     root "dashboard#index"
     resources :products
     resources :categories
+    resources :orders, only: [:index, :show, :update]
   end
 
   resource :cart, only: [:show] do
@@ -19,7 +20,12 @@ Rails.application.routes.draw do
   resources :addresses
   get "/checkout", to: "checkout#show"
 
-  resources :orders, only: [:index, :show, :create]
+  resources :orders, only: [:index, :show, :create] do
+    member do
+      get :payment
+      post :verify_payment
+    end
+  end
   post "/checkout", to: "orders#create"
 
   resources :products, only: [:index, :show]

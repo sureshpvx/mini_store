@@ -32,29 +32,149 @@
     </div>
 
     <div class="flex flex-wrap gap-4 w-full lg:w-auto">
-      <div class="flex-1 lg:flex-none min-w-[140px] bg-[#0A0A0A] border border-white/5 p-4 transition hover:border-white/20">
-        <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Total Valuation</p>
-        <p class="text-xl font-light tracking-tight text-white"><%= number_to_currency(@products.sum("price * stock"), unit: "₹", precision: 0) %></p>
+
+      <!-- TOTAL PRODUCTS -->
+      <div class="flex-1 lg:flex-none min-w-[150px]
+              bg-[#0A0A0A]
+              border border-white/5
+              p-4 transition hover:border-white/20">
+
+        <p class="text-[9px]
+              text-gray-600
+              uppercase tracking-widest mb-1">
+
+          Total Products
+
+        </p>
+
+        <p class="text-xl
+              font-light
+              tracking-tight
+              text-white">
+
+          <%= @products.count %>
+
+        </p>
+
       </div>
 
-      <div class="flex-1 lg:flex-none min-w-[140px] bg-[#0A0A0A] border border-white/5 p-4 transition hover:border-white/20">
-        <p class="text-[9px] text-gray-600 uppercase tracking-widest mb-1">Unit Count</p>
-        <p class="text-xl font-light tracking-tight text-white"><%= @products.sum(:stock) %></p>
+      <!-- TOTAL INVENTORY VALUE -->
+      <div class="flex-1 lg:flex-none min-w-[150px]
+              bg-[#0A0A0A]
+              border border-white/5
+              p-4 transition hover:border-white/20">
+
+        <p class="text-[9px]
+              text-gray-600
+              uppercase tracking-widest mb-1">
+
+          Inventory Value
+
+        </p>
+
+        <p class="text-xl
+              font-light
+              tracking-tight
+              text-white">
+
+          <%= number_to_currency(
+                @products.sum("price * stock"),
+                unit: "₹",
+                precision: 0
+              ) %>
+
+        </p>
+
       </div>
 
+      <!-- TOTAL STOCK -->
+      <div class="flex-1 lg:flex-none min-w-[150px]
+              bg-[#0A0A0A]
+              border border-white/5
+              p-4 transition hover:border-white/20">
+
+        <p class="text-[9px]
+              text-gray-600
+              uppercase tracking-widest mb-1">
+
+          Units In Stock
+
+        </p>
+
+        <p class="text-xl
+              font-light
+              tracking-tight
+              text-white">
+
+          <%= @products.sum(:stock) %>
+
+        </p>
+
+      </div>
+
+      <!-- LOW STOCK -->
+      <div class="flex-1 lg:flex-none min-w-[150px]
+              bg-[#0A0A0A]
+              border border-white/5
+              p-4 transition hover:border-white/20">
+
+        <p class="text-[9px]
+              text-gray-600
+              uppercase tracking-widest mb-1">
+
+          Low Stock
+
+        </p>
+
+        <p class="text-xl
+              font-light
+              tracking-tight
+              text-orange-400">
+
+          <%= @products.where("stock < ?", 10).count %>
+
+        </p>
+
+      </div>
+
+      <!-- ADD PRODUCT -->
       <div data-controller="modal">
+
         <button data-action="click->modal#open"
-                class="group relative overflow-hidden bg-white px-8 py-4 text-black text-[11px] font-bold uppercase tracking-[0.2em] transition-all hover:pr-12">
-          <span class="relative z-10">+ New Entry</span>
-          <div class="absolute right-0 top-0 h-full w-0 bg-black transition-all group-hover:w-10 flex items-center justify-center">
-            <span class="text-white">→</span>
+                class="group relative overflow-hidden
+                   bg-white px-8 py-4
+                   text-black text-[11px]
+                   font-bold uppercase tracking-[0.2em]
+                   transition-all hover:pr-12">
+
+      <span class="relative z-10">
+        + New Entry
+      </span>
+
+          <div class="absolute right-0 top-0
+                  h-full w-0 bg-black
+                  transition-all
+                  group-hover:w-10
+                  flex items-center justify-center">
+
+        <span class="text-white">
+          →
+        </span>
+
           </div>
+
         </button>
 
-        <%= render "shared/modal", title: "Add Product" do %>
-          <%= render "admin/products/form", product: Product.new %>
+        <%= render "shared/modal",
+                   title: "Add Product" do %>
+
+          <%= render "admin/products/form",
+                     product: Product.new %>
+
         <% end %>
+
       </div>
+
     </div>
   </div>
 
@@ -101,13 +221,13 @@
             <div class="flex flex-col gap-2">
               <div class="flex justify-between items-end w-32">
                 <span class="text-[10px] uppercase tracking-widest text-gray-600">Capacity</span>
-                <span class="text-xs font-mono <%= product.stock < 10 ? 'text-orange-500' : 'text-white' %>">
-                  <%= product.stock.to_s.rjust(2, '0') %>
+                <span class="text-xs font-mono <%= product.stock.to_i <= 10 ? 'text-orange-500' : 'text-white' %>">
+                  <%= product.stock.to_i.to_s.rjust(2, '0') %>
                 </span>
               </div>
               <div class="w-32 h-[1px] bg-white/5 relative">
-                <div class="absolute top-0 left-0 h-full transition-all duration-1000 <%= product.stock < 10 ? 'bg-orange-600 shadow-[0_0_10px_#ea580c]' : 'bg-white/40' %>"
-                     style="width: <%= [product.stock * 2, 100].min %>%;"></div>
+                <div class="absolute top-0 left-0 h-full transition-all duration-1000 <%= product.stock.to_i < 10 ? 'bg-orange-600 shadow-[0_0_10px_#ea580c]' : 'bg-white/40' %>"
+                     style="width: <%= [product.stock.to_i * 2, 100].min %>%;"></div>
               </div>
             </div>
           </td>

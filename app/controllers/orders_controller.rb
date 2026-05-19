@@ -58,8 +58,53 @@ class OrdersController < ApplicationController
 
       # cart.cart_items.destroy_all
 
-      redirect_to order_path(order),
-                  notice: "Order created. Ready for payment."
+      redirect_to payment_order_path(order),
+                  notice: "Order created. Proceed to payment."
+    end
+  end
+
+  def payment
+    @order = current_user.orders.find(params[:id])
+  end
+
+  def verify_payment
+    order = current_user.orders.find(params[:id])
+
+    razorpay_order_id = params[:razorpay_order_id]
+    razorpay_payment_id = params[:razorpay_payment_id]
+    razorpay_signature = params[:razorpay_signature]
+
+    begin
+
+      Razorpay::Utility.verify_payment_signature(
+        razorpay_order_id: razorpay_order_id,
+        razorpay_payment_id: razorpay_payment_id,
+        razorpay_signature: razorpay_signature
+      )
+
+      order.update!(
+        payment_status: :paid,
+        razorpay_payment_id: razorpay_payment_id,
+        razorpay_signature: razorpay_signature
+      )
+
+      current_cart.cart_items.destroy_all
+
+      render json: {
+        success: true,
+        redirect_url: order_path(order)
+      }
+
+    rescue Razorpay::Errors::SignatureVerificationError
+
+      order.update!(
+        payment_status: :failed
+      )
+
+      render json: {
+        success: false
+      }, status: :unprocessable_entity
+
     end
   end
 

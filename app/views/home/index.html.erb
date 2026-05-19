@@ -95,7 +95,16 @@
         <div class="relative aspect-[3/4] bg-black overflow-hidden mb-4 sm:mb-6 flex items-center justify-center border border-white/[0.03]">
           <% if product.images.attached? %>
             <%= image_tag product.images.first, loading: "lazy",
-                          class: "w-full h-full object-contain p-4 sm:p-10 grayscale opacity-90 group-hover:opacity-100 group-hover:scale-105 transition duration-700" %>
+                          class: "
+                w-full
+                h-full
+                object-contain
+                p-8 sm:p-12
+                group-hover:scale-105
+                transition
+                duration-700
+                ease-in-out
+              " %>
           <% else %>
             <div class="text-gray-800 uppercase text-[8px] tracking-widest">No Image</div>
           <% end %>
