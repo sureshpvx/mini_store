@@ -69,14 +69,68 @@
                 </p>
               </div>
 
-              <div>
-                <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                  Status
-                </p>
+              <div class="flex gap-8">
 
-                <p class="text-yellow-400 capitalize">
-                  <%= order.status %>
-                </p>
+                <!-- DELIVERY STATUS -->
+                <div>
+
+                  <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
+                    Delivery
+                  </p>
+
+                  <p class="
+      capitalize
+      font-medium
+
+      <%=
+                    case order.status
+                    when 'pending'
+                      'text-yellow-400'
+                    when 'processing'
+                      'text-blue-400'
+                    when 'shipped'
+                      'text-purple-400'
+                    when 'delivered'
+                      'text-green-400'
+                    when 'cancelled'
+                      'text-red-400'
+                    end
+                  %>
+    ">
+                    <%= order.status.humanize %>
+                  </p>
+
+                </div>
+
+                <!-- PAYMENT STATUS -->
+                <div>
+
+                  <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
+                    Payment
+                  </p>
+
+                  <p class="
+      capitalize
+      font-medium
+
+      <%=
+                    case order.payment_status
+                    when 'paid'
+                      'text-green-400'
+                    when 'unpaid'
+                      'text-yellow-400'
+                    when 'failed'
+                      'text-red-400'
+                    when 'refunded'
+                      'text-gray-400'
+                    end
+                  %>
+    ">
+                    <%= order.payment_status.humanize %>
+                  </p>
+
+                </div>
+
               </div>
 
             </div>

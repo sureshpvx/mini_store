@@ -4,7 +4,13 @@ class Admin::ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   def index
-    @products = Product.all.order(created_at: :desc)
+    @pagy, @products = pagy(
+      Product.includes(
+        :category,
+        images_attachments: :blob
+      ).order(created_at: :desc),
+      limit: 10
+    )
   end
 
   def new

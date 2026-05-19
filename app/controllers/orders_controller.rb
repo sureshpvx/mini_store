@@ -16,6 +16,11 @@ class OrdersController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
+      if params[:address_id].blank?
+        redirect_to checkout_path,
+                    alert: "Please select a shipping address."
+        return
+      end
 
       address = current_user.addresses.find(params[:address_id])
 
