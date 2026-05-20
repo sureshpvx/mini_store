@@ -69,7 +69,9 @@
 
             <% if product.images.attached? %>
 
-              <%= image_tag product.images.first,
+              <%= image_tag product.images.first.variant(
+                resize_to_limit: [500, 600]
+              ),
                             loading: "lazy",
                             class: "
                               w-full
