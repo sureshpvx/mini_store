@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root "home#index"
-
   namespace :admin do
     root "dashboard#index"
     resources :products
@@ -29,6 +27,14 @@ Rails.application.routes.draw do
   post "/checkout", to: "orders#create"
 
   resources :products, only: [:index, :show]
+
+  root "home#index"
+  get  "/otp-login", to: "otp_auth#new"
+  post "/send-otp", to: "otp_auth#send_otp"
+  post "/verify-otp", to: "otp_auth#verify"
+  post "store-checkout-address",
+       to: "checkout#store_address",
+       as: :store_checkout_address
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

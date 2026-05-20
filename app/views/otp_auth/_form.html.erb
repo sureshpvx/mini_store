@@ -1,0 +1,52 @@
+<turbo-frame id="otp_modal_content">
+
+  <div class="max-w-md mx-auto">
+
+    <p class="text-xs uppercase tracking-[0.4em] text-gray-500 mb-3">
+      Secure Checkout
+    </p>
+
+    <h2 class="text-3xl text-white font-light mb-8">
+      Enter Your Phone Number
+    </h2>
+
+    <%= form_with url: send_otp_path,
+                  method: :post,
+                  data: {
+                    turbo_frame: "otp_modal_content"
+                  } do |f| %>
+
+
+      <div class="space-y-6">
+
+        <%= f.telephone_field :phone_number,
+                              placeholder: "Phone Number",
+                              class: "
+                                w-full h-14
+                                rounded-2xl
+                                bg-black
+                                border border-white/10
+                                px-5
+                                text-white
+                              " %>
+
+
+
+        <%= f.submit "Send OTP",
+                     class: "
+                       w-full h-14
+                       rounded-full
+                       bg-white
+                       text-black
+                       uppercase
+                       tracking-[0.3em]
+                       text-sm
+                     " %>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+</turbo-frame>

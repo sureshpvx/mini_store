@@ -1,23 +1,38 @@
 class AddressesController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_address, only: [:edit, :update, :destroy]
 
   def index
-    @addresses = current_user.addresses.order(created_at: :desc)
+    @addresses =
+      user_signed_in? ?
+        current_user.addresses.order(created_at: :desc) :
+        []
   end
 
   def new
-    @address = current_user.addresses.new
+    @address = Address.new
   end
 
   def create
-    @address = current_user.addresses.new(address_params)
+
+    @address = Address.new(address_params)
+
+    if user_signed_in?
+      @address.user = current_user
+    end
 
     if @address.save
+
+      session[:guest_address_id] = @address.id
+
       redirect_to checkout_path
+
     else
-      render :new, status: :unprocessable_entity
+
+      render :new,
+             status: :unprocessable_entity
+
     end
+
   end
 
   def edit
@@ -42,7 +57,14 @@ class AddressesController < ApplicationController
   private
 
   def set_address
-    @address = current_user.addresses.find(params[:id])
+
+    @address =
+      if user_signed_in?
+        current_user.addresses.find(params[:id])
+      else
+        Address.find(params[:id])
+      end
+
   end
 
   def address_params

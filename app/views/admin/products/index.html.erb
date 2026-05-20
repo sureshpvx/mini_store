@@ -161,9 +161,11 @@
       </div>
 
       <!-- ADD PRODUCT -->
-      <div data-controller="modal">
+      <div data-controller="modal"
+                     data-modal-id="add-product-modal">
 
         <button
+          data-modal-id="add-product-modal"
           data-action="click->modal#open"
           class="group relative overflow-hidden
                  bg-white px-8 py-4
@@ -190,7 +192,8 @@
         </button>
 
         <%= render "shared/modal",
-                   title: "Add Product" do %>
+                   title: "Add Product",
+                   modal_id: "add-product-modal" do %>
 
           <%= render "admin/products/form",
                      product: Product.new %>
@@ -366,9 +369,11 @@
             <div class="flex justify-end items-center gap-6">
 
               <!-- EDIT -->
-              <div data-controller="modal">
+              <div data-controller="modal"
+                   data-modal-id="edit-product-<%= product.id %>">
 
                 <button
+                  data-modal-id="edit-product-<%= product.id %>"
                   data-action="click->modal#open"
                   class="relative group/link">
 
@@ -391,7 +396,8 @@
                 </button>
 
                 <%= render "shared/modal",
-                           title: "Edit Product" do %>
+                           title: "Edit Product",
+                           modal_id: "edit-product-#{product.id}" do %>
 
                   <%= render "admin/products/form",
                              product: product %>

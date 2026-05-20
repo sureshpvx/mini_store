@@ -8,22 +8,39 @@ class ApplicationController < ActionController::Base
   protected
 
   def current_cart
-    # ✅ logged in customer ALWAYS uses own cart
-    if user_signed_in? && current_user.customer?
-      current_user.cart
 
-      # ✅ guest cart
-    elsif session[:cart_id].present?
-      Cart.find_by(id: session[:cart_id])
+    @current_cart ||= begin
 
-      # ✅ create guest cart
-    else
-      cart = Cart.create!
+                        cart =
+                          if user_signed_in? && current_user.customer?
 
-      session[:cart_id] = cart.id
+                            current_user.cart
 
-      cart
-    end
+                          elsif session[:cart_id].present?
+
+                            Cart.find_by(id: session[:cart_id])
+
+                          else
+
+                            new_cart = Cart.create!
+
+                            session[:cart_id] = new_cart.id
+
+                            new_cart
+
+                          end
+
+                        Cart.includes(
+                          cart_items: {
+                            product: [
+                              :category,
+                              { images_attachments: :blob }
+                            ]
+                          }
+                        ).find(cart.id)
+
+                      end
+
   end
 
   def after_sign_in_path_for(resource)

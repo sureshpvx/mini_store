@@ -8,6 +8,9 @@ class User < ApplicationRecord
   has_one :cart, dependent: :destroy
   has_many :orders, dependent: :destroy
   has_many :addresses, dependent: :destroy
+  validates :phone_number,
+            uniqueness: true,
+            allow_nil: true
 
   after_create :create_cart_for_customer
 

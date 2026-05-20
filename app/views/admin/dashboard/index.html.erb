@@ -199,22 +199,24 @@
         <div data-controller="modal">
 
           <button
+            data-modal-id="add-product-modal"
             data-action="click->modal#open"
             class="group relative overflow-hidden
-                   bg-white text-black
-                   px-8 h-14
-                   uppercase tracking-[0.25em]
-                   text-[11px]
-                   font-semibold">
+           bg-white text-black
+           px-8 h-14
+           uppercase tracking-[0.25em]
+           text-[11px]
+           font-semibold">
 
-            <span class="relative z-10">
-              + Add Product
-            </span>
+    <span class="relative z-10">
+      + Add Product
+    </span>
 
           </button>
 
           <%= render "shared/modal",
-                     title: "Add Product" do %>
+                     title: "Add Product",
+                     modal_id: "add-product-modal" do %>
 
             <%= render "admin/products/form",
                        product: @product %>

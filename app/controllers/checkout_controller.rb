@@ -1,8 +1,27 @@
 class CheckoutController < ApplicationController
-  before_action :authenticate_user!
 
   def show
+
     @cart = current_cart
-    @addresses = current_user.addresses
+
+    if user_signed_in?
+
+      @addresses =
+        current_user.addresses.order(created_at: :desc)
+
+    else
+
+      @addresses =
+        Address.where(id: session[:guest_address_id])
+
+    end
+
   end
+
+  def store_address
+    session[:guest_address_id] = params[:address_id]
+
+    head :ok
+  end
+
 end

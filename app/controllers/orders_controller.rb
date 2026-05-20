@@ -3,7 +3,13 @@ class OrdersController < ApplicationController
 
   def index
     @orders = current_user.orders
-                          .includes(order_items: :product)
+                          .includes(
+                            order_items: {
+                              product: [
+                                { images_attachments: :blob }
+                              ]
+                            }
+                          )
                           .order(created_at: :desc)
   end
 
@@ -11,18 +17,27 @@ class OrdersController < ApplicationController
     cart = current_cart
 
     if cart.cart_items.empty?
-      redirect_to root_path, alert: "Your cart is empty"
+      redirect_to root_path,
+                  alert: "Your cart is empty"
       return
     end
 
     ActiveRecord::Base.transaction do
-      if params[:address_id].blank?
+
+      address_id =
+        params[:address_id] ||
+        params.dig(:order, :address_id)
+
+      if address_id.blank?
+
         redirect_to checkout_path,
                     alert: "Please select a shipping address."
+
         return
       end
 
-      address = current_user.addresses.find(params[:address_id])
+      address =
+        current_user.addresses.find(address_id)
 
       order = current_user.orders.create!(
         total_price: cart.total_price,
@@ -43,14 +58,15 @@ class OrdersController < ApplicationController
       )
 
       cart.cart_items.each do |cart_item|
+
         order.order_items.create!(
           product: cart_item.product,
           quantity: cart_item.quantity,
           price: cart_item.product.price
         )
+
       end
 
-      # CREATE RAZORPAY ORDER
       razorpay_order = Razorpay::Order.create(
         amount: (order.total_price * 100).to_i,
         currency: "INR",
@@ -61,10 +77,12 @@ class OrdersController < ApplicationController
         razorpay_order_id: razorpay_order.id
       )
 
-      # cart.cart_items.destroy_all
+      session.delete(:auto_order_address_id)
+      session.delete(:guest_address_id)
 
       redirect_to payment_order_path(order),
                   notice: "Order created. Proceed to payment."
+
     end
   end
 
