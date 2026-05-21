@@ -25,6 +25,8 @@ class Admin::ProductsController < ApplicationController
       redirect_to admin_product_path(@product),
                   notice: "#{@product.name} added to collection"
     else
+      Rails.logger.debug "=== PRODUCT FAILED ==="
+      Rails.logger.debug @product.errors.full_messages.inspect
       load_categories
       render :new, status: :unprocessable_entity
     end
