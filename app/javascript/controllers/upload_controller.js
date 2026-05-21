@@ -71,23 +71,24 @@ export default class extends Controller {
 
   // 🔥 RENDER
   render() {
-    this.previewTarget.innerHTML = ""
-
-    // Existing previews
-    const existing = this.previewTarget.querySelectorAll("[data-existing]")
-    existing.forEach(el => el.remove())
+    // Remove only JS previews
+    this.previewTarget
+        .querySelectorAll("[data-new-upload]")
+        .forEach(el => el.remove())
 
     if (this.files.length === 0 && this.previewTarget.dataset.hasExisting !== "true") {
       this.placeholderTarget.classList.remove("hidden")
-      this.previewTarget.classList.add("hidden")
       return
     }
 
     this.placeholderTarget.classList.add("hidden")
-    this.previewTarget.classList.remove("hidden")
 
     this.files.forEach((file, index) => {
       const el = this.createPreview(file, index)
+
+      // mark preview as JS-generated
+      el.dataset.newUpload = "true"
+
       this.previewTarget.appendChild(el)
     })
   }
