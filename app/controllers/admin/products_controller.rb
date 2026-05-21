@@ -21,18 +21,32 @@ class Admin::ProductsController < ApplicationController
   def create
     puts "CREATE ACTION HIT"
 
-    @product = Product.new(product_params)
+    @product = Product.new(
+      name: params[:product][:name],
+      description: params[:product][:description],
+      price: params[:product][:price],
+      stock: params[:product][:stock],
+      category_id: params[:product][:category_id]
+    )
 
-    puts "PARAMS:"
-    p product_params
+    puts "SAVING PRODUCT WITHOUT IMAGE"
 
     if @product.save
-      puts "SAVE SUCCESS"
+      puts "PRODUCT SAVE SUCCESS"
+
+      if params[:product][:images].present?
+        puts "ATTACHING IMAGE"
+
+        @product.images.attach(params[:product][:images])
+
+        puts "IMAGE ATTACHED"
+      end
 
       redirect_to admin_product_path(@product),
-                  notice: "#{@product.name} added to collection"
+                  notice: "Product created"
+
     else
-      puts "SAVE FAILED"
+      puts "PRODUCT SAVE FAILED"
       p @product.errors.full_messages
 
       render plain: @product.errors.full_messages.inspect,
