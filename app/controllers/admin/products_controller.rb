@@ -19,33 +19,24 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    Rails.logger.debug "=== PRODUCT CREATE STARTED ==="
-
     @product = Product.new(product_params)
 
     begin
-      if @product.save
-        Rails.logger.debug "=== PRODUCT SAVED SUCCESSFULLY ==="
-
+      if @product.save!
         redirect_to admin_product_path(@product),
                     notice: "#{@product.name} added to collection"
-      else
-        Rails.logger.debug "=== PRODUCT FAILED ==="
-        Rails.logger.debug @product.errors.full_messages.inspect
-
-        flash.now[:alert] = @product.errors.full_messages.join(", ")
-
-        load_categories
-        render :new, status: :unprocessable_entity
       end
 
     rescue => e
-      Rails.logger.debug "=== EXCEPTION OCCURRED ==="
-      Rails.logger.debug e.class.name
-      Rails.logger.debug e.message
-      Rails.logger.debug e.backtrace.first(10)
+      Rails.logger.error "========== ERROR =========="
+      Rails.logger.error e.class.name
+      Rails.logger.error e.message
+      Rails.logger.error e.backtrace.take(20)
 
-      raise e
+      flash.now[:alert] = e.message
+
+      load_categories
+      render :new, status: :unprocessable_entity
     end
   end
   def show
