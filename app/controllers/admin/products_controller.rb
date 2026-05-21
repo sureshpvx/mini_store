@@ -20,32 +20,23 @@ class Admin::ProductsController < ApplicationController
 
   def create
     puts "CREATE ACTION HIT"
-    Rails.logger.debug "LOGGER DEBUG WORKING"
-    raise "TEST ERROR"
-    begin
-      @product = Product.new(product_params)
 
-      Rails.logger.error "=== PARAMS ==="
-      Rails.logger.error product_params.inspect
+    @product = Product.new(product_params)
 
-      if @product.save
-        redirect_to admin_product_path(@product),
-                    notice: "#{@product.name} added to collection"
-      else
-        Rails.logger.error "=== VALIDATION ERRORS ==="
-        Rails.logger.error @product.errors.full_messages.inspect
+    Rails.logger.error "=== PARAMS ==="
+    Rails.logger.error product_params.inspect
 
-        load_categories
-        render :new, status: :unprocessable_entity
-      end
+    if @product.save
+      Rails.logger.error "=== SAVE SUCCESS ==="
 
-    rescue => e
-      Rails.logger.error "=== EXCEPTION ==="
-      Rails.logger.error e.class.name
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace.take(20)
+      redirect_to admin_product_path(@product),
+                  notice: "#{@product.name} added to collection"
+    else
+      Rails.logger.error "=== VALIDATION ERRORS ==="
+      Rails.logger.error @product.errors.full_messages.inspect
 
-      raise e
+      load_categories
+      render :new, status: :unprocessable_entity
     end
   end
   def test
