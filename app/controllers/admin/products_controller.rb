@@ -23,20 +23,20 @@ class Admin::ProductsController < ApplicationController
 
     @product = Product.new(product_params)
 
-    Rails.logger.error "=== PARAMS ==="
-    Rails.logger.error product_params.inspect
+    puts "PARAMS:"
+    p product_params
 
     if @product.save
-      Rails.logger.error "=== SAVE SUCCESS ==="
+      puts "SAVE SUCCESS"
 
       redirect_to admin_product_path(@product),
                   notice: "#{@product.name} added to collection"
     else
-      Rails.logger.error "=== VALIDATION ERRORS ==="
-      Rails.logger.error @product.errors.full_messages.inspect
+      puts "SAVE FAILED"
+      p @product.errors.full_messages
 
-      load_categories
-      render :new, status: :unprocessable_entity
+      render plain: @product.errors.full_messages.inspect,
+             status: :unprocessable_entity
     end
   end
   def test
