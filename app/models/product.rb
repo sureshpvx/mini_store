@@ -10,10 +10,6 @@ class Product < ApplicationRecord
 
 
   validates :name, :price, presence: true
-  validate :debug_images
 
-  def debug_images
-    Rails.logger.error "=== IMAGES DEBUG ==="
-    Rails.logger.error images.inspect
-  end
+  
 end
