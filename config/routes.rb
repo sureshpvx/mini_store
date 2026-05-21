@@ -35,6 +35,6 @@ Rails.application.routes.draw do
   post "store-checkout-address",
        to: "checkout#store_address",
        as: :store_checkout_address
-
+  get "admin/test_upload", to: "admin/products#test"
   get "up" => "rails/health#show", as: :rails_health_check
 end

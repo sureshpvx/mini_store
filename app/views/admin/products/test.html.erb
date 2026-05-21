@@ -1,0 +1,23 @@
+<!-- app/views/admin/products/test.html.erb -->
+
+<h1>Test Upload</h1>
+
+<%= form_with model: [:admin, Product.new],
+              url: admin_products_path,
+              multipart: true,
+              local: true do |f| %>
+
+  <%= f.text_field :name, value: "Test Product" %><br><br>
+
+  <%= f.number_field :price, value: 100 %><br><br>
+
+  <%= f.collection_select :category_id,
+                          Category.all,
+                          :id,
+                          :name %><br><br>
+
+  <%= f.file_field :images, multiple: true %><br><br>
+
+  <%= f.submit "Create Product" %>
+
+<% end %>

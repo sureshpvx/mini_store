@@ -39,6 +39,9 @@ class Admin::ProductsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
+  def test
+  end
   def show
   end
 
