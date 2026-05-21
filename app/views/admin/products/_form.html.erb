@@ -187,109 +187,16 @@
       <!-- IMAGES -->
       <!-- ===================================================== -->
 
-      <div data-controller="upload">
+      <div>
 
         <label class="block w-full text-left text-[11px] uppercase tracking-[0.35em] text-gray-500 mb-4">
           Product Images
         </label>
 
-        <input
-          type="file"
-          name="product[images][]"
-          multiple
-          accept="image/*"
-          data-upload-target="input"
-          class="hidden" />
-
-        <!-- DROPZONE -->
-        <div
-          data-upload-target="dropzone"
-          data-action="click->upload#open"
-          class="
-            relative
-            h-[220px]
-            border border-dashed border-white/10
-            bg-[#0A0A0A]
-            overflow-y-auto
-            cursor-pointer
-            hover:border-white/30
-            transition-all duration-300
-          ">
-
-          <!-- PLACEHOLDER -->
-          <div
-            data-upload-target="placeholder"
-            class="
-              absolute inset-0
-              flex flex-col items-center justify-center
-              text-center
-            ">
-
-            <p class="text-sm text-gray-400">
-              Drag & drop or
-              <span class="underline">browse</span>
-            </p>
-
-            <p class="text-xs text-gray-600 mt-2">
-              Images only
-            </p>
-
-          </div>
-
-          <!-- PREVIEW -->
-          <div
-            data-upload-target="preview"
-            data-has-existing="<%= product.images.attached? %>"
-            class="
-              absolute inset-0
-              p-4
-              flex flex-wrap gap-3 content-start
-            ">
-
-            <% if product.persisted? && product.images.attached? %>
-
-              <% product.images.each_with_index do |image, index| %>
-
-                <div
-                  data-existing="true"
-                  class="
-                    relative
-                    w-[90px]
-                    h-[90px]
-                    bg-black
-                    overflow-hidden
-                    border border-white/10
-                  ">
-
-                  <%= image_tag image,
-                                class: "w-full h-full object-cover" %>
-
-                  <% if index == 0 %>
-
-                    <div
-                      class="
-                        absolute bottom-1 left-1
-                        text-[9px]
-                        bg-white text-black
-                        px-2 py-0.5
-                        uppercase tracking-widest
-                      ">
-
-                      Primary
-
-                    </div>
-
-                  <% end %>
-
-                </div>
-
-              <% end %>
-
-            <% end %>
-
-          </div>
-
-        </div>
+        <%= f.file_field :images,
+                         multiple: true,
+                         accept: "image/*",
+                         class: "text-white" %>
 
       </div>
 
@@ -297,7 +204,7 @@
       <!-- VIDEO -->
       <!-- ===================================================== -->
 
-      
+
 
     </div>
 
