@@ -33,6 +33,8 @@ class Admin::ProductsController < ApplicationController
         Rails.logger.debug "=== PRODUCT FAILED ==="
         Rails.logger.debug @product.errors.full_messages.inspect
 
+        flash.now[:alert] = @product.errors.full_messages.join(", ")
+
         load_categories
         render :new, status: :unprocessable_entity
       end
