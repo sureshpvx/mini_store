@@ -19,6 +19,9 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
+    puts "CREATE ACTION HIT"
+    Rails.logger.debug "LOGGER DEBUG WORKING"
+    raise "TEST ERROR"
     begin
       @product = Product.new(product_params)
 
