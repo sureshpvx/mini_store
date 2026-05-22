@@ -19,42 +19,16 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    puts "CREATE ACTION HIT"
-
-    @product = Product.new(
-      name: params[:product][:name],
-      description: params[:product][:description],
-      price: params[:product][:price],
-      stock: params[:product][:stock],
-      category_id: params[:product][:category_id]
-    )
-
-    puts "SAVING PRODUCT WITHOUT IMAGE"
+    @product = Product.new(product_params)
 
     if @product.save
-      puts "PRODUCT SAVE SUCCESS"
-
-      if params[:product][:images].present?
-        puts "ATTACHING IMAGE"
-
-        @product.images.attach(params[:product][:images])
-
-        puts "IMAGE ATTACHED"
-      end
-
       redirect_to admin_product_path(@product),
-                  notice: "Product created"
-
+                  notice: "Created"
     else
-      puts "PRODUCT SAVE FAILED"
-      p @product.errors.full_messages
-
-      render plain: @product.errors.full_messages.inspect,
-             status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
-  def test
-  end
+
   def show
   end
 
@@ -102,7 +76,6 @@ class Admin::ProductsController < ApplicationController
       :price,
       :stock,
       :category_id,
-      :video,
       images: []
     )
   end
