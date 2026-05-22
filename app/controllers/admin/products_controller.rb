@@ -24,15 +24,20 @@ class Admin::ProductsController < ApplicationController
       if params[:product][:images].present?
         file = params[:product][:images].first
 
-        @product.images.attach(
-          io: file.tempfile,
-          filename: file.original_filename,
-          content_type: file.content_type
-        )
-      end
+        puts "TEMPFILE PATH:"
+        puts file.tempfile.path
 
-      redirect_to admin_product_path(@product),
-                  notice: "Product created"
+        puts "FILE EXISTS?"
+        puts File.exist?(file.tempfile.path)
+
+        puts "FILE SIZE:"
+        puts File.size(file.tempfile.path)
+
+        redirect_to admin_product_path(@product),
+                    notice: "Tempfile test success"
+
+        return
+      end
     else
       load_categories
       render :new, status: :unprocessable_entity
