@@ -18,11 +18,21 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    @product = Product.new(product_params)
+    @product = Product.new(product_params.except(:images))
 
     if @product.save
+      if params[:product][:images].present?
+        file = params[:product][:images].first
+
+        @product.images.attach(
+          io: file.tempfile,
+          filename: file.original_filename,
+          content_type: file.content_type
+        )
+      end
+
       redirect_to admin_product_path(@product),
-                  notice: "#{@product.name} added to collection"
+                  notice: "Product created"
     else
       load_categories
       render :new, status: :unprocessable_entity
@@ -74,6 +84,8 @@ class Admin::ProductsController < ApplicationController
       :description,
       :price,
       :stock,
-      :category_id)
+      :category_id,
+      images: []
+    )
   end
 end

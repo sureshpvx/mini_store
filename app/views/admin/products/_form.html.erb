@@ -12,6 +12,8 @@
 
   <%= f.collection_select :category_id, Category.all, :id, :name %>
 
+  <%= f.file_field :images, multiple: true %>
+
   <%= f.submit %>
 
 <% end %>
