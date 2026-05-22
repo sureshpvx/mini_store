@@ -6,8 +6,7 @@ class Admin::ProductsController < ApplicationController
   def index
     @pagy, @products = pagy(
       Product.includes(
-        :category,
-        images_attachments: :blob
+        :category
       ).order(created_at: :desc),
       limit: 10
     )
