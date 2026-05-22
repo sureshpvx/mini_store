@@ -21,24 +21,9 @@ class Admin::ProductsController < ApplicationController
     @product = Product.new(product_params.except(:images))
 
     if @product.save
-      if params[:product][:images].present?
-        file = params[:product][:images].first
+      p params[:product][:images]
 
-        puts "TEMPFILE PATH:"
-        puts file.inspect
-        puts file.class
-
-        puts "FILE EXISTS?"
-        puts File.exist?(file.tempfile.path)
-
-        puts "FILE SIZE:"
-        puts File.size(file.tempfile.path)
-
-        redirect_to admin_product_path(@product),
-                    notice: "Tempfile test success"
-
-        return
-      end
+      return render plain: params[:product][:images].inspect
     else
       load_categories
       render :new, status: :unprocessable_entity
