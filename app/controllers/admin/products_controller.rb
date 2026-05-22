@@ -21,9 +21,15 @@ class Admin::ProductsController < ApplicationController
     @product = Product.new(product_params.except(:images))
 
     if @product.save
-      p params[:product][:images]
+      if params[:product][:images].present?
 
-      return render plain: params[:product][:images].inspect
+        images = params[:product][:images].reject(&:blank?)
+
+        @product.images.attach(images)
+      end
+
+      redirect_to admin_product_path(@product),
+                  notice: "Product created"
     else
       load_categories
       render :new, status: :unprocessable_entity
