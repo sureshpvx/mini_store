@@ -25,7 +25,8 @@ class Admin::ProductsController < ApplicationController
         file = params[:product][:images].first
 
         puts "TEMPFILE PATH:"
-        puts file.tempfile.path
+        puts file.inspect
+        puts file.class
 
         puts "FILE EXISTS?"
         puts File.exist?(file.tempfile.path)
