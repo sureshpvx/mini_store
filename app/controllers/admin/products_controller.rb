@@ -18,46 +18,15 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    puts "STEP 1"
+    @product = Product.new(product_params)
 
-    @product = Product.new(
-      name: params[:product][:name],
-      description: params[:product][:description],
-      price: params[:product][:price],
-      stock: params[:product][:stock],
-      category_id: params[:product][:category_id]
-    )
-
-    puts "STEP 2"
-
-    @product.save!
-
-    puts "STEP 3"
-
-    if params[:product][:images].present?
-      puts "STEP 4"
-
-      puts params[:product][:images].class
-
-      params[:product][:images].each do |image|
-        puts "IMAGE OBJECT:"
-        puts image.inspect
-        puts image.class
-
-        @product.images.attach(image)
-      end
-
-      puts "STEP 5"
+    if @product.save
+      redirect_to admin_product_path(@product),
+                  notice: "#{@product.name} added to collection"
+    else
+      load_categories
+      render :new, status: :unprocessable_entity
     end
-    redirect_to admin_products_path
-
-  rescue => e
-    puts "ERROR OCCURRED"
-    puts e.class
-    puts e.message
-    puts e.backtrace.first(10)
-
-    render plain: e.message
   end
   def show
   end
@@ -105,8 +74,6 @@ class Admin::ProductsController < ApplicationController
       :description,
       :price,
       :stock,
-      :category_id,
-      images: []
-    )
+      :category_id)
   end
 end
