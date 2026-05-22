@@ -37,7 +37,9 @@ class Admin::ProductsController < ApplicationController
     if params[:product][:images].present?
       puts "STEP 4"
 
-      @product.images.attach(params[:product][:images])
+      params[:product][:images].each do |image|
+        @product.images.attach(image)
+      end
 
       puts "STEP 5"
     end
