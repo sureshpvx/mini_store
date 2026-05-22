@@ -19,16 +19,40 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    @product = Product.new(product_params)
+    puts "STEP 1"
 
-    if @product.save
-      redirect_to admin_product_path(@product),
-                  notice: "Created"
-    else
-      render :new, status: :unprocessable_entity
+    @product = Product.new(
+      name: params[:product][:name],
+      description: params[:product][:description],
+      price: params[:product][:price],
+      stock: params[:product][:stock],
+      category_id: params[:product][:category_id]
+    )
+
+    puts "STEP 2"
+
+    @product.save!
+
+    puts "STEP 3"
+
+    if params[:product][:images].present?
+      puts "STEP 4"
+
+      @product.images.attach(params[:product][:images])
+
+      puts "STEP 5"
     end
-  end
 
+    redirect_to admin_products_path
+
+  rescue => e
+    puts "ERROR OCCURRED"
+    puts e.class
+    puts e.message
+    puts e.backtrace.first(10)
+
+    render plain: e.message
+  end
   def show
   end
 
