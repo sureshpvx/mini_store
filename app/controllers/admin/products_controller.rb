@@ -37,13 +37,18 @@ class Admin::ProductsController < ApplicationController
     if params[:product][:images].present?
       puts "STEP 4"
 
+      puts params[:product][:images].class
+
       params[:product][:images].each do |image|
+        puts "IMAGE OBJECT:"
+        puts image.inspect
+        puts image.class
+
         @product.images.attach(image)
       end
 
       puts "STEP 5"
     end
-
     redirect_to admin_products_path
 
   rescue => e
