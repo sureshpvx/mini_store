@@ -10,7 +10,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Full error reports are disabled.
-  config.consider_all_requests_local = false
+  config.consider_all_requests_local = true
   config.log_level = :debug
 
   # Turn on fragment caching in view templates.
@@ -37,11 +37,17 @@ Rails.application.configure do
 
   # Log to STDOUT with the current request id as a default log tag.
   # Log to STDOUT
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-  config.logger.level = Logger::DEBUG
+  # Force standard output to flush immediately so Render doesn't buffer it
+  $stdout.sync = true
 
+  # Set up a properly formatted tagged logger for production
+  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = ::Logger::Formatter.new
+  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+
+  # Keep debug level so you can see Active Storage operations
+  config.logger.level = Logger::DEBUG
   config.log_tags = [ :request_id ]
-  config.log_level = :debug
   # Change to "debug" to log everything (including potentially personally-identifiable information!)
 
   # Prevent health checks from clogging up the logs.
