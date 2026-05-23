@@ -1,19 +1,50 @@
-<%= form_with model: [:admin, @product],
-              local: true,
-              multipart: true do |f| %>
+<%= form_with model: [:admin, @product], local: true, multipart: true, class: "flex flex-col gap-4" do |f| %>
 
-  <%= f.text_field :name %>
+  <%# --- ERROR DISPLAY BLOCK --- %>
+  <% if @product.errors.any? %>
+    <div class="bg-[#0a0a0a] border border-purple-500 p-4 mb-5 rounded shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+      <h4 class="text-purple-400 text-sm tracking-widest uppercase font-semibold mb-3">
+        <%= pluralize(@product.errors.count, "error") %> prohibited saving:
+      </h4>
+      <ul class="list-disc pl-5 text-blue-400 text-sm">
+        <% @product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%# --------------------------- %>
 
-  <%= f.text_field :description %>
+  <div class="flex flex-col">
+    <%= f.label :name, class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.text_field :name, class: "bg-black border border-gray-800 text-white p-2" %>
+  </div>
 
-  <%= f.number_field :price %>
+  <div class="flex flex-col">
+    <%= f.label :description, class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.text_field :description, class: "bg-black border border-gray-800 text-white p-2" %>
+  </div>
 
-  <%= f.number_field :stock %>
+  <div class="flex flex-col">
+    <%= f.label :price, class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.number_field :price, class: "bg-black border border-gray-800 text-white p-2" %>
+  </div>
 
-  <%= f.collection_select :category_id, Category.all, :id, :name %>
+  <div class="flex flex-col">
+    <%= f.label :stock, class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.number_field :stock, class: "bg-black border border-gray-800 text-white p-2" %>
+  </div>
 
-  <%= f.file_field :images, multiple: true %>
+  <div class="flex flex-col">
+    <%= f.label :category_id, class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, {}, { class: "bg-black border border-gray-800 text-white p-2" } %>
+  </div>
 
-  <%= f.submit %>
+  <div class="flex flex-col">
+    <%= f.label :images, "Images & Video", class: "text-gray-400 text-xs tracking-widest uppercase mb-1" %>
+    <%= f.file_field :images, multiple: true, class: "text-white" %>
+  </div>
+
+  <%= f.submit "Save Product", class: "mt-4 bg-white text-black px-8 h-12 uppercase tracking-[0.2em] text-[11px] font-bold cursor-pointer hover:bg-gray-200 transition-colors" %>
 
 <% end %>
