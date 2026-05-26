@@ -102,28 +102,23 @@ class Admin::ProductsController < ApplicationController
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
 
-      # Read file into memory
-      file.rewind
-      content = file.read
-
-      # Create blob without triggering upload (we'll let Cloudinary handle it)
-      blob = ActiveStorage::Blob.create_before_direct_upload!(
-        key: SecureRandom.hex(16),
+      blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
         filename: secure_filename(file.original_filename),
-        byte_size: content.bytesize,
-        checksum: Digest::MD5.base64digest(content),
-        content_type: file.content_type
+        content_type: file.content_type,
+        service_name: "cloudinary"  # <-- explicitly set
       )
-
-      # Upload to Cloudinary manually
-      Cloudinary::Uploader.upload(
-        StringIO.new(content),
-        public_id: blob.key,
-        resource_type: "auto"
-      )
-
-      # Attach the blob
       @product.images.attach(blob)
+    end
+
+    if video_file.is_a?(ActionDispatch::Http::UploadedFile)
+      blob = ActiveStorage::Blob.create_after_upload!(
+        io: video_file,
+        filename: secure_filename(video_file.original_filename),
+        content_type: video_file.content_type,
+        service_name: "cloudinary"  # <-- explicitly set
+      )
+      @product.video.attach(blob)
     end
   end
   def secure_filename(original)
