@@ -54,6 +54,8 @@ class Admin::ProductsController < ApplicationController
   rescue => e
     @product.destroy if @product&.persisted?
     load_categories
+    Rails.logger.error "ATTACH ERROR: #{e.class}: #{e.message}"
+    Rails.logger.error e.backtrace.first(10).join("\n")
     flash.now[:alert] = "Upload failed: #{e.message}"
     render :new, status: :unprocessable_entity
   end
@@ -94,22 +96,26 @@ class Admin::ProductsController < ApplicationController
   def attach_media!(files, video_file)
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
+
+      # Rewind to start of file before upload
+      file.rewind if file.respond_to?(:rewind)
+
       @product.images.attach(
-        io: file.to_io,
+        io: file,  # pass the UploadedFile directly, NOT .to_io
         filename: secure_filename(file.original_filename),
         content_type: file.content_type
       )
     end
 
     if video_file.is_a?(ActionDispatch::Http::UploadedFile)
+      video_file.rewind if video_file.respond_to?(:rewind)
       @product.video.attach(
-        io: video_file.to_io,
+        io: video_file,
         filename: secure_filename(video_file.original_filename),
         content_type: video_file.content_type
       )
     end
   end
-
   def secure_filename(original)
     "#{SecureRandom.hex(8)}_#{original.downcase.gsub(/[^a-z0-9.]/, '_')}"
   end
