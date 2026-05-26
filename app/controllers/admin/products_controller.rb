@@ -1,4 +1,3 @@
-require 'stringio'
 class Admin::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
@@ -91,25 +90,23 @@ class Admin::ProductsController < ApplicationController
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
 
-      file.rewind if file.respond_to?(:rewind)
-      content = file.read
-
-      @product.images.attach(
-        io: StringIO.new(content),
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: file,
         filename: secure_filename(file.original_filename),
-        content_type: file.content_type
+        content_type: file.content_type,
+        service_name: "cloudinary"
       )
+      @product.images.attach(blob)
     end
 
     if video_file.is_a?(ActionDispatch::Http::UploadedFile)
-      video_file.rewind if video_file.respond_to?(:rewind)
-      content = video_file.read
-
-      @product.video.attach(
-        io: StringIO.new(content),
+      blob = ActiveStorage::Blob.create_and_upload!(
+        io: video_file,
         filename: secure_filename(video_file.original_filename),
-        content_type: video_file.content_type
+        content_type: video_file.content_type,
+        service_name: "cloudinary"
       )
+      @product.video.attach(blob)
     end
   end
 

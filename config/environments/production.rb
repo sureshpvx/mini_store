@@ -60,7 +60,8 @@ Rails.application.configure do
   config.cache_store = :solid_cache_store
 
   config.active_storage.analyzers = []
-
+  config.active_storage.previewers = []
+  config.active_storage.variant_processor = nil
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
   # config.active_job.queue_adapter = :solid_queue
