@@ -73,5 +73,5 @@ gem "razorpay", "~> 3.2"
 gem "dotenv-rails", "~> 3.2"
 
 gem "pagy", "~> 9.3"
-gem "cloudinary"
-gem "activestorage-cloudinary-service"
+gem "cloudinary", "~> 2.0"
+
