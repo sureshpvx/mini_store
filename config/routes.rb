@@ -8,11 +8,14 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update]
   end
 
+  # config/routes.rb
   resource :cart, only: [:show] do
-    post :add_item
-    patch "cart_items/:id/increase", to: "carts#increase_quantity", as: :increase_quantity
-    patch "cart_items/:id/decrease", to: "carts#decrease_quantity", as: :decrease_quantity
-    delete "cart_items/:id", to: "carts#remove_item", as: :remove_item
+    collection do
+      post   :add_item
+      patch  :increase_quantity
+      patch  :decrease_quantity
+      delete :remove_item
+    end
   end
 
   resources :addresses

@@ -1,47 +1,111 @@
-<div class="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="max-w-6xl mx-auto px-6 py-16 text-white min-h-screen bg-[#050505]">
 
-  <!-- LEFT: Images -->
-  <div>
-    <% if @product.images.attached? %>
-      <!-- Main Image -->
-      <div class="mb-4">
-        <%= image_tag @product.images.first, class: "w-full rounded-lg shadow" %>
-      </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
 
-      <!-- Thumbnail Images -->
-      <div class="flex gap-2">
-        <% @product.images.each do |img| %>
-          <%= image_tag img, class: "w-20 h-20 object-cover border rounded" %>
+    <!-- LEFT: Images -->
+    <div class="space-y-6">
+      <% if @product.images.attached? && @product.images.first.present? %>
+
+        <!-- Main Image -->
+        <div class="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0a0a0a]">
+          <%= image_tag @product.images.first,
+                        class: "w-full h-full object-cover hover:scale-105 transition duration-700 ease-out",
+                        alt: @product.name %>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
+        </div>
+
+        <!-- Thumbnails -->
+        <% if @product.images.count > 1 %>
+          <div class="flex gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-white/10">
+            <% @product.images.each do |img| %>
+              <button class="flex-shrink-0 w-20 h-20 rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/20 transition bg-[#0a0a0a]">
+                <%= image_tag img, class: "w-full h-full object-cover" %>
+              </button>
+            <% end %>
+          </div>
+        <% end %>
+
+      <% else %>
+
+        <!-- No Image Placeholder -->
+        <div class="aspect-[4/5] rounded-2xl border border-white/[0.06] bg-[#0a0a0a] flex items-center justify-center">
+          <span class="text-[10px] uppercase tracking-[0.3em] text-gray-700">No Image</span>
+        </div>
+
+      <% end %>
+
+      <!-- Video (safe check) -->
+      <% if @product.respond_to?(:video) && @product.video.attached? %>
+        <div class="border border-white/[0.06] rounded-2xl overflow-hidden bg-[#0a0a0a]">
+          <div class="px-5 py-4 border-b border-white/[0.04]">
+            <h3 class="text-[10px] uppercase tracking-[0.35em] text-gray-500 font-medium">Product Video</h3>
+          </div>
+          <video controls class="w-full aspect-video">
+            <source src="<%= url_for(@product.video) %>" type="video/mp4">
+          </video>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="flex flex-col justify-center lg:py-10">
+
+      <!-- Category -->
+      <p class="text-[10px] uppercase tracking-[0.4em] text-gray-600 font-medium mb-4">
+        <%= @product.category&.name || "Hypee" %>
+      </p>
+
+      <!-- Name -->
+      <h1 class="text-4xl lg:text-5xl font-black uppercase tracking-tight text-white mb-6 leading-none">
+        <%= @product.name %>
+      </h1>
+
+      <!-- Description -->
+      <p class="text-sm text-gray-400 leading-relaxed mb-10 max-w-md">
+        <%= @product.description %>
+      </p>
+
+      <!-- Price -->
+      <div class="flex items-baseline gap-3 mb-10">
+        <span class="text-3xl font-light tracking-wide text-white">₹ <%= @product.price.to_f.round(2) %></span>
+        <% if @product.stock.to_i <= 10 && @product.stock.to_i > 0 %>
+          <span class="text-[10px] uppercase tracking-[0.3em] text-orange-500 font-medium">Low Stock</span>
+        <% elsif @product.stock.to_i == 0 %>
+          <span class="text-[10px] uppercase tracking-[0.3em] text-red-500 font-medium">Out of Stock</span>
         <% end %>
       </div>
-    <% end %>
-  </div>
 
-  <!-- RIGHT: Product Info -->
-  <div>
-    <h1 class="text-2xl font-bold mb-2"><%= @product.name %></h1>
-
-    <p class="text-gray-600 mb-4"><%= @product.description %></p>
-
-    <p class="text-xl font-semibold text-green-600 mb-4">
-      ₹ <%= @product.price %>
-    </p>
-
-    <!-- Video -->
-    <% if @product.video.attached? %>
-      <div class="mt-6">
-        <h3 class="font-semibold mb-2">Product Video</h3>
-        <video controls class="w-full rounded-lg">
-          <source src="<%= url_for(@product.video) %>" type="video/mp4">
-        </video>
+      <!-- Stock Meter -->
+      <div class="mb-10">
+        <div class="flex justify-between items-end w-32 mb-2">
+          <span class="text-[10px] uppercase tracking-widest text-gray-600">Capacity</span>
+          <span class="text-xs font-mono <%= @product.stock.to_i <= 10 ? 'text-orange-500' : 'text-white' %>">
+            <%= @product.stock.to_i.to_s.rjust(2, '0') %>
+          </span>
+        </div>
+        <div class="w-32 h-[2px] bg-white/5 rounded-full overflow-hidden">
+          <div class="h-full bg-white/20 rounded-full" style="width: <%= [(@product.stock.to_i / 100.0) * 100, 100].min %>%"></div>
+        </div>
       </div>
-    <% end %>
 
-    <!-- Button (future use) -->
-    <%= button_to "Add To Cart",
-                  add_item_cart_path(product_id: @product.id),
-                  method: :post,
-                  class: "mt-3 w-full border border-white/20 py-3 text-xs uppercase tracking-widest hover:bg-white hover:text-black transition" %>
+      <!-- Add to Cart -->
+      <% if @product.stock.to_i > 0 %>
+        <%= button_to add_item_cart_path(product_id: @product.id),
+                      method: :post,
+                      class: "w-full h-16 rounded-full border border-white text-white uppercase tracking-[0.4em] text-[11px] font-semibold hover:bg-white hover:text-black transition-all duration-500 active:scale-95" do %>
+          Add To Cart
+        <% end %>
+      <% else %>
+        <button disabled class="w-full h-16 rounded-full border border-white/20 text-gray-600 uppercase tracking-[0.4em] text-[11px] font-semibold cursor-not-allowed">
+          Sold Out
+        </button>
+      <% end %>
+
+      <!-- Footer Note -->
+      <p class="text-center text-[10px] uppercase tracking-[0.25em] text-gray-700 mt-6">
+        Complimentary shipping on premium orders
+      </p>
+
+    </div>
   </div>
-
 </div>

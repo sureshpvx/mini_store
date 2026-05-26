@@ -1,6 +1,7 @@
+# config/initializers/cloudinary.rb
 Cloudinary.config do |config|
-  config.cloud_name = ENV["CLOUDINARY_CLOUD_NAME"]
-  config.api_key    = ENV["CLOUDINARY_API_KEY"]
-  config.api_secret = ENV["CLOUDINARY_API_SECRET"]
-  config.secure     = true
+  config.upload_options = {
+    overwrite: false,
+    resource_type: "auto"  # auto-detects image/video
+  }
 end
