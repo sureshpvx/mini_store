@@ -54,9 +54,8 @@ class Admin::ProductsController < ApplicationController
   rescue => e
     @product.destroy if @product&.persisted?
     load_categories
-    Rails.logger.error "ATTACH ERROR: #{e.class}: #{e.message}"
-    Rails.logger.error e.backtrace.first(10).join("\n")
-    flash.now[:alert] = "Upload failed: #{e.message}"
+    backtrace = e.backtrace.first(5).join(" | ")
+    flash.now[:alert] = "ERROR: #{e.class}: #{e.message} | #{backtrace}"
     render :new, status: :unprocessable_entity
   end
 
