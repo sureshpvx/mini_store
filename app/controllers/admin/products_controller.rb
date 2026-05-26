@@ -3,6 +3,7 @@ class Admin::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_new_product, only: [:index, :show]
 
   def index
     @pagy, @products = pagy(
@@ -133,6 +134,10 @@ class Admin::ProductsController < ApplicationController
     @categories = Category.includes(:subcategories)
                           .where(parent_id: nil)
                           .order(:name)
+  end
+
+  def set_new_product
+    @product = Product.new
   end
 
   def require_admin
