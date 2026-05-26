@@ -54,8 +54,14 @@ class Admin::ProductsController < ApplicationController
   rescue => e
     @product.destroy if @product&.persisted?
     load_categories
-    backtrace = e.backtrace.first(5).join(" | ")
-    flash.now[:alert] = "ERROR: #{e.class}: #{e.message} | #{backtrace}"
+
+    # Unwrap nested errors to find the real cause
+    real_error = e
+    while real_error.respond_to?(:cause) && real_error.cause
+      real_error = real_error.cause
+    end
+
+    flash.now[:alert] = "REAL ERROR: #{real_error.class}: #{real_error.message}"
     render :new, status: :unprocessable_entity
   end
 
