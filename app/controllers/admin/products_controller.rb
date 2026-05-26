@@ -102,21 +102,21 @@ class Admin::ProductsController < ApplicationController
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
 
-      blob = ActiveStorage::Blob.create_after_upload!(
+      blob = ActiveStorage::Blob.create_and_upload!(
         io: file,
         filename: secure_filename(file.original_filename),
         content_type: file.content_type,
-        service_name: "cloudinary"  # <-- explicitly set
+        service_name: "cloudinary"
       )
       @product.images.attach(blob)
     end
 
     if video_file.is_a?(ActionDispatch::Http::UploadedFile)
-      blob = ActiveStorage::Blob.create_after_upload!(
+      blob = ActiveStorage::Blob.create_and_upload!(
         io: video_file,
         filename: secure_filename(video_file.original_filename),
         content_type: video_file.content_type,
-        service_name: "cloudinary"  # <-- explicitly set
+        service_name: "cloudinary"
       )
       @product.video.attach(blob)
     end
