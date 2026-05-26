@@ -90,22 +90,40 @@ class Admin::ProductsController < ApplicationController
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
 
-      blob = ActiveStorage::Blob.create_and_upload!(
-        io: file,
+      # Upload directly to Cloudinary
+      result = Cloudinary::Uploader.upload(
+        file.tempfile.path,
+        resource_type: "image"
+      )
+
+      # Create a blob that points to the Cloudinary URL
+      blob = ActiveStorage::Blob.create!(
+        key: result['public_id'],
         filename: secure_filename(file.original_filename),
         content_type: file.content_type,
+        byte_size: result['bytes'],
+        checksum: result['etag'] || Digest::MD5.base64digest(File.read(file.tempfile.path)),
         service_name: "cloudinary"
       )
+
       @product.images.attach(blob)
     end
 
     if video_file.is_a?(ActionDispatch::Http::UploadedFile)
-      blob = ActiveStorage::Blob.create_and_upload!(
-        io: video_file,
+      result = Cloudinary::Uploader.upload(
+        video_file.tempfile.path,
+        resource_type: "video"
+      )
+
+      blob = ActiveStorage::Blob.create!(
+        key: result['public_id'],
         filename: secure_filename(video_file.original_filename),
         content_type: video_file.content_type,
+        byte_size: result['bytes'],
+        checksum: result['etag'] || Digest::MD5.base64digest(File.read(video_file.tempfile.path)),
         service_name: "cloudinary"
       )
+
       @product.video.attach(blob)
     end
   end
