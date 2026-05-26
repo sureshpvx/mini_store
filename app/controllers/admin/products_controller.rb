@@ -1,4 +1,4 @@
-# app/controllers/admin/products_controller.rb
+require 'stringio'
 class Admin::ProductsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
@@ -97,11 +97,11 @@ class Admin::ProductsController < ApplicationController
     files.each do |file|
       next unless file.is_a?(ActionDispatch::Http::UploadedFile)
 
-      # Rewind to start of file before upload
       file.rewind if file.respond_to?(:rewind)
+      content = file.read
 
       @product.images.attach(
-        io: file,  # pass the UploadedFile directly, NOT .to_io
+        io: StringIO.new(content),
         filename: secure_filename(file.original_filename),
         content_type: file.content_type
       )
@@ -109,8 +109,10 @@ class Admin::ProductsController < ApplicationController
 
     if video_file.is_a?(ActionDispatch::Http::UploadedFile)
       video_file.rewind if video_file.respond_to?(:rewind)
+      content = video_file.read
+
       @product.video.attach(
-        io: video_file,
+        io: StringIO.new(content),
         filename: secure_filename(video_file.original_filename),
         content_type: video_file.content_type
       )
