@@ -35,26 +35,12 @@ Rails.application.configure do
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
-  # Log to STDOUT with the current request id as a default log tag.
-  # Log to STDOUT
-  # Force standard output to flush immediately so Render doesn't buffer it
-  # In production.rb, replace your logger setup with this:
+  # Force immediate flush so Render captures logs in real-time
   $stdout.sync = true
-  $stderr.sync = true
 
-  logger = ActiveSupport::Logger.new(STDOUT)
-  logger.formatter = ::Logger::Formatter.new
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
-
-  # Also log to STDERR as backup (Render sometimes picks this up better)
-  stderr_logger = ActiveSupport::Logger.new(STDERR)
-  stderr_logger.formatter = ::Logger::Formatter.new
-  config.logger.extend(ActiveSupport::Logger.broadcast(stderr_logger))
-
-  # Keep debug level so you can see Active Storage operations
-  config.logger.level = Logger::DEBUG
+  # Simple, clean STDOUT logger — no broadcast, no manual formatters
+  config.logger = ActiveSupport::Logger.new(STDOUT)
   config.log_tags = [ :request_id ]
-  # Change to "debug" to log everything (including potentially personally-identifiable information!)
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"
@@ -72,7 +58,7 @@ Rails.application.configure do
   # Replace the default in-process and non-durable queuing backend for Active Job.
   # config.active_job.queue_adapter = :solid_queue
   # config.solid_queue.connects_to = { database: { writing: :queue } }
-   config.active_job.queue_adapter = :async
+  config.active_job.queue_adapter = :async
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
