@@ -4,7 +4,7 @@ Rails.application.configure do
   config.enable_reloading = false
   config.eager_load = true
   config.consider_all_requests_local = false
-  config.log_level = :debug
+  config.log_level = :info
 
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
@@ -13,8 +13,9 @@ Rails.application.configure do
   config.force_ssl = true
   config.action_controller.forgery_protection_origin_check = false
 
+  # Force all Rails logs to STDOUT so Render captures them
   $stdout.sync = true
-  config.logger = ActiveSupport::Logger.new(STDOUT)
+  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
   config.log_tags = [ :request_id ]
 
   config.silence_healthcheck_path = "/up"
