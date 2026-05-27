@@ -38,12 +38,18 @@ Rails.application.configure do
   # Log to STDOUT with the current request id as a default log tag.
   # Log to STDOUT
   # Force standard output to flush immediately so Render doesn't buffer it
+  # In production.rb, replace your logger setup with this:
   $stdout.sync = true
+  $stderr.sync = true
 
-  # Set up a properly formatted tagged logger for production
-  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = ::Logger::Formatter.new
-  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+
+  # Also log to STDERR as backup (Render sometimes picks this up better)
+  stderr_logger = ActiveSupport::Logger.new(STDERR)
+  stderr_logger.formatter = ::Logger::Formatter.new
+  config.logger.extend(ActiveSupport::Logger.broadcast(stderr_logger))
 
   # Keep debug level so you can see Active Storage operations
   config.logger.level = Logger::DEBUG
