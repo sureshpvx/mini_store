@@ -11,6 +11,8 @@ Rails.application.configure do
   config.active_storage.service = :cloudinary
   config.assume_ssl = true
   config.force_ssl = true
+  config.hosts << "hypee.shop"
+  config.hosts << "www.hypee.shop"
   config.action_controller.forgery_protection_origin_check = false
 
   # Force all Rails logs to STDOUT so Render captures them
