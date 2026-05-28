@@ -3,6 +3,20 @@ class CartsController < ApplicationController
     @cart = current_cart
   end
 
+  def buy_now
+    product = Product.find(params[:product_id])
+    quantity = params[:quantity].to_i > 0 ? params[:quantity].to_i : 1
+
+    # Set exact quantity for this product (replace if already in cart)
+    cart_item = current_cart.cart_items.find_or_initialize_by(product: product)
+    cart_item.quantity = quantity
+    cart_item.save!
+
+    @current_cart = nil  # bust cache
+
+    redirect_to checkout_path
+  end
+
   def add_item
     product = Product.find(params[:product_id])
     cart_item = current_cart.cart_items.find_or_initialize_by(product: product)

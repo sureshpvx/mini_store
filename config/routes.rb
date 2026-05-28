@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resource :cart, only: [:show] do
     collection do
       post   :add_item
+      post   :buy_now
       patch  :increase_quantity
       patch  :decrease_quantity
       delete :remove_item

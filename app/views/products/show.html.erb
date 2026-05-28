@@ -1,111 +1,234 @@
-<div class="max-w-6xl mx-auto px-6 py-16 text-white min-h-screen bg-[#050505]">
+<div class="min-h-screen bg-black text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
-    <!-- LEFT: Images -->
-    <div class="space-y-6">
-      <% if @product.images.attached? && @product.images.first.present? %>
+      <%# ========== UNIFIED MEDIA GALLERY ========== %>
+      <div class="space-y-3" data-controller="product-gallery">
 
-        <!-- Main Image -->
-        <div class="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0a0a0a]">
-          <%= image_tag @product.images.first,
-                        class: "w-full h-full object-cover hover:scale-105 transition duration-700 ease-out",
-                        alt: @product.name %>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-        </div>
+        <% all_media = [] %>
+        <% @product.images.each { |img| all_media << { type: :image, src: url_for(img), alt: @product.name } } %>
+        <% if @product.video.attached? %>
+          <% all_media << { type: :video, src: url_for(@product.video), content_type: @product.video.content_type, alt: "#{@product.name} video" } %>
+        <% end %>
 
-        <!-- Thumbnails -->
-        <% if @product.images.count > 1 %>
-          <div class="flex gap-3 overflow-x-auto pb-2 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:bg-white/10">
-            <% @product.images.each do |img| %>
-              <button class="flex-shrink-0 w-20 h-20 rounded-xl border border-white/[0.06] overflow-hidden hover:border-white/20 transition bg-[#0a0a0a]">
-                <%= image_tag img, class: "w-full h-full object-cover" %>
+        <% if all_media.any? %>
+
+          <div class="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#0a0a0a] group select-none" data-product-gallery-target="viewport">
+
+            <div class="flex h-full transition-transform duration-500 ease-out will-change-transform" data-product-gallery-target="track">
+              <% all_media.each_with_index do |media, i| %>
+                <div class="w-full h-full flex-shrink-0 relative" data-slide-index="<%= i %>">
+
+                  <% if media[:type] == :image %>
+                    <%= image_tag media[:src],
+                                  class: "w-full h-full object-cover",
+                                  alt: media[:alt],
+                                  loading: i == 0 ? "eager" : "lazy",
+                                  draggable: "false" %>
+                  <% else %>
+                    <video class="w-full h-full object-cover cursor-pointer"
+                           muted loop playsinline preload="metadata"
+                           data-product-gallery-target="video"
+                           onclick="this.paused ? this.play() : this.pause(); this.muted = !this.muted;">
+                      <source src="<%= media[:src] %>" type="<%= media[:content_type] %>">
+                    </video>
+
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300" data-video-overlay>
+                      <div class="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/20">
+                        <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      </div>
+                    </div>
+                  <% end %>
+
+                </div>
+              <% end %>
+            </div>
+
+            <% if all_media.size > 1 %>
+              <button type="button"
+                      class="absolute left-0 top-0 bottom-0 w-16 sm:w-20 flex items-center justify-start pl-4 sm:pl-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 outline-none z-10"
+                      aria-label="Previous"
+                      data-action="click->product-gallery#prev">
+                <svg class="w-6 h-6 text-white/70 hover:text-white transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+
+              <button type="button"
+                      class="absolute right-0 top-0 bottom-0 w-16 sm:w-20 flex items-center justify-end pr-4 sm:pr-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 outline-none z-10"
+                      aria-label="Next"
+                      data-action="click->product-gallery#next">
+                <svg class="w-6 h-6 text-white/70 hover:text-white transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
               </button>
             <% end %>
+
+            <% if all_media.size > 1 %>
+              <div class="absolute top-4 right-4 text-[10px] uppercase tracking-[0.2em] text-white/50 bg-black/40 backdrop-blur-sm px-2.5 py-1 z-10">
+                <span data-product-gallery-target="current">1</span> / <%= all_media.size %>
+              </div>
+            <% end %>
+
+            <% if all_media.any? { |m| m[:type] == :video } %>
+              <div class="absolute top-4 left-4 text-[9px] uppercase tracking-[0.2em] text-white/60 bg-black/40 backdrop-blur-sm px-2.5 py-1 z-10 hidden" data-product-gallery-target="videoBadge">
+                Video
+              </div>
+            <% end %>
+
+          </div>
+
+          <% if all_media.size > 1 %>
+            <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide select-none" data-product-gallery-target="thumbs">
+              <% all_media.each_with_index do |media, i| %>
+                <button type="button"
+                        class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 border transition-colors relative outline-none <%= i == 0 ? 'border-white/40' : 'border-white/10 hover:border-white/30' %>"
+                        data-action="click->product-gallery#goTo"
+                        data-index="<%= i %>"
+                        aria-label="View <%= media[:type] %> <%= i + 1 %>">
+
+                  <% if media[:type] == :image %>
+                    <%= image_tag media[:src], class: "w-full h-full object-cover", alt: "", draggable: "false" %>
+                  <% else %>
+                    <div class="w-full h-full bg-[#0a0a0a] flex items-center justify-center">
+                      <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  <% end %>
+
+                  <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-white transition-opacity <%= i == 0 ? 'opacity-100' : 'opacity-0' %>" data-thumb-indicator></div>
+                </button>
+              <% end %>
+            </div>
+          <% end %>
+
+        <% else %>
+          <div class="aspect-[3/4] sm:aspect-[4/5] bg-[#0a0a0a] flex items-center justify-center border border-white/[0.04]">
+            <span class="text-[10px] uppercase tracking-[0.3em] text-gray-700">No Image</span>
           </div>
         <% end %>
 
-      <% else %>
-
-        <!-- No Image Placeholder -->
-        <div class="aspect-[4/5] rounded-2xl border border-white/[0.06] bg-[#0a0a0a] flex items-center justify-center">
-          <span class="text-[10px] uppercase tracking-[0.3em] text-gray-700">No Image</span>
-        </div>
-
-      <% end %>
-
-      <!-- Video (safe check) -->
-      <% if @product.respond_to?(:video) && @product.video.attached? %>
-        <div class="border border-white/[0.06] rounded-2xl overflow-hidden bg-[#0a0a0a]">
-          <div class="px-5 py-4 border-b border-white/[0.04]">
-            <h3 class="text-[10px] uppercase tracking-[0.35em] text-gray-500 font-medium">Product Video</h3>
-          </div>
-          <video controls class="w-full aspect-video">
-            <source src="<%= url_for(@product.video) %>" type="video/mp4">
-          </video>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- RIGHT: Product Info -->
-    <div class="flex flex-col justify-center lg:py-10">
-
-      <!-- Category -->
-      <p class="text-[10px] uppercase tracking-[0.4em] text-gray-600 font-medium mb-4">
-        <%= @product.category&.name || "Hypee" %>
-      </p>
-
-      <!-- Name -->
-      <h1 class="text-4xl lg:text-5xl font-black uppercase tracking-tight text-white mb-6 leading-none">
-        <%= @product.name %>
-      </h1>
-
-      <!-- Description -->
-      <p class="text-sm text-gray-400 leading-relaxed mb-10 max-w-md">
-        <%= @product.description %>
-      </p>
-
-      <!-- Price -->
-      <div class="flex items-baseline gap-3 mb-10">
-        <span class="text-3xl font-light tracking-wide text-white">₹ <%= @product.price.to_f.round(2) %></span>
-        <% if @product.stock.to_i <= 10 && @product.stock.to_i > 0 %>
-          <span class="text-[10px] uppercase tracking-[0.3em] text-orange-500 font-medium">Low Stock</span>
-        <% elsif @product.stock.to_i == 0 %>
-          <span class="text-[10px] uppercase tracking-[0.3em] text-red-500 font-medium">Out of Stock</span>
-        <% end %>
       </div>
 
-      <!-- Stock Meter -->
-      <div class="mb-10">
-        <div class="flex justify-between items-end w-32 mb-2">
-          <span class="text-[10px] uppercase tracking-widest text-gray-600">Capacity</span>
-          <span class="text-xs font-mono <%= @product.stock.to_i <= 10 ? 'text-orange-500' : 'text-white' %>">
-            <%= @product.stock.to_i.to_s.rjust(2, '0') %>
+      <%# ========== PRODUCT INFO ========== %>
+      <div class="lg:pt-2 space-y-5">
+
+        <%# Category + Stock %>
+        <div class="flex items-center justify-between">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500">
+            <%= @product.category&.name || "Hypee" %>
+          </p>
+          <% stock = @product.stock.to_i %>
+          <% if stock <= 5 && stock > 0 %>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-orange-400">Only <%= stock %> left</span>
+          <% elsif stock == 0 %>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-red-400">Sold Out</span>
+          <% else %>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-emerald-500">In stock</span>
+          <% end %>
+        </div>
+
+        <%# Name + Price %>
+        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-none">
+            <%= @product.name %>
+          </h1>
+          <span class="text-xl sm:text-2xl font-light tracking-wide text-gray-300">
+            <%= number_to_currency(@product.price, unit: "₹", precision: 0) %>
           </span>
         </div>
-        <div class="w-32 h-[2px] bg-white/5 rounded-full overflow-hidden">
-          <div class="h-full bg-white/20 rounded-full" style="width: <%= [(@product.stock.to_i / 100.0) * 100, 100].min %>%"></div>
-        </div>
-      </div>
 
-      <!-- Add to Cart -->
-      <% if @product.stock.to_i > 0 %>
-        <%= button_to add_item_cart_path(product_id: @product.id),
-                      method: :post,
-                      class: "w-full h-16 rounded-full border border-white text-white uppercase tracking-[0.4em] text-[11px] font-semibold hover:bg-white hover:text-black transition-all duration-500 active:scale-95" do %>
-          Add To Cart
+        <p class="text-[10px] text-gray-600 tracking-wide">(Inclusive of All Taxes)</p>
+
+        <%# Description — always open %>
+        <% if @product.description.present? %>
+          <div class="border-b border-white/[0.06] pb-4">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-3">Description</p>
+            <p class="text-xs text-gray-500 leading-relaxed">
+              <%= @product.description %>
+            </p>
+          </div>
         <% end %>
-      <% else %>
-        <button disabled class="w-full h-16 rounded-full border border-white/20 text-gray-600 uppercase tracking-[0.4em] text-[11px] font-semibold cursor-not-allowed">
-          Sold Out
-        </button>
-      <% end %>
 
-      <!-- Footer Note -->
-      <p class="text-center text-[10px] uppercase tracking-[0.25em] text-gray-700 mt-6">
-        Complimentary shipping on premium orders
-      </p>
+        <%# Delivery & Return accordion %>
+        <div class="space-y-0" data-controller="accordion">
+          <div class="border-b border-white/[0.06]" data-accordion-item>
+            <button type="button" class="w-full flex items-center justify-between py-3 text-left group" data-action="click->accordion#toggle">
+              <span class="text-[11px] uppercase tracking-[0.2em] text-gray-400 group-hover:text-white transition">Delivery & Return</span>
+              <svg class="w-3 h-3 text-gray-600 transition-transform duration-300" data-accordion-icon fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="hidden pb-4" data-accordion-panel>
+              <div class="space-y-2 text-xs text-gray-500 leading-relaxed">
+                <p>Free standard delivery on orders above ₹5000. Estimated delivery 3–5 business days.</p>
+                <p>Returns accepted within 7 days of delivery. Product must be unused with original tags attached.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <%# ========== FORM: Quantity + Buy Now + Add to Cart ========== %>
+        <% if stock > 0 %>
+          <%= form_with url: add_item_cart_path(product_id: @product.id),
+                        method: :post,
+                        data: { turbo: true },
+                        class: "space-y-4" do |f| %>
+
+            <div class="flex items-stretch gap-3">
+              <%# Stepper %>
+              <div class="flex items-center border border-white/20" data-controller="quantity">
+                <button type="button"
+                        class="w-10 h-12 flex items-center justify-center text-gray-500 hover:text-white transition select-none"
+                        data-action="click->quantity#decrement">−</button>
+                <input type="number"
+                       name="quantity"
+                       value="1"
+                       min="1"
+                       max="<%= stock %>"
+                       class="w-10 h-12 bg-transparent text-center text-sm text-white outline-none border-x border-white/10"
+                       data-quantity-target="input"
+                       readonly>
+                <button type="button"
+                        class="w-10 h-12 flex items-center justify-center text-gray-500 hover:text-white transition select-none"
+                        data-action="click->quantity#increment">+</button>
+              </div>
+
+              <%# Buy Now — white, primary %>
+              <%= button_tag "Buy Now",
+                             type: :submit,
+                             formaction: buy_now_cart_path(product_id: @product.id),
+                             class: "flex-1 h-12 bg-white text-black uppercase tracking-[0.2em] text-[11px] font-semibold hover:bg-gray-200 transition active:scale-[0.98]" %>
+
+              <%# Add to Cart — outline, secondary %>
+              <%= button_tag "Add to Cart",
+                             type: :submit,
+                             class: "flex-1 h-12 border border-white/20 text-white uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-white/5 transition active:scale-[0.98]" %>
+            </div>
+
+          <% end %>
+        <% else %>
+          <button disabled class="w-full h-12 border border-white/10 text-gray-600 uppercase tracking-[0.25em] text-[11px] cursor-not-allowed">
+            Sold Out
+          </button>
+        <% end %>
+
+        <p class="text-[9px] uppercase tracking-[0.15em] text-gray-700 text-center">
+          Free shipping over ₹5000
+        </p>
+
+        <%# Meta footer %>
+        <div class="space-y-1 pt-1">
+          <p class="text-[10px] text-gray-600">Country of Origin: India</p>
+          <p class="text-[10px] text-gray-600 leading-relaxed">
+            Marketed and distributed by:<br>
+            Hypee Lifestyle Private Limited
+          </p>
+        </div>
+
+      </div>
     </div>
+
   </div>
 </div>
