@@ -35,15 +35,9 @@
 
       <!-- TITLE -->
       <div>
-
-        <p class="text-[10px] uppercase tracking-[0.35em] text-gray-600 mb-2">
-          Admin Panel
-        </p>
-
         <h2 class="text-xl uppercase tracking-[0.3em] text-white">
           <%= title %>
         </h2>
-
       </div>
 
       <!-- CLOSE -->
@@ -59,28 +53,16 @@
           hover:border-white/30
           transition-all duration-300
         ">
-
         ✕
-
       </button>
 
     </div>
 
     <!-- SCROLLABLE CONTENT -->
-    <div
-      class="
-        overflow-y-auto
-        max-h-[calc(90vh-110px)]
-      ">
-
-
-        <div class="p-8 md:p-10">
-
-          <%= yield %>
-
-        </div>
-
-
+    <div class="overflow-y-auto max-h-[calc(90vh-110px)]">
+      <div class="p-8 md:p-10">
+        <%= yield %>
+      </div>
     </div>
 
   </div>

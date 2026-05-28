@@ -39,21 +39,22 @@ class Admin::ProductsController < ApplicationController
     @product = Product.new(base_product_params)
 
     if @product.save
-      @product.reload  # <-- KEY FIX: reload before attaching
-      attach_media!(files, video_file)
-      redirect_to admin_product_path(@product), notice: "Product created successfully."
+      begin
+        attach_media!(files, video_file)
+        redirect_to admin_products_path, notice: "Product created successfully."
+      rescue => e
+        Rails.logger.error "Media upload failed: #{e.message}"
+        load_categories
+        flash.now[:alert] = "Product saved but media upload failed: #{e.message}. Add media below."
+        render turbo_stream: turbo_stream.replace(
+          "modal-content",
+          partial: "admin/products/form",
+          locals: { product: @product }
+        )
+      end
     else
       load_categories
       flash.now[:alert] = @product.errors.full_messages.to_sentence.presence || "Failed to create product."
-      render :new, status: :unprocessable_entity
-    end
-  rescue => e
-    load_categories
-    if @product&.persisted? && @product.images.attached?
-      # Product created successfully, ignore post-upload errors
-      redirect_to admin_product_path(@product), notice: "Product created successfully."
-    else
-      flash.now[:alert] = "Upload failed: #{e.message}"
       render :new, status: :unprocessable_entity
     end
   end
@@ -66,18 +67,31 @@ class Admin::ProductsController < ApplicationController
     files = Array(params.dig(:product, :images)).reject(&:blank?)
     video_file = params.dig(:product, :video)
 
+    if params[:remove_image_ids].present?
+      @product.images.where(id: params[:remove_image_ids]).each(&:purge)
+    end
+
+    if params[:remove_video].present?
+      @product.video.purge
+    end
+
     if @product.update(base_product_params)
-      attach_media!(files, video_file) if files.any? || video_file.present?
+      if files.any? || video_file.present?
+        begin
+          attach_media!(files, video_file)
+        rescue => e
+          load_categories
+          flash.now[:alert] = "Media upload failed: #{e.message}"
+          render :edit, status: :unprocessable_entity
+          return
+        end
+      end
       redirect_to admin_product_path(@product), notice: "#{@product.name} updated successfully."
     else
       load_categories
       flash.now[:alert] = @product.errors.full_messages.to_sentence.presence || "Update failed."
       render :edit, status: :unprocessable_entity
     end
-  rescue => e
-    load_categories
-    flash.now[:alert] = "Upload failed: #{e.message}"
-    render :edit, status: :unprocessable_entity
   end
 
   def destroy
@@ -100,16 +114,11 @@ class Admin::ProductsController < ApplicationController
           io: file,
           filename: secure_filename(file.original_filename),
           content_type: file.content_type,
-          service_name: "cloudinary"
+          service_name: :cloudinary
         )
         @product.images.attach(blob)
       rescue NoMethodError => e
-        if e.message.include?('preview_image')
-          Rails.logger.warn "Cloudinary preview skipped for #{file.original_filename}"
-          # Upload succeeded, ignore preview error
-        else
-          raise e
-        end
+        raise e unless e.message.include?('preview_image')
       end
     end
 
@@ -119,18 +128,15 @@ class Admin::ProductsController < ApplicationController
           io: video_file,
           filename: secure_filename(video_file.original_filename),
           content_type: video_file.content_type,
-          service_name: "cloudinary"
+          service_name: :cloudinary
         )
         @product.video.attach(blob)
       rescue NoMethodError => e
-        if e.message.include?('preview_image')
-          Rails.logger.warn "Cloudinary preview skipped for video"
-        else
-          raise e
-        end
+        raise e unless e.message.include?('preview_image')
       end
     end
   end
+
   def secure_filename(original)
     "#{SecureRandom.hex(8)}_#{original.downcase.gsub(/[^a-z0-9.]/, '_')}"
   end
