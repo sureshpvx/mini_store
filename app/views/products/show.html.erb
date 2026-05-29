@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-black text-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+<div class="min-h-screen bg-white text-black">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24">
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
@@ -14,7 +14,7 @@
 
         <% if all_media.any? %>
 
-          <div class="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-[#0a0a0a] group select-none" data-product-gallery-target="viewport">
+          <div class="relative aspect-[3/4] sm:aspect-[4/5] overflow-hidden bg-gray-50 group select-none" data-product-gallery-target="viewport">
 
             <div class="flex h-full transition-transform duration-500 ease-out will-change-transform" data-product-gallery-target="track">
               <% all_media.each_with_index do |media, i| %>
@@ -35,8 +35,8 @@
                     </video>
 
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300" data-video-overlay>
-                      <div class="w-12 h-12 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm bg-black/20">
-                        <svg class="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      <div class="w-12 h-12 border border-black/20 flex items-center justify-center backdrop-blur-sm bg-white/50">
+                        <svg class="w-4 h-4 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                       </div>
                     </div>
                   <% end %>
@@ -50,7 +50,7 @@
                       class="absolute left-0 top-0 bottom-0 w-16 sm:w-20 flex items-center justify-start pl-4 sm:pl-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 outline-none z-10"
                       aria-label="Previous"
                       data-action="click->product-gallery#prev">
-                <svg class="w-6 h-6 text-white/70 hover:text-white transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-black/40 hover:text-black transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
                 </svg>
               </button>
@@ -59,20 +59,20 @@
                       class="absolute right-0 top-0 bottom-0 w-16 sm:w-20 flex items-center justify-end pr-4 sm:pr-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 outline-none z-10"
                       aria-label="Next"
                       data-action="click->product-gallery#next">
-                <svg class="w-6 h-6 text-white/70 hover:text-white transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-black/40 hover:text-black transition" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
             <% end %>
 
             <% if all_media.size > 1 %>
-              <div class="absolute top-4 right-4 text-[10px] uppercase tracking-[0.2em] text-white/50 bg-black/40 backdrop-blur-sm px-2.5 py-1 z-10">
+              <div class="absolute top-4 right-4 text-[10px] uppercase tracking-[0.2em] text-black/50 bg-white/80 backdrop-blur-sm border border-black/10 px-2.5 py-1 z-10">
                 <span data-product-gallery-target="current">1</span> / <%= all_media.size %>
               </div>
             <% end %>
 
             <% if all_media.any? { |m| m[:type] == :video } %>
-              <div class="absolute top-4 left-4 text-[9px] uppercase tracking-[0.2em] text-white/60 bg-black/40 backdrop-blur-sm px-2.5 py-1 z-10 hidden" data-product-gallery-target="videoBadge">
+              <div class="absolute top-4 left-4 text-[9px] uppercase tracking-[0.2em] text-black/60 bg-white/80 backdrop-blur-sm border border-black/10 px-2.5 py-1 z-10 hidden" data-product-gallery-target="videoBadge">
                 Video
               </div>
             <% end %>
@@ -83,7 +83,7 @@
             <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide select-none" data-product-gallery-target="thumbs">
               <% all_media.each_with_index do |media, i| %>
                 <button type="button"
-                        class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 border transition-colors relative outline-none <%= i == 0 ? 'border-white/40' : 'border-white/10 hover:border-white/30' %>"
+                        class="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 border transition-colors relative outline-none <%= i == 0 ? 'border-black/40' : 'border-black/10 hover:border-black/30' %>"
                         data-action="click->product-gallery#goTo"
                         data-index="<%= i %>"
                         aria-label="View <%= media[:type] %> <%= i + 1 %>">
@@ -91,63 +91,63 @@
                   <% if media[:type] == :image %>
                     <%= image_tag media[:src], class: "w-full h-full object-cover", alt: "", draggable: "false" %>
                   <% else %>
-                    <div class="w-full h-full bg-[#0a0a0a] flex items-center justify-center">
-                      <svg class="w-5 h-5 text-white/50" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <svg class="w-5 h-5 text-black/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                     </div>
                   <% end %>
 
-                  <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-white transition-opacity <%= i == 0 ? 'opacity-100' : 'opacity-0' %>" data-thumb-indicator></div>
+                  <div class="absolute bottom-0 left-0 right-0 h-[2px] bg-black transition-opacity <%= i == 0 ? 'opacity-100' : 'opacity-0' %>" data-thumb-indicator></div>
                 </button>
               <% end %>
             </div>
           <% end %>
 
         <% else %>
-          <div class="aspect-[3/4] sm:aspect-[4/5] bg-[#0a0a0a] flex items-center justify-center border border-white/[0.04]">
-            <span class="text-[10px] uppercase tracking-[0.3em] text-gray-700">No Image</span>
+          <div class="aspect-[3/4] sm:aspect-[4/5] bg-gray-50 flex items-center justify-center border border-black/[0.04]">
+            <span class="text-[10px] uppercase tracking-[0.3em] text-gray-400">No Image</span>
           </div>
         <% end %>
 
       </div>
 
       <%# ========== PRODUCT INFO ========== %>
-      <div class="lg:pt-2 space-y-5">
+      <div class="lg:pt-2 space-y-6">
 
         <%# Category + Stock %>
         <div class="flex items-center justify-between">
-          <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
             <%= @product.category&.name || "Hypee" %>
           </p>
           <% stock = @product.stock.to_i %>
           <% if stock <= 5 && stock > 0 %>
-            <span class="text-[9px] uppercase tracking-[0.15em] text-orange-400">Only <%= stock %> left</span>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-orange-500">Only <%= stock %> left</span>
           <% elsif stock == 0 %>
-            <span class="text-[9px] uppercase tracking-[0.15em] text-red-400">Sold Out</span>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-red-500">Sold Out</span>
           <% else %>
-            <span class="text-[9px] uppercase tracking-[0.15em] text-emerald-500">In stock</span>
+            <span class="text-[9px] uppercase tracking-[0.15em] text-emerald-600">In stock</span>
           <% end %>
         </div>
 
         <%# Name + Price %>
         <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-4">
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight leading-none">
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-light uppercase tracking-[0.1em] leading-none text-black">
             <%= @product.name %>
           </h1>
-          <span class="text-xl sm:text-2xl font-light tracking-wide text-gray-300">
+          <span class="text-xl sm:text-2xl font-light tracking-wide text-black">
             <%= number_to_currency(@product.price, unit: "₹", precision: 0) %>
           </span>
         </div>
 
-        <p class="text-[10px] text-gray-600 tracking-wide">(Inclusive of All Taxes)</p>
+        <p class="text-[10px] text-gray-400 tracking-wide">(Inclusive of All Taxes)</p>
 
         <%# Description — always open %>
         <% if @product.description.present? %>
-          <div class="border-b border-white/[0.06] pb-4">
+          <div class="border-b border-black/[0.06] pb-4">
             <p class="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-3">Description</p>
-            <p class="text-xs text-gray-500 leading-relaxed">
+            <p class="text-xs text-gray-500 leading-relaxed font-light">
               <%= @product.description %>
             </p>
           </div>
@@ -155,13 +155,13 @@
 
         <%# Delivery & Return accordion %>
         <div class="space-y-0" data-controller="accordion">
-          <div class="border-b border-white/[0.06]" data-accordion-item>
+          <div class="border-b border-black/[0.06]" data-accordion-item>
             <button type="button" class="w-full flex items-center justify-between py-3 text-left group" data-action="click->accordion#toggle">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-gray-400 group-hover:text-white transition">Delivery & Return</span>
-              <svg class="w-3 h-3 text-gray-600 transition-transform duration-300" data-accordion-icon fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+              <span class="text-[11px] uppercase tracking-[0.2em] text-gray-400 group-hover:text-black transition">Delivery & Return</span>
+              <svg class="w-3 h-3 text-gray-400 transition-transform duration-300" data-accordion-icon fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="hidden pb-4" data-accordion-panel>
-              <div class="space-y-2 text-xs text-gray-500 leading-relaxed">
+              <div class="space-y-2 text-xs text-gray-500 leading-relaxed font-light">
                 <p>Free standard delivery on orders above ₹5000. Estimated delivery 3–5 business days.</p>
                 <p>Returns accepted within 7 days of delivery. Product must be unused with original tags attached.</p>
               </div>
@@ -178,50 +178,50 @@
 
             <div class="flex items-stretch gap-3">
               <%# Stepper %>
-              <div class="flex items-center border border-white/20" data-controller="quantity">
+              <div class="flex items-center border border-black/20" data-controller="quantity">
                 <button type="button"
-                        class="w-10 h-12 flex items-center justify-center text-gray-500 hover:text-white transition select-none"
+                        class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
                         data-action="click->quantity#decrement">−</button>
                 <input type="number"
                        name="quantity"
                        value="1"
                        min="1"
                        max="<%= stock %>"
-                       class="w-10 h-12 bg-transparent text-center text-sm text-white outline-none border-x border-white/10"
+                       class="w-10 h-12 bg-transparent text-center text-sm text-black outline-none border-x border-black/10"
                        data-quantity-target="input"
                        readonly>
                 <button type="button"
-                        class="w-10 h-12 flex items-center justify-center text-gray-500 hover:text-white transition select-none"
+                        class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
                         data-action="click->quantity#increment">+</button>
               </div>
 
-              <%# Buy Now — white, primary %>
+              <%# Buy Now — solid black, primary %>
               <%= button_tag "Buy Now",
                              type: :submit,
                              formaction: buy_now_cart_path(product_id: @product.id),
-                             class: "flex-1 h-12 bg-white text-black uppercase tracking-[0.2em] text-[11px] font-semibold hover:bg-gray-200 transition active:scale-[0.98]" %>
+                             class: "flex-1 h-12 bg-black text-white uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition active:scale-[0.98]" %>
 
               <%# Add to Cart — outline, secondary %>
               <%= button_tag "Add to Cart",
                              type: :submit,
-                             class: "flex-1 h-12 border border-white/20 text-white uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-white/5 transition active:scale-[0.98]" %>
+                             class: "flex-1 h-12 border border-black/30 text-black uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-black hover:text-white transition active:scale-[0.98]" %>
             </div>
 
           <% end %>
         <% else %>
-          <button disabled class="w-full h-12 border border-white/10 text-gray-600 uppercase tracking-[0.25em] text-[11px] cursor-not-allowed">
+          <button disabled class="w-full h-12 border border-black/10 text-gray-400 uppercase tracking-[0.25em] text-[11px] cursor-not-allowed">
             Sold Out
           </button>
         <% end %>
 
-        <p class="text-[9px] uppercase tracking-[0.15em] text-gray-700 text-center">
+        <p class="text-[9px] uppercase tracking-[0.15em] text-gray-400 text-center">
           Free shipping over ₹5000
         </p>
 
         <%# Meta footer %>
         <div class="space-y-1 pt-1">
-          <p class="text-[10px] text-gray-600">Country of Origin: India</p>
-          <p class="text-[10px] text-gray-600 leading-relaxed">
+          <p class="text-[10px] text-gray-400">Country of Origin: India</p>
+          <p class="text-[10px] text-gray-400 leading-relaxed">
             Marketed and distributed by:<br>
             Hypee Lifestyle Private Limited
           </p>

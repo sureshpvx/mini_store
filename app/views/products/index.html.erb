@@ -1,97 +1,56 @@
-<div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-12 sm:py-20 bg-black">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24 bg-white">
 
-  <!-- HEADER -->
-  <div class="mb-12 sm:mb-20 border-b border-white/[0.04] pb-10">
+  <!-- HEADER: Centered -->
+  <div class="mb-12 sm:mb-20 text-center">
 
-    <h1 class="text-3xl sm:text-5xl font-medium uppercase tracking-tight text-white">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">
+      Collection
+    </p>
+
+    <h1 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] text-black">
       <%= params[:filter]&.titleize || "All Products" %>
     </h1>
 
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-5 mt-5">
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-5 mt-5">
 
-      <p class="text-gray-500 text-[11px] sm:text-sm uppercase tracking-[0.22em] leading-relaxed max-w-md">
+      <p class="text-gray-400 text-[11px] uppercase tracking-[0.2em] leading-relaxed max-w-md font-light">
         Curated pieces for modern minimal style. Engineered for the contemporary silhouette.
       </p>
 
-      <span class="text-[10px] text-gray-700 uppercase tracking-[0.25em]">
-        Showing
-        <span class="text-white font-medium">
-          <%= @products.count %>
-        </span>
-        items
-      </span>
-
     </div>
+
+    <span class="block mt-4 text-[10px] text-gray-400 uppercase tracking-[0.25em] font-light">
+      Showing
+      <span class="text-black">
+        <%= @products.count %>
+      </span>
+      items
+    </span>
 
   </div>
 
   <% if @products.any? %>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-14 sm:gap-y-20">
+    <!-- 3 columns max -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
       <% @products.each do |product| %>
 
         <%= link_to product_path(product),
-                    class: "
-                      group
-                      flex
-                      flex-col
-                    " do %>
+                    class: "group flex flex-col" do %>
 
           <!-- PRODUCT IMAGE -->
-          <div class="
-                relative
-                aspect-[3/4]
-                bg-black
-                overflow-hidden
-                mb-5
-                flex
-                items-center
-                justify-center
-                border
-                border-white/[0.04]
-                transition-all
-                duration-500
-                group-hover:border-white/[0.08]
-              ">
-
-            <!-- subtle hover glow -->
-            <div class="
-                  absolute
-                  inset-0
-                  opacity-0
-                  group-hover:opacity-100
-                  transition
-                  duration-700
-                  bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)]
-                ">
-            </div>
+          <div class="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-4 sm:mb-5 flex items-center justify-center border border-black/[0.04]">
 
             <% if product.images.attached? %>
 
-              <%= image_tag product.images.first.variant(
-                resize_to_limit: [500, 600]
-              ),
+              <%= image_tag product.images.first.variant(resize_to_limit: [500, 600]),
                             loading: "lazy",
-                            class: "
-                              w-full
-                              h-full
-                              object-contain
-                              p-8 sm:p-10
-                              transition-all
-                              duration-700
-                              ease-out
-                              group-hover:scale-[1.03]
-                            " %>
+                            class: "w-full h-full object-contain p-6 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out" %>
 
             <% else %>
 
-              <div class="
-                    text-gray-800
-                    uppercase
-                    text-[10px]
-                    tracking-[0.3em]
-                  ">
+              <div class="text-gray-400 uppercase text-[10px] tracking-[0.3em]">
                 No Image
               </div>
 
@@ -100,32 +59,15 @@
           </div>
 
           <!-- PRODUCT INFO -->
-          <div class="flex flex-col gap-2 px-[2px]">
+          <div class="flex flex-col gap-1.5">
 
-            <div class="flex justify-between items-start gap-3">
+            <div class="flex justify-between items-baseline gap-2">
 
-              <h3 class="
-                    uppercase
-                    text-[11px]
-                    sm:text-xs
-                    tracking-[0.18em]
-                    font-medium
-                    text-white
-                    transition
-                    duration-300
-                    group-hover:text-gray-300
-                  ">
+              <h3 class="uppercase text-[10px] sm:text-[11px] tracking-[0.15em] font-medium text-black group-hover:text-gray-600 transition truncate">
                 <%= product.name %>
               </h3>
 
-              <span class="
-                    text-[11px]
-                    sm:text-xs
-                    text-white
-                    font-light
-                    tracking-wide
-                    whitespace-nowrap
-                  ">
+              <span class="text-[10px] sm:text-[11px] text-gray-500 font-light whitespace-nowrap">
                 <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
               </span>
 
@@ -133,15 +75,8 @@
 
             <% if product.description.present? %>
 
-              <p class="
-                    text-[10px]
-                    sm:text-[11px]
-                    text-gray-600
-                    tracking-wide
-                    font-light
-                    leading-relaxed
-                  ">
-                <%= product.description.truncate(48) %>
+              <p class="hidden sm:block text-[10px] text-gray-500 tracking-wide font-light leading-relaxed">
+                <%= product.description.truncate(30) %>
               </p>
 
             <% end %>
@@ -156,43 +91,15 @@
 
   <% else %>
 
-    <div class="
-          flex
-          flex-col
-          items-center
-          justify-center
-          py-32
-          border
-          border-dashed
-          border-white/10
-        ">
+    <div class="flex flex-col items-center justify-center py-32 border border-dashed border-black/[0.06]">
 
-      <p class="
-            text-gray-500
-            text-xs
-            uppercase
-            tracking-[0.35em]
-            mb-6
-          ">
+      <p class="text-gray-400 text-xs uppercase tracking-[0.35em] mb-6 font-light">
         The archive is currently empty
       </p>
 
       <%= link_to "Return to Shop",
                   root_path,
-                  class: "
-                    text-[10px]
-                    text-white
-                    border
-                    border-white
-                    px-8
-                    py-3
-                    uppercase
-                    tracking-[0.3em]
-                    transition-all
-                    duration-300
-                    hover:bg-white
-                    hover:text-black
-                  " %>
+                  class: "text-[11px] text-black border border-black/30 px-8 py-3 uppercase tracking-[0.2em] transition-all duration-300 hover:bg-black hover:text-white" %>
 
     </div>
 
