@@ -6,40 +6,43 @@
   data-controller="hero-video"
   data-action="mouseenter->hero-video#play mouseleave->hero-video#pause">
 
-  <!-- Video — no poster, just black background shows until loaded -->
+  <!-- Video: turbo-permanent keeps it alive across page visits -->
   <video
+    id="hero-video"
     data-hero-video-target="video"
-    class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out"
-    style="opacity: 0.35"
+    data-turbo-permanent
+    class="absolute inset-0 w-full h-full object-cover"
+    style="opacity: 0.4"
     muted
     loop
-    playsinline>
+    playsinline
+    preload="auto">
     <source src="<%= asset_path('save.mp4') %>" type="video/mp4">
   </video>
 
-  <!-- Gradient -->
-  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/30 md:bg-gradient-to-r md:from-black md:via-black/70 md:to-transparent"></div>
+  <!-- Gradient for text readability -->
+  <div class="absolute inset-0 bg-gradient-to-r from-white/60 via-white/20 to-transparent"></div>
 
   <!-- Content -->
-  <div class="relative z-10 flex items-end md:items-center h-full min-h-screen">
-    <div class="w-full max-w-7xl mx-auto px-6 sm:px-10 pb-24 md:pb-0 pt-32 md:pt-0">
+  <div class="relative z-10 flex items-center h-full min-h-screen">
+    <div class="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-20">
       <div class="max-w-md md:max-w-xl text-left">
 
-        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 mb-6">
+        <p class="text-[10px] uppercase tracking-[0.4em] text-black/60 mb-6">
           SS / 26 Collection
         </p>
 
-        <h1 class="text-5xl sm:text-6xl lg:text-[7.5rem] font-black uppercase leading-[0.85] mb-8 tracking-tight">
+        <h1 class="text-5xl sm:text-6xl lg:text-[7.5rem] font-black uppercase leading-[0.85] mb-8 tracking-tight text-black">
           DEFINE<br>YOUR<br>EDGE
         </h1>
 
-        <p class="text-gray-400 mb-10 text-sm leading-relaxed max-w-sm">
+        <p class="text-black/70 mb-10 text-sm leading-relaxed max-w-sm">
           Uncompromising aesthetics for the modern minimalist.
           Structured silhouettes, premium materials, quiet dominance.
         </p>
 
         <%= link_to products_path(filter: "all"),
-                    class: "inline-flex items-center gap-4 border border-white/20 bg-transparent px-8 py-4 uppercase tracking-[0.25em] text-[11px] text-white hover:bg-white hover:text-black transition-all duration-300" do %>
+                    class: "inline-flex items-center gap-4 border border-black/30 bg-transparent px-8 py-4 uppercase tracking-[0.25em] text-[11px] text-black hover:bg-black hover:text-white transition-all duration-300" do %>
           Explore Collection
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -53,8 +56,8 @@
 </section>
 
 <!-- ================= CATEGORIES ================= -->
-<section class="py-16 sm:py-24 px-4 sm:px-10 bg-[#0a0a0a]">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5">
+<section class="py-16 sm:py-24 px-4 sm:px-10 bg-white">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-[1440px] mx-auto">
 
     <% categories = [
       { name: "Men", image: "men.jpg", filter: "men" },
@@ -64,19 +67,22 @@
 
     <% categories.each do |cat| %>
       <%= link_to products_path(filter: cat[:filter]),
-                  class: "relative group overflow-hidden bg-black h-[280px] sm:h-[380px] md:h-[600px] block" do %>
+                  class: "relative group overflow-hidden bg-gray-50 h-[400px] sm:h-[500px] md:h-[600px] block" do %>
 
+        <!-- Full-color image, no blur, no grayscale -->
         <%= image_tag cat[:image], loading: "lazy",
-                      class: "absolute inset-0 w-full h-full object-cover grayscale opacity-60 group-hover:opacity-90 group-hover:scale-105 transition-all duration-700 ease-out" %>
+                      class: "absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" %>
 
-        <div class="absolute inset-0 bg-black/50 group-hover:bg-black/30 transition duration-500"></div>
+        <!-- Ultra-subtle bottom gradient so text stays readable -->
+        <div class="absolute inset-0 bg-gradient-to-t from-white/70 via-white/10 to-transparent"></div>
 
-        <div class="absolute inset-0 flex items-center justify-center">
+        <!-- Minimal bottom text -->
+        <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-8 sm:pb-12">
           <div class="text-center">
-            <h2 class="text-2xl sm:text-3xl uppercase font-bold tracking-[0.2em] text-white mb-2">
+            <h2 class="text-xs sm:text-sm uppercase tracking-[0.35em] font-light text-black mb-3">
               <%= cat[:name] %>
             </h2>
-            <span class="inline-block w-8 h-px bg-white/40 group-hover:w-16 group-hover:bg-white transition-all duration-500"></span>
+            <span class="inline-block w-4 h-px bg-black/20 group-hover:w-10 group-hover:bg-black/40 transition-all duration-500"></span>
           </div>
         </div>
 
@@ -86,20 +92,20 @@
   </div>
 </section>
 
-<!-- ================= NEW ARRIVALS ================= -->
-<section class="py-16 sm:py-24 px-4 sm:px-10 bg-[#0a0a0a] border-t border-white/[0.03]">
+<!<!-- ================= NEW ARRIVALS ================= -->
+<section class="py-16 sm:py-24 px-4 sm:px-10 bg-white border-t border-black/[0.03]">
 
-  <div class="max-w-7xl mx-auto">
+  <div class="max-w-[1440px] mx-auto">
 
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12 sm:mb-16">
       <div>
-        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600 mb-3">Latest Drop</p>
-        <h2 class="text-3xl sm:text-5xl font-medium uppercase tracking-tight text-white">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Latest Drop</p>
+        <h2 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.2em] text-black">
           New Arrivals
         </h2>
       </div>
 
-      <%= link_to products_path(filter: "new"), class: "group flex items-center gap-2 text-gray-500 hover:text-white text-[10px] uppercase tracking-[0.3em] transition" do %>
+      <%= link_to products_path(filter: "new"), class: "group flex items-center gap-2 text-gray-400 hover:text-black text-[10px] uppercase tracking-[0.3em] transition" do %>
         View All
         <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -111,29 +117,24 @@
       <% @new_arrivals.each do |product| %>
         <%= link_to product_path(product), class: "group flex flex-col" do %>
 
-          <div class="relative aspect-[3/4] bg-[#080808] overflow-hidden mb-4 sm:mb-5 flex items-center justify-center border border-white/[0.04]">
+          <div class="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-4 sm:mb-5 flex items-center justify-center">
             <% if product.images.attached? %>
               <%= image_tag product.images.first, loading: "lazy",
-                            class: "w-full h-full object-contain p-6 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out" %>
+                            class: "w-full h-full object-contain p-4 sm:p-8 group-hover:scale-105 transition-transform duration-700 ease-out" %>
             <% else %>
-              <div class="text-gray-700 uppercase text-[8px] tracking-widest">No Image</div>
+              <div class="text-gray-300 uppercase text-[8px] tracking-widest">No Image</div>
             <% end %>
           </div>
 
-          <div class="flex flex-col gap-1.5">
+          <div class="flex flex-col gap-1">
             <div class="flex justify-between items-baseline gap-2">
-              <h3 class="uppercase text-[10px] sm:text-[11px] tracking-[0.15em] font-medium text-white group-hover:text-gray-400 transition truncate">
+              <h3 class="uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-light text-black group-hover:text-gray-500 transition truncate">
                 <%= product.name %>
               </h3>
               <span class="text-[10px] sm:text-[11px] text-gray-400 font-light whitespace-nowrap">
                 <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
               </span>
             </div>
-            <% if product.description.present? %>
-              <p class="hidden sm:block text-[10px] text-gray-600 tracking-wide font-light leading-relaxed">
-                <%= product.description.truncate(30) %>
-              </p>
-            <% end %>
           </div>
 
         <% end %>
@@ -145,25 +146,25 @@
 </section>
 
 <!-- ================= EDITORIAL BANNER ================= -->
-<section class="relative h-[500px] md:h-[600px] flex items-center border-t border-white/[0.03] overflow-hidden">
+<section class="relative h-[500px] md:h-[600px] flex items-center border-t border-black/[0.03] overflow-hidden bg-white">
 
   <div class="absolute inset-0 w-full md:w-3/5 ml-auto">
     <%= image_tag "girl.jpg", loading: "lazy",
-                  class: "w-full h-full object-cover object-[60%_center] md:object-center grayscale opacity-70" %>
+                  class: "w-full h-full object-cover object-[60%_center] md:object-center" %>
   </div>
 
-  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent md:bg-gradient-to-r md:from-black md:via-black/90 md:to-transparent"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent md:bg-gradient-to-r md:from-white md:via-white/80 md:to-transparent"></div>
 
   <div class="relative z-10 px-6 sm:px-10 max-w-xl md:max-w-2xl">
-    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-4">Editorial</p>
-    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold uppercase mb-6 leading-[0.95] tracking-tight">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-4">Editorial</p>
+    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-light uppercase mb-6 leading-[1.1] tracking-[0.1em] text-black">
       Crafted<br>For The Bold
     </h2>
-    <p class="text-gray-400 mb-8 text-sm sm:text-base leading-relaxed max-w-md">
+    <p class="text-gray-500 mb-8 text-sm leading-relaxed max-w-md font-light">
       Reject the superfluous. Embrace the essential. Our latest collection is an exercise in restraint and precision.
     </p>
     <%= link_to "#",
-                class: "inline-flex items-center gap-3 bg-white text-black px-7 py-3.5 uppercase text-[11px] tracking-[0.2em] font-medium hover:bg-gray-200 transition duration-300" do %>
+                class: "inline-flex items-center gap-3 border border-black/30 bg-transparent px-7 py-3.5 uppercase text-[11px] tracking-[0.2em] font-light text-black hover:bg-black hover:text-white transition duration-300" do %>
       Read the Journal
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
