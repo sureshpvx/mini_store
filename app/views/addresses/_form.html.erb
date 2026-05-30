@@ -1,39 +1,38 @@
-<%= form_with model: address,
-              local: true do |f| %>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<%= form_with model: address, local: true do |f| %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
     <%= f.text_field :full_name,
                      placeholder: "Full Name",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
     <%= f.text_field :phone_number,
                      placeholder: "Phone Number",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
     <%= f.text_field :address_line_1,
                      placeholder: "Address Line 1",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white md:col-span-2" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition md:col-span-2" %>
 
     <%= f.text_field :address_line_2,
                      placeholder: "Address Line 2",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white md:col-span-2" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition md:col-span-2" %>
 
     <%= f.text_field :city,
                      placeholder: "City",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
     <%= f.text_field :state,
                      placeholder: "State",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
     <%= f.text_field :postal_code,
                      placeholder: "Postal Code",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
     <%= f.text_field :country,
                      placeholder: "Country",
                      value: "India",
-                     class: "h-14 rounded-2xl bg-black border border-white/10 px-5 text-white" %>
+                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
 
   </div>
 
@@ -42,14 +41,15 @@
                  mt-8
                  w-full
                  h-14
-                 rounded-full
-                 bg-white
-                 text-black
+                 bg-black
+                 text-white
                  uppercase
-                 tracking-[0.3em]
-                 text-sm
-                 hover:opacity-90
+                 tracking-[0.2em]
+                 text-[11px]
+                 hover:bg-gray-800
                  transition-all
+                 duration-300
+                 cursor-pointer
                " %>
 
 <% end %>

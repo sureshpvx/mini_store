@@ -1,50 +1,37 @@
-<div class="min-h-screen bg-black text-white flex">
+<div class="min-h-screen bg-white text-black flex">
 
   <!-- ================= SIDEBAR ================= -->
-  <aside class="w-72 border-r border-white/10 bg-[#050505] px-8 py-10 flex flex-col justify-between">
+  <aside class="w-72 border-r border-black/[0.06] bg-white px-8 py-10 flex flex-col justify-between">
 
     <div>
 
       <div>
 
-        <h1 class="text-3xl font-black uppercase tracking-tight">
+        <h1 class="text-2xl font-bold uppercase tracking-tight">
           Hypee
         </h1>
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.35em]
-                  text-gray-600 mt-2">
-
+        <p class="text-[10px] uppercase tracking-[0.35em] text-gray-400 mt-2">
           Commerce Control Node
-
         </p>
 
       </div>
 
-      <nav class="mt-14 space-y-2">
+      <nav class="mt-14 space-y-1">
 
         <a href="#"
-           class="flex items-center justify-between
-                  px-5 py-4
-                  bg-white text-black
-                  text-[11px]
-                  uppercase tracking-[0.25em]">
+           class="flex items-center justify-between px-5 py-4 bg-black text-white text-[11px] uppercase tracking-[0.2em]">
 
           Dashboard
 
-          <span>01</span>
+          <span class="text-[10px] opacity-60">01</span>
 
         </a>
 
         <a href="#"
-           class="flex items-center justify-between
-                  px-5 py-4
-                  text-gray-500
-                  hover:text-white
-                  transition">
+           class="flex items-center justify-between px-5 py-4 text-gray-400 hover:text-black transition">
 
-          <span class="text-[11px] uppercase tracking-[0.25em]">
+          <span class="text-[11px] uppercase tracking-[0.2em]">
             Catalog
           </span>
 
@@ -55,13 +42,9 @@
         </a>
 
         <a href="#"
-           class="flex items-center justify-between
-                  px-5 py-4
-                  text-gray-500
-                  hover:text-white
-                  transition">
+           class="flex items-center justify-between px-5 py-4 text-gray-400 hover:text-black transition">
 
-          <span class="text-[11px] uppercase tracking-[0.25em]">
+          <span class="text-[11px] uppercase tracking-[0.2em]">
             Orders
           </span>
 
@@ -72,13 +55,9 @@
         </a>
 
         <a href="#"
-           class="flex items-center justify-between
-                  px-5 py-4
-                  text-gray-500
-                  hover:text-white
-                  transition">
+           class="flex items-center justify-between px-5 py-4 text-gray-400 hover:text-black transition">
 
-          <span class="text-[11px] uppercase tracking-[0.25em]">
+          <span class="text-[11px] uppercase tracking-[0.2em]">
             Customers
           </span>
 
@@ -93,25 +72,20 @@
     </div>
 
     <!-- SYSTEM STATUS -->
-    <div class="border border-white/10 bg-[#0A0A0A] p-5">
+    <div class="border border-black/[0.06] bg-gray-50 p-5">
 
       <div class="flex items-center gap-3">
 
         <span class="relative flex h-2 w-2">
 
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
 
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
 
         </span>
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-500">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           System Operational
-
         </p>
 
       </div>
@@ -120,11 +94,11 @@
 
         <div class="flex justify-between text-[10px] uppercase tracking-widest">
 
-          <span class="text-gray-600">
+          <span class="text-gray-400">
             Inventory
           </span>
 
-          <span class="text-white">
+          <span class="text-black">
             Active
           </span>
 
@@ -132,11 +106,11 @@
 
         <div class="flex justify-between text-[10px] uppercase tracking-widest">
 
-          <span class="text-gray-600">
+          <span class="text-gray-400">
             Payments
           </span>
 
-          <span class="text-green-400">
+          <span class="text-emerald-600">
             Razorpay Live
           </span>
 
@@ -149,49 +123,30 @@
   </aside>
 
   <!-- ================= MAIN ================= -->
-  <main class="flex-1 px-10 py-10">
+  <main class="flex-1 px-10 py-10 bg-white">
 
     <!-- TOPBAR -->
-    <div class="flex flex-col lg:flex-row
-                lg:items-center
-                lg:justify-between
-                gap-6
-                border-b border-white/10
-                pb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 border-b border-black/[0.06] pb-8">
 
       <div>
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.4em]
-                  text-gray-600 mb-3">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">
           Commerce Analytics
-
         </p>
 
-        <h1 class="text-5xl font-black uppercase tracking-tight">
-
+        <h1 class="text-3xl font-light uppercase tracking-[0.1em] text-black">
           Dashboard
-
         </h1>
 
       </div>
 
       <div class="flex items-center gap-4">
 
-        <div class="hidden lg:flex items-center
-                    border border-white/10
-                    bg-[#0A0A0A]
-                    px-5 h-14 w-[320px]">
+        <div class="hidden lg:flex items-center border border-black/[0.06] bg-gray-50 px-5 h-12 w-[320px]">
 
           <input type="text"
                  placeholder="Search products, orders..."
-                 class="bg-transparent
-                        w-full
-                        outline-none
-                        text-sm
-                        placeholder:text-gray-600">
+                 class="bg-transparent w-full outline-none text-sm placeholder:text-gray-400">
 
         </div>
 
@@ -201,16 +156,9 @@
           <button
             data-modal-id="add-product-modal"
             data-action="click->modal#open"
-            class="group relative overflow-hidden
-           bg-white text-black
-           px-8 h-14
-           uppercase tracking-[0.25em]
-           text-[11px]
-           font-semibold">
+            class="bg-black text-white px-8 h-12 uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition">
 
-    <span class="relative z-10">
-      + Add Product
-    </span>
+            + Add Product
 
           </button>
 
@@ -230,109 +178,75 @@
     </div>
 
     <!-- KPI GRID -->
-    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10">
+    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-10">
 
       <!-- REVENUE -->
-      <div class="border border-white/10 bg-[#080808] p-7">
+      <div class="border border-black/[0.06] bg-white p-6">
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-600">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Revenue
-
         </p>
 
-        <h2 class="text-4xl font-light mt-5">
-
+        <h2 class="text-3xl font-light mt-4 text-black">
           <%= number_to_currency(
                 Order.paid.sum(:total_price),
                 unit: "₹",
                 precision: 0
               ) %>
-
         </h2>
 
-        <p class="text-green-400 text-sm mt-4">
+        <p class="text-emerald-600 text-xs mt-3 font-light">
           Paid commerce volume
         </p>
 
       </div>
 
       <!-- ORDERS -->
-      <div class="border border-white/10 bg-[#080808] p-7">
+      <div class="border border-black/[0.06] bg-white p-6">
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-600">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Orders
-
         </p>
 
-        <h2 class="text-4xl font-light mt-5">
-
+        <h2 class="text-3xl font-light mt-4 text-black">
           <%= Order.count %>
-
         </h2>
 
-        <p class="text-gray-500 text-sm mt-4">
-
-          <%= Order.processing.count %>
-          processing orders
-
+        <p class="text-gray-400 text-xs mt-3 font-light">
+          <%= Order.processing.count %> processing orders
         </p>
 
       </div>
 
       <!-- PRODUCTS -->
-      <div class="border border-white/10 bg-[#080808] p-7">
+      <div class="border border-black/[0.06] bg-white p-6">
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-600">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Products
-
         </p>
 
-        <h2 class="text-4xl font-light mt-5">
-
+        <h2 class="text-3xl font-light mt-4 text-black">
           <%= Product.count %>
-
         </h2>
 
-        <p class="text-gray-500 text-sm mt-4">
-
-          <%= Product.where("stock < ?", 10).count %>
-          low stock alerts
-
+        <p class="text-gray-400 text-xs mt-3 font-light">
+          <%= Product.where("stock < ?", 10).count %> low stock alerts
         </p>
 
       </div>
 
       <!-- CUSTOMERS -->
-      <div class="border border-white/10 bg-[#080808] p-7">
+      <div class="border border-black/[0.06] bg-white p-6">
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-600">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
           Customers
-
         </p>
 
-        <h2 class="text-4xl font-light mt-5">
-
+        <h2 class="text-3xl font-light mt-4 text-black">
           <%= User.count %>
-
         </h2>
 
-        <p class="text-gray-500 text-sm mt-4">
+        <p class="text-gray-400 text-xs mt-3 font-light">
           Registered users
         </p>
 
@@ -341,25 +255,20 @@
     </section>
 
     <!-- LOWER GRID -->
-    <section class="grid grid-cols-1 xl:grid-cols-3 gap-8 mt-12">
+    <section class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-10">
 
       <!-- RECENT ORDERS -->
-      <div class="xl:col-span-2 border border-white/10 bg-[#050505]">
+      <div class="xl:col-span-2 border border-black/[0.06] bg-white">
 
-        <div class="flex items-center justify-between px-8 py-6 border-b border-white/10">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-black/[0.06]">
 
           <div>
 
-            <p class="text-[10px]
-                      uppercase
-                      tracking-[0.3em]
-                      text-gray-600 mb-2">
-
+            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
               Fulfillment Queue
-
             </p>
 
-            <h2 class="text-2xl font-bold uppercase tracking-tight">
+            <h2 class="text-lg font-light uppercase tracking-[0.1em] text-black">
               Recent Orders
             </h2>
 
@@ -367,32 +276,27 @@
 
         </div>
 
-        <div class="divide-y divide-white/5">
+        <div class="divide-y divide-black/[0.04]">
 
           <% Order.order(created_at: :desc).limit(5).each do |order| %>
 
-            <div class="flex items-center justify-between px-8 py-6 hover:bg-white/[0.02] transition">
+            <div class="flex items-center justify-between px-6 py-5 hover:bg-gray-50/50 transition">
 
               <div>
 
-                <p class="text-sm font-medium">
+                <p class="text-sm font-medium text-black">
                   #HYPEE-<%= order.id.to_s.rjust(4, "0") %>
                 </p>
 
-                <p class="text-[10px]
-                          uppercase
-                          tracking-[0.25em]
-                          text-gray-600 mt-2">
-
+                <p class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mt-1">
                   <%= order.shipping_full_name %>
-
                 </p>
 
               </div>
 
               <div class="text-right">
 
-                <p class="text-sm">
+                <p class="text-sm text-black">
                   <%= number_to_currency(
                         order.total_price,
                         unit: "₹",
@@ -400,14 +304,8 @@
                       ) %>
                 </p>
 
-                <p class="text-[10px]
-                          uppercase
-                          tracking-[0.25em]
-                          mt-2
-                          <%= order.payment_status == 'paid' ? 'text-green-400' : 'text-yellow-400' %>">
-
+                <p class="text-[10px] uppercase tracking-[0.25em] mt-1 <%= order.payment_status == 'paid' ? 'text-emerald-600' : 'text-orange-500' %>">
                   <%= order.payment_status %>
-
                 </p>
 
               </div>
@@ -421,22 +319,17 @@
       </div>
 
       <!-- INVENTORY STATUS -->
-      <div class="border border-white/10 bg-[#050505] p-8">
+      <div class="border border-black/[0.06] bg-white p-6">
 
-        <p class="text-[10px]
-                  uppercase
-                  tracking-[0.3em]
-                  text-gray-600 mb-3">
-
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
           Inventory Watch
-
         </p>
 
-        <h2 class="text-2xl font-bold uppercase tracking-tight mb-8">
+        <h2 class="text-lg font-light uppercase tracking-[0.1em] text-black mb-6">
           Low Stock
         </h2>
 
-        <div class="space-y-5">
+        <div class="space-y-4">
 
           <% Product.where("stock < ?", 10).limit(6).each do |product| %>
 
@@ -444,17 +337,17 @@
 
               <div class="flex items-center justify-between mb-2">
 
-                <p class="text-sm">
+                <p class="text-sm text-black truncate">
                   <%= product.name %>
                 </p>
 
-                <p class="text-xs text-orange-400 font-mono">
+                <p class="text-xs text-orange-500 font-light">
                   <%= product.stock %>
                 </p>
 
               </div>
 
-              <div class="h-[1px] bg-white/10 relative overflow-hidden">
+              <div class="h-[1px] bg-black/[0.06] relative overflow-hidden">
 
                 <div class="absolute left-0 top-0 h-full bg-orange-500"
                      style="width: <%= [product.stock * 10, 100].min %>%">

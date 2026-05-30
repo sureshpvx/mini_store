@@ -2,11 +2,11 @@
 
   <div class="max-w-md mx-auto">
 
-    <p class="text-xs uppercase tracking-[0.4em] text-gray-500 mb-3">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">
       Secure Checkout
     </p>
 
-    <h2 class="text-3xl text-white font-light mb-8">
+    <h2 class="text-xl sm:text-2xl font-light uppercase tracking-[0.1em] text-black mb-8">
       Enter Your Phone Number
     </h2>
 
@@ -16,31 +16,34 @@
                     turbo_frame: "otp_modal_content"
                   } do |f| %>
 
-
-      <div class="space-y-6">
+      <div class="space-y-4">
 
         <%= f.telephone_field :phone_number,
                               placeholder: "Phone Number",
                               class: "
-                                w-full h-14
-                                rounded-2xl
-                                bg-black
-                                border border-white/10
-                                px-5
-                                text-white
+                                w-full h-12
+                                bg-white
+                                border border-black/[0.06]
+                                px-4
+                                text-black text-sm
+                                placeholder:text-gray-400
+                                focus:border-black/20
+                                focus:outline-none
+                                transition
                               " %>
-
-
 
         <%= f.submit "Send OTP",
                      class: "
                        w-full h-14
-                       rounded-full
-                       bg-white
-                       text-black
+                       bg-black
+                       text-white
                        uppercase
-                       tracking-[0.3em]
-                       text-sm
+                       tracking-[0.2em]
+                       text-[11px]
+                       hover:bg-gray-800
+                       transition-all
+                       duration-300
+                       cursor-pointer
                      " %>
 
       </div>

@@ -1,77 +1,64 @@
-<div class="max-w-6xl mx-auto px-6 py-16">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24 bg-white">
 
   <!-- HEADER -->
-  <div class="mb-14">
+  <div class="mb-14 text-center">
 
-    <div class="flex items-center gap-4 mb-4">
+    <div class="flex items-center justify-center gap-4 mb-4">
 
-      <div class="w-12 h-12 rounded-full
-                  border border-green-500/30
-                  bg-green-500/10
-                  flex items-center justify-center">
+      <div class="w-10 h-10 border border-black/[0.06] bg-gray-50 flex items-center justify-center">
 
-        <span class="text-green-400 text-xl">
+        <span class="text-black text-lg font-light">
           ✓
         </span>
 
       </div>
 
-      <div>
-
-        <h1 class="text-4xl font-semibold text-white">
-          Order Confirmed
-        </h1>
-
-        <p class="text-gray-500 mt-2">
-          Your order has been placed successfully.
-        </p>
-
-      </div>
-
     </div>
 
-    <div class="flex flex-wrap gap-4 mt-8">
+    <h1 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] text-black">
+      Order Confirmed
+    </h1>
+
+    <p class="text-gray-400 mt-3 text-sm font-light">
+      Your order has been placed successfully.
+    </p>
+
+    <div class="flex flex-wrap justify-center gap-3 mt-8">
 
       <!-- ORDER ID -->
-      <div class="border border-white/10
-                  bg-white/[0.02]
-                  px-5 py-3 rounded-2xl">
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
 
-        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
           Order ID
         </p>
 
-        <p class="text-white font-medium">
+        <p class="text-black font-light text-sm">
           #HYPEE-<%= @order.id.to_s.rjust(4, "0") %>
         </p>
 
       </div>
 
       <!-- STATUS -->
-      <div class="border border-white/10
-                  bg-white/[0.02]
-                  px-5 py-3 rounded-2xl">
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
 
-        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
           Status
         </p>
 
-        <p class="text-yellow-400 font-medium capitalize">
+        <p class="text-orange-500 font-light text-sm capitalize">
           <%= @order.status %>
         </p>
 
       </div>
 
       <!-- PAYMENT -->
-      <div class="border border-white/10
-                  bg-white/[0.02]
-                  px-5 py-3 rounded-2xl">
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
 
-        <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
           Payment
         </p>
 
-        <p class="text-red-400 font-medium capitalize">
+        <p class="text-red-500 font-light text-sm capitalize">
           <%= @order.payment_status %>
         </p>
 
@@ -82,32 +69,29 @@
   </div>
 
   <!-- GRID -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     <!-- LEFT -->
     <div class="lg:col-span-2 space-y-6">
 
       <!-- SHIPPING -->
-      <div class="border border-white/10
-                  bg-[#070707]
-                  rounded-3xl
-                  p-8">
+      <div class="border border-black/[0.06] bg-white p-6 sm:p-8">
 
-        <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-6">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">
           Shipping Details
         </p>
 
         <div class="space-y-4">
 
-          <h2 class="text-2xl text-white font-medium">
+          <h2 class="text-lg sm:text-xl text-black font-light tracking-wide">
             <%= @order.shipping_full_name %>
           </h2>
 
-          <p class="text-gray-400">
+          <p class="text-gray-400 text-sm font-light">
             <%= @order.shipping_phone_number %>
           </p>
 
-          <div class="space-y-2 text-gray-300 leading-relaxed">
+          <div class="space-y-1 text-gray-500 text-sm leading-relaxed font-light">
 
             <p>
               <%= @order.shipping_address_line_1 %>
@@ -143,19 +127,13 @@
       <!-- ORDER ITEMS -->
       <% @order.order_items.each do |item| %>
 
-        <div class="border border-white/10
-                    bg-[#070707]
-                    rounded-3xl
-                    p-6
-                    flex flex-col md:flex-row gap-6
-                    items-start md:items-center
-                    justify-between">
+        <div class="border border-black/[0.06] bg-white p-6 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
 
           <!-- LEFT -->
           <div class="flex gap-5 items-start">
 
             <!-- IMAGE -->
-            <div class="w-28 h-32 overflow-hidden rounded-2xl bg-black">
+            <div class="w-24 h-28 overflow-hidden bg-gray-50 flex-shrink-0">
 
               <% if item.product.images.attached? %>
 
@@ -169,26 +147,26 @@
             <!-- INFO -->
             <div>
 
-              <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-3">
+              <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
                 Product
               </p>
 
-              <h2 class="text-2xl text-white font-light uppercase tracking-wide">
+              <h2 class="text-base sm:text-lg text-black font-light uppercase tracking-[0.15em]">
                 <%= item.product.name %>
               </h2>
 
-              <div class="mt-5 space-y-2">
+              <div class="mt-4 space-y-1">
 
-                <p class="text-gray-400">
+                <p class="text-gray-400 text-sm font-light">
                   Quantity:
-                  <span class="text-white font-medium">
+                  <span class="text-black">
                     <%= item.quantity %>
                   </span>
                 </p>
 
-                <p class="text-gray-400">
+                <p class="text-gray-400 text-sm font-light">
                   Unit Price:
-                  <span class="text-white font-medium">
+                  <span class="text-black">
                     ₹ <%= item.price.to_f.round(2) %>
                   </span>
                 </p>
@@ -202,11 +180,11 @@
           <!-- RIGHT -->
           <div class="text-right">
 
-            <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mb-3">
+            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">
               Subtotal
             </p>
 
-            <p class="text-3xl text-white font-light">
+            <p class="text-2xl text-black font-light">
               ₹ <%= item.total_price.to_f.round(2) %>
             </p>
 
@@ -221,50 +199,45 @@
     <!-- RIGHT SUMMARY -->
     <div>
 
-      <div class="border border-white/10
-                  bg-[#070707]
-                  rounded-3xl
-                  p-8
-                  sticky top-28">
+      <div class="border border-black/[0.06] bg-white p-6 sm:p-8 sticky top-24">
 
-        <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-6">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">
           Order Summary
         </p>
 
-        <div class="space-y-5">
+        <div class="space-y-4">
 
-          <div class="flex justify-between text-gray-400">
+          <div class="flex justify-between text-gray-400 text-sm">
 
-            <span>
+            <span class="font-light">
               Subtotal
             </span>
 
-            <span>
+            <span class="text-black font-light">
               ₹ <%= @order.total_price.to_f.round(2) %>
             </span>
 
           </div>
 
-          <div class="flex justify-between text-gray-400">
+          <div class="flex justify-between text-gray-400 text-sm">
 
-            <span>
+            <span class="font-light">
               Shipping
             </span>
 
-            <span>
+            <span class="text-black font-light">
               Free
             </span>
 
           </div>
 
-          <div class="border-t border-white/10 pt-6
-                      flex justify-between items-center">
+          <div class="border-t border-black/[0.06] pt-4 flex justify-between items-center">
 
-            <span class="uppercase tracking-[0.3em] text-white">
+            <span class="text-sm uppercase tracking-[0.2em] text-black font-light">
               Total
             </span>
 
-            <span class="text-4xl text-white font-light">
+            <span class="text-3xl text-black font-light">
               ₹ <%= @order.total_price.to_f.round(2) %>
             </span>
 
@@ -273,29 +246,15 @@
         </div>
 
         <!-- ACTIONS -->
-        <div class="mt-10 space-y-4">
+        <div class="mt-8 space-y-3">
 
           <%= link_to "View Orders",
                       orders_path,
-                      class: "w-full h-14
-                             border border-white/15
-                             rounded-full
-                             flex items-center justify-center
-                             uppercase tracking-[0.35em]
-                             text-sm text-white
-                             hover:bg-white hover:text-black
-                             transition-all duration-500" %>
+                      class: "w-full h-14 border border-black/30 flex items-center justify-center uppercase tracking-[0.2em] text-[11px] text-black hover:bg-black hover:text-white transition-all duration-300" %>
 
           <%= link_to "Continue Shopping",
                       products_path,
-                      class: "w-full h-14
-                             bg-white text-black
-                             rounded-full
-                             flex items-center justify-center
-                             uppercase tracking-[0.35em]
-                             text-sm
-                             hover:opacity-90
-                             transition-all duration-500" %>
+                      class: "w-full h-14 bg-black text-white flex items-center justify-center uppercase tracking-[0.2em] text-[11px] hover:bg-gray-800 transition-all duration-300" %>
 
         </div>
 
