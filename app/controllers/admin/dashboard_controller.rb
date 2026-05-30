@@ -1,15 +1,9 @@
-class Admin::DashboardController < ApplicationController
-  before_action :authenticate_user!
-  before_action :ensure_admin!
+# app/controllers/admin/dashboard_controller.rb
+class Admin::DashboardController < Admin::BaseController
   def index
-    @product = Product.new
-
-  end
-
-  private
-  def ensure_admin!
-    unless current_user.admin?
-      redirect_to root_path, status: :forbidden, alert: "Admins only!"
-    end
+    @total_orders    = Order.count
+    @total_customers = User.count
+    @total_products  = Product.count
+    @total_revenue   = Order.where(payment_status: 1).sum(:total_price)
   end
 end

@@ -5,10 +5,10 @@
 
   <% if product.errors.any? %>
     <div class="border border-red-500/30 p-4">
-      <p class="text-red-400 text-[10px] tracking-[0.2em] uppercase mb-2">
+      <p class="text-red-600 text-[10px] tracking-[0.2em] uppercase mb-2">
         <%= pluralize(product.errors.count, "error") %>
       </p>
-      <ul class="text-red-300 text-xs space-y-1">
+      <ul class="text-red-500 text-xs space-y-1">
         <% product.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
@@ -18,31 +18,31 @@
 
   <%# NAME — label left-aligned %>
   <div class="flex flex-col gap-1">
-    <%= f.label :name, class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <%= f.text_field :name, class: "bg-transparent border border-gray-800 text-white px-3 py-2.5 text-sm focus:border-white focus:outline-none transition-colors" %>
+    <%= f.label :name, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+    <%= f.text_field :name, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
   </div>
 
   <%# DESCRIPTION %>
   <div class="flex flex-col gap-1">
-    <%= f.label :description, class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <%= f.text_area :description, rows: 3, class: "bg-transparent border border-gray-800 text-white px-3 py-2.5 text-sm focus:border-white focus:outline-none transition-colors resize-none" %>
+    <%= f.label :description, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+    <%= f.text_area :description, rows: 3, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors resize-none" %>
   </div>
 
   <%# PRICE + STOCK %>
   <div class="grid grid-cols-2 gap-4">
     <div class="flex flex-col gap-1">
-      <%= f.label :price, class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-      <%= f.number_field :price, step: 0.01, class: "bg-transparent border border-gray-800 text-white px-3 py-2.5 text-sm focus:border-white focus:outline-none transition-colors" %>
+      <%= f.label :price, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+      <%= f.number_field :price, step: 0.01, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
     </div>
     <div class="flex flex-col gap-1">
-      <%= f.label :stock, class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-      <%= f.number_field :stock, class: "bg-transparent border border-gray-800 text-white px-3 py-2.5 text-sm focus:border-white focus:outline-none transition-colors" %>
+      <%= f.label :stock, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+      <%= f.number_field :stock, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
     </div>
   </div>
 
   <%# CATEGORY %>
   <div class="flex flex-col gap-1">
-    <%= f.label :category_id, "Category", class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
+    <%= f.label :category_id, "Category", class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
     <%= f.select :category_id,
                  options_for_select(
                    Category.includes(:parent).where.not(parent_id: nil).map { |c|
@@ -51,20 +51,20 @@
                    product.category_id
                  ),
                  { include_blank: "Select Category" },
-                 { class: "bg-black border border-gray-800 text-white px-3 py-2.5 text-sm focus:border-white focus:outline-none transition-colors cursor-pointer" } %>
+                 { class: "bg-white border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors cursor-pointer" } %>
   </div>
 
   <%# EXISTING IMAGES (edit mode) %>
   <% if product.persisted? && product.images.attached? %>
     <div class="flex flex-col gap-2">
-      <p class="text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left">Current Images</p>
+      <p class="text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left">Current Images</p>
       <div class="flex gap-2 flex-wrap">
         <% product.images.each do |image| %>
           <div class="relative group">
-            <%= image_tag image.variant(resize_to_limit: [80, 80]), class: "border border-gray-800 w-20 h-20 object-cover" %>
-            <label class="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-              <input type="checkbox" name="remove_image_ids[]" value="<%= image.id %>" class="accent-white">
-              <span class="text-white text-[10px] ml-1">Remove</span>
+            <%= image_tag image.variant(resize_to_limit: [80, 80]), class: "border border-black/[0.06] w-20 h-20 object-cover" %>
+            <label class="absolute inset-0 flex items-center justify-center bg-white/70 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <input type="checkbox" name="remove_image_ids[]" value="<%= image.id %>" class="accent-black">
+              <span class="text-black text-[10px] ml-1">Remove</span>
             </label>
           </div>
         <% end %>
@@ -74,22 +74,22 @@
 
   <%# IMAGE UPLOAD %>
   <div class="flex flex-col gap-2">
-    <%= f.label :images, product.new_record? ? "Images" : "Add More Images", class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <div class="border border-dashed border-gray-800 p-6 text-center">
+    <%= f.label :images, product.new_record? ? "Images" : "Add More Images", class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+    <div class="border border-dashed border-black/[0.06] p-6 text-center">
       <%= f.file_field :images, multiple: true, accept: "image/jpeg,image/png,image/webp",
-                       class: "text-gray-400 text-xs file:mr-4 file:py-2 file:px-4 file:border file:border-gray-700 file:bg-transparent file:text-white file:text-xs file:tracking-widest file:uppercase file:cursor-pointer hover:file:border-white transition-colors" %>
+                       class: "text-gray-400 text-xs file:mr-4 file:py-2 file:px-4 file:border file:border-black/[0.06] file:bg-white file:text-black file:text-xs file:tracking-widest file:uppercase file:cursor-pointer hover:file:border-black transition-colors" %>
     </div>
   </div>
 
   <%# EXISTING VIDEO (edit mode) %>
   <% if product.persisted? && product.video.attached? %>
     <div class="flex flex-col gap-2">
-      <p class="text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left">Current Video</p>
-      <div class="border border-gray-800 p-3 flex items-center justify-between">
-        <span class="text-white text-xs"><%= product.video.filename %></span>
+      <p class="text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left">Current Video</p>
+      <div class="border border-black/[0.06] p-3 flex items-center justify-between">
+        <span class="text-black text-xs"><%= product.video.filename %></span>
         <label class="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" name="remove_video" value="1" class="accent-white">
-          <span class="text-gray-500 text-[10px] tracking-widest uppercase">Remove</span>
+          <input type="checkbox" name="remove_video" value="1" class="accent-black">
+          <span class="text-gray-400 text-[10px] tracking-widest uppercase">Remove</span>
         </label>
       </div>
     </div>
@@ -97,14 +97,14 @@
 
   <%# VIDEO UPLOAD %>
   <div class="flex flex-col gap-2">
-    <%= f.label :video, product.new_record? ? "Video" : "Replace Video", class: "text-gray-500 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <div class="border border-dashed border-gray-800 p-6 text-center">
+    <%= f.label :video, product.new_record? ? "Video" : "Replace Video", class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
+    <div class="border border-dashed border-black/[0.06] p-6 text-center">
       <%= f.file_field :video, accept: "video/mp4,video/webm",
-                       class: "text-gray-400 text-xs file:mr-4 file:py-2 file:px-4 file:border file:border-gray-700 file:bg-transparent file:text-white file:text-xs file:tracking-widest file:uppercase file:cursor-pointer hover:file:border-white transition-colors" %>
+                       class: "text-gray-400 text-xs file:mr-4 file:py-2 file:px-4 file:border file:border-black/[0.06] file:bg-white file:text-black file:text-xs file:tracking-widest file:uppercase file:cursor-pointer hover:file:border-black transition-colors" %>
     </div>
   </div>
 
   <%= f.submit product.new_record? ? "Create Product" : "Update Product",
-               class: "mt-2 bg-white text-black h-12 uppercase tracking-[0.25em] text-[11px] font-medium hover:bg-gray-200 transition-colors cursor-pointer" %>
+               class: "mt-2 bg-black text-white h-12 uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition-colors cursor-pointer" %>
 
 <% end %>

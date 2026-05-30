@@ -1,539 +1,152 @@
-<div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-10 bg-black min-h-screen text-white font-sans">
+<%# app/views/admin/products/index.html.erb %>
 
-  <div class="flex justify-between items-center mb-4 px-1">
-    <div class="flex gap-4 items-center">
-      <div class="flex items-center gap-2">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-        </span>
+<div class="min-h-screen bg-white text-black flex">
+  <%= render "admin/shared/sidebar", active: :products %>
 
-        <span class="text-[9px] uppercase tracking-[0.3em] text-gray-500">
-          System Live
-        </span>
+  <main class="flex-1 px-10 py-10 bg-white">
+    <!-- TOPBAR -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 border-b border-black/[0.06] pb-8">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Inventory Management</p>
+        <h1 class="text-3xl font-light uppercase tracking-[0.1em] text-black">Catalog</h1>
       </div>
-
-      <span class="text-[9px] uppercase tracking-[0.3em] text-gray-700">
-        |
-      </span>
-
-      <span class="text-[9px] uppercase tracking-[0.3em] text-gray-500">
-        <%= Time.current.strftime("%H:%M %Z") %>
-      </span>
-    </div>
-
-    <div class="flex gap-6">
-      <div class="text-[9px] uppercase tracking-[0.3em] text-gray-500">
-        Storage:
-        <span class="text-white">
-          Optimized
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-12 border-b border-white/10 pb-12">
-
-    <div class="space-y-4">
-
-      <h1 class="text-6xl font-bold uppercase tracking-tighter leading-none">
-        Inv
-        <span class="text-outline text-transparent border-white/20"
-              style="-webkit-text-stroke: 1px rgba(255,255,255,0.2)">
-          Control
-        </span>
-      </h1>
 
       <div class="flex items-center gap-4">
-        <div class="h-px w-12 bg-white/20"></div>
+        <div class="hidden lg:flex items-center border border-black/[0.06] bg-gray-50 px-5 h-12 w-[320px]">
+          <input type="text" placeholder="Search products..." class="bg-transparent w-full outline-none text-sm placeholder:text-gray-400">
+        </div>
 
-        <p class="text-gray-500 text-[10px] uppercase tracking-[0.4em]">
-          Multi-channel inventory node
-        </p>
+        <div data-controller="modal">
+          <button data-modal-id="add-product-modal" data-action="click->modal#open" class="bg-black text-white px-8 h-12 uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition">
+            + Add Product
+          </button>
+          <%= render "shared/modal", title: "Add Product", modal_id: "add-product-modal" do %>
+            <%= render "admin/products/form", product: Product.new %>
+          <% end %>
+        </div>
       </div>
-
     </div>
 
-    <div class="flex flex-wrap gap-4 w-full lg:w-auto">
-
-      <!-- TOTAL PRODUCTS -->
-      <div class="flex-1 lg:flex-none min-w-[150px]
-                  bg-[#0A0A0A]
-                  border border-white/5
-                  p-4 transition hover:border-white/20">
-
-        <p class="text-[9px]
-                  text-gray-600
-                  uppercase tracking-widest mb-1">
-
-          Total Products
-
-        </p>
-
-        <p class="text-xl
-                  font-light
-                  tracking-tight
-                  text-white">
-
-          <%= Product.count %>
-
-        </p>
-
+    <!-- STATS BAR -->
+    <div class="flex flex-wrap gap-4 mt-8 mb-8">
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Total Products</p>
+        <p class="text-xl font-light text-black"><%= Product.count %></p>
       </div>
-
-      <!-- INVENTORY VALUE -->
-      <div class="flex-1 lg:flex-none min-w-[150px]
-                  bg-[#0A0A0A]
-                  border border-white/5
-                  p-4 transition hover:border-white/20">
-
-        <p class="text-[9px]
-                  text-gray-600
-                  uppercase tracking-widest mb-1">
-
-          Inventory Value
-
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Inventory Value</p>
+        <p class="text-xl font-light text-black">
+          <%= number_to_currency(Product.sum("price * stock"), unit: "₹", precision: 0) %>
         </p>
-
-        <p class="text-xl
-                  font-light
-                  tracking-tight
-                  text-white">
-
-          <%= number_to_currency(
-                Product.sum("price * stock"),
-                unit: "₹",
-                precision: 0
-              ) %>
-
-        </p>
-
       </div>
-
-      <!-- TOTAL STOCK -->
-      <div class="flex-1 lg:flex-none min-w-[150px]
-                  bg-[#0A0A0A]
-                  border border-white/5
-                  p-4 transition hover:border-white/20">
-
-        <p class="text-[9px]
-                  text-gray-600
-                  uppercase tracking-widest mb-1">
-
-          Units In Stock
-
-        </p>
-
-        <p class="text-xl
-                  font-light
-                  tracking-tight
-                  text-white">
-
-          <%= Product.sum(:stock) %>
-
-        </p>
-
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Units In Stock</p>
+        <p class="text-xl font-light text-black"><%= Product.sum(:stock) %></p>
       </div>
-
-      <!-- LOW STOCK -->
-      <div class="flex-1 lg:flex-none min-w-[150px]
-                  bg-[#0A0A0A]
-                  border border-white/5
-                  p-4 transition hover:border-white/20">
-
-        <p class="text-[9px]
-                  text-gray-600
-                  uppercase tracking-widest mb-1">
-
-          Low Stock
-
-        </p>
-
-        <p class="text-xl
-                  font-light
-                  tracking-tight
-                  text-orange-400">
-
-          <%= Product.where("stock < ?", 10).count %>
-
-        </p>
-
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Low Stock</p>
+        <p class="text-xl font-light text-orange-500"><%= Product.where("stock < ?", 10).count %></p>
       </div>
-
-      <!-- ADD PRODUCT -->
-      <div data-controller="modal"
-                     data-modal-id="add-product-modal">
-
-        <button
-          data-modal-id="add-product-modal"
-          data-action="click->modal#open"
-          class="group relative overflow-hidden
-                 bg-white px-8 py-4
-                 text-black text-[11px]
-                 font-bold uppercase tracking-[0.2em]
-                 transition-all hover:pr-12">
-
-          <span class="relative z-10">
-            + New Entry
-          </span>
-
-          <div class="absolute right-0 top-0
-                      h-full w-0 bg-black
-                      transition-all
-                      group-hover:w-10
-                      flex items-center justify-center">
-
-            <span class="text-white">
-              →
-            </span>
-
-          </div>
-
-        </button>
-
-        <%= render "shared/modal",
-                   title: "Add Product",
-                   modal_id: "add-product-modal" do %>
-
-          <%= render "admin/products/form",
-                     product: Product.new %>
-
-        <% end %>
-
-      </div>
-
     </div>
-  </div>
 
-  <!-- TABLE -->
-  <div class="relative overflow-hidden border border-white/5 bg-[#050505]">
-
-    <table class="w-full text-left border-collapse">
-
-      <thead>
-
-      <tr class="bg-white/[0.02]
-                 border-b border-white/10
-                 text-[9px]
-                 uppercase tracking-[0.3em]
-                 text-gray-500">
-
-        <th class="p-6 font-semibold">
-          Metadata / Product
-        </th>
-
-        <th class="p-6 font-semibold">
-          Classification
-        </th>
-
-        <th class="p-6 font-semibold">
-          Metrics / Stock
-        </th>
-
-        <th class="p-6 font-semibold text-right">
-          Value
-        </th>
-
-        <th class="p-6 font-semibold text-right">
-          Operations
-        </th>
-
-      </tr>
-
-      </thead>
-
-      <tbody class="divide-y divide-white/5">
-
-      <% @products.each do |product| %>
-
-        <tr class="group hover:bg-white/[0.03] transition-all duration-300">
-
-          <td class="p-6">
-
-            <div class="flex items-center gap-5">
-
-              <div class="relative w-14 h-18
-                          bg-black
-                          border border-white/10
-                          overflow-hidden
-                          group-hover:border-white/30
-                          transition-colors">
-
-                <% if product.images.attached? %>
-
-                  <%= image_tag product.images.first,
-                                class: "
-                                  w-full
-                                  h-full
-                                  object-cover
-                                  grayscale
-                                  opacity-60
-                                  group-hover:opacity-100
-                                  group-hover:scale-110
-                                  transition
-                                  duration-700
-                                " %>
-
-                <% end %>
-
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-
+    <!-- PRODUCT TABLE -->
+    <div class="relative overflow-hidden border border-black/[0.06] bg-white">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-gray-50/50 border-b border-black/[0.06] text-[10px] uppercase tracking-[0.3em] text-gray-400">
+          <th class="p-6 font-medium">Product</th>
+          <th class="p-6 font-medium">Category</th>
+          <th class="p-6 font-medium">Stock</th>
+          <th class="p-6 font-medium text-right">Price</th>
+          <th class="p-6 font-medium text-right">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-black/[0.04]">
+        <% @products.each do |product| %>
+          <tr class="group hover:bg-gray-50/50 transition-all duration-300">
+            <td class="p-6">
+              <div class="flex items-center gap-5">
+                <div class="relative w-14 h-16 bg-gray-50 border border-black/[0.04] overflow-hidden">
+                  <% if product.images.attached? %>
+                    <%= image_tag product.images.first, class: "w-full h-full object-cover group-hover:scale-105 transition duration-700" %>
+                  <% end %>
+                </div>
+                <div>
+                  <p class="text-xs font-medium uppercase tracking-widest text-black mb-1"><%= product.name %></p>
+                  <p class="text-[9px] text-gray-400 font-mono tracking-tighter">REF: #<%= product.id %></p>
+                </div>
               </div>
-
-              <div>
-
-                <p class="text-xs font-semibold uppercase tracking-widest text-white mb-1">
-                  <%= product.name %>
-                </p>
-
-                <p class="text-[9px] text-gray-600 font-mono tracking-tighter">
-                  REF_ID: #<%= product.id %>
-                </p>
-
-              </div>
-
-            </div>
-
-          </td>
-
-          <td class="p-6">
-
-            <div class="flex items-center gap-2">
-
-              <div class="h-1 w-1 rounded-full bg-white/20"></div>
-
-              <span class="text-[10px]
-                           text-gray-400
-                           uppercase tracking-widest
-                           font-light">
-
-                <%= product.category&.name || "Default" %>
-
-              </span>
-
-            </div>
-
-          </td>
-
-          <td class="p-6">
-
-            <div class="flex flex-col gap-2">
-
-              <div class="flex justify-between items-end w-32">
-
-                <span class="text-[10px]
-                             uppercase tracking-widest
-                             text-gray-600">
-
-                  Capacity
-
+            </td>
+            <td class="p-6">
+              <div class="flex items-center gap-2">
+                <div class="h-1 w-1 bg-black/20"></div>
+                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-light">
+                  <%= product.category&.name || "Default" %>
                 </span>
-
-                <span class="text-xs font-mono
-                  <%= product.stock.to_i <= 10 ? 'text-orange-500' : 'text-white' %>">
-
-                  <%= product.stock.to_i.to_s.rjust(2, '0') %>
-
-                </span>
-
               </div>
-
-              <div class="w-32 h-[1px] bg-white/5 relative">
-
-                <div
-                  class="absolute top-0 left-0 h-full transition-all duration-1000
-                  <%= product.stock.to_i < 10 ? 'bg-orange-600 shadow-[0_0_10px_#ea580c]' : 'bg-white/40' %>"
-                  style="width: <%= [product.stock.to_i * 2, 100].min %>%;">
+            </td>
+            <td class="p-6">
+              <div class="flex flex-col gap-2 w-32">
+                <div class="flex justify-between items-end">
+                  <span class="text-[10px] uppercase tracking-widest text-gray-400">Stock</span>
+                  <span class="text-xs font-light <%= product.stock.to_i <= 10 ? 'text-orange-500' : 'text-black' %>">
+                    <%= product.stock.to_i.to_s.rjust(2, '0') %>
+                  </span>
+                </div>
+                <div class="w-full h-[1px] bg-black/[0.06] relative">
+                  <div class="absolute top-0 left-0 h-full transition-all duration-1000 <%= product.stock.to_i < 10 ? 'bg-orange-500' : 'bg-black/30' %>" style="width: <%= [product.stock.to_i * 2, 100].min %>%;"></div>
+                </div>
+              </div>
+            </td>
+            <td class="p-6 text-right">
+                <span class="text-xs font-light tracking-wide text-black">
+                  <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
+                </span>
+            </td>
+            <td class="p-6 text-right">
+              <div class="flex justify-end items-center gap-6">
+                <div data-controller="modal" data-modal-id="edit-product-<%= product.id %>">
+                  <button data-modal-id="edit-product-<%= product.id %>" data-action="click->modal#open" class="relative group/link">
+                    <span class="text-[10px] uppercase tracking-widest text-gray-400 group-hover/link:text-black transition-colors">Edit</span>
+                    <div class="absolute -bottom-1 left-0 w-0 h-px bg-black transition-all group-hover/link:w-full"></div>
+                  </button>
+                  <%= render "shared/modal", title: "Edit Product", modal_id: "edit-product-#{product.id}" do %>
+                    <%= render "admin/products/form", product: product %>
+                  <% end %>
                 </div>
 
-              </div>
-
-            </div>
-
-          </td>
-
-          <td class="p-6 text-right">
-
-            <span class="text-xs font-mono tracking-tighter text-white">
-
-              <%= number_to_currency(product.price,
-                                     unit: "₹",
-                                     precision: 0) %>
-
-            </span>
-
-          </td>
-
-          <td class="p-6 text-right">
-
-            <div class="flex justify-end items-center gap-6">
-
-              <!-- EDIT -->
-              <div data-controller="modal"
-                   data-modal-id="edit-product-<%= product.id %>">
-
-                <button
-                  data-modal-id="edit-product-<%= product.id %>"
-                  data-action="click->modal#open"
-                  class="relative group/link">
-
-                  <span class="text-[9px]
-                               uppercase tracking-widest
-                               text-gray-500
-                               group-hover/link:text-white
-                               transition-colors">
-
-                    Modify
-
-                  </span>
-
-                  <div class="absolute -bottom-1 left-0
-                              w-0 h-px bg-white
-                              transition-all
-                              group-hover/link:w-full">
-                  </div>
-
-                </button>
-
-                <%= render "shared/modal",
-                           title: "Edit Product",
-                           modal_id: "edit-product-#{product.id}" do %>
-
-                  <%= render "admin/products/form",
-                             product: product %>
-
+                <%= button_to admin_product_path(product), method: :delete, class: "p-2 hover:bg-red-50 transition-colors text-gray-400 hover:text-red-500", data: { turbo_confirm: "Delete this product?" } do %>
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 18L18 6M6 6l12 12" stroke-width="2"/>
+                  </svg>
                 <% end %>
-
               </div>
-
-              <!-- DELETE -->
-              <%= button_to admin_product_path(product),
-                            method: :delete,
-                            class: "
-                              p-2
-                              hover:bg-red-500/10
-                              rounded-full
-                              transition-colors
-                              text-gray-600
-                              hover:text-red-500
-                            ",
-                            data: {
-                              turbo_confirm: "Decommission product?"
-                            } do %>
-
-                <svg class="w-3 h-3"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
-
-                  <path d="M6 18L18 6M6 6l12 12"
-                        stroke-width="2"/>
-
-                </svg>
-
-              <% end %>
-
-            </div>
-
-          </td>
-
-        </tr>
-
-      <% end %>
-
-      </tbody>
-
-    </table>
-
-  </div>
-
-  <!-- PAGINATION -->
-  <% if @pagy.pages > 1 %>
-
-    <div class="mt-12 flex items-center justify-center gap-2">
-
-      <% if @pagy.prev %>
-
-        <%= link_to pagy_url_for(@pagy, @pagy.prev),
-                    class: "
-                      w-11 h-11
-                      flex items-center justify-center
-                      border border-white/10
-                      text-gray-500
-                      hover:text-white
-                      hover:border-white/30
-                      transition-all duration-300
-                    " do %>
-
-          ←
-
+            </td>
+          </tr>
         <% end %>
-
-      <% end %>
-
-      <% @pagy.series.each do |item| %>
-
-        <% if item.is_a?(Integer) %>
-
-          <%= link_to item,
-                      pagy_url_for(@pagy, item),
-                      class: "
-                        w-11 h-11
-                        flex items-center justify-center
-                        border border-white/10
-                        text-gray-500
-                        hover:text-white
-                        hover:border-white/30
-                        text-[11px]
-                        tracking-[0.2em]
-                        transition-all duration-300
-                      " %>
-
-        <% elsif item.is_a?(String) %>
-
-          <div class="
-            w-11 h-11
-            flex items-center justify-center
-            bg-white
-            text-black
-            text-[11px]
-            tracking-[0.2em]
-            font-medium
-          ">
-            <%= item %>
-          </div>
-
-        <% elsif item == :gap %>
-
-          <div class="w-11 text-center text-gray-700">
-            ...
-          </div>
-
-        <% end %>
-
-      <% end %>
-
-      <% if @pagy.next %>
-
-        <%= link_to pagy_url_for(@pagy, @pagy.next),
-                    class: "
-                      w-11 h-11
-                      flex items-center justify-center
-                      border border-white/10
-                      text-gray-500
-                      hover:text-white
-                      hover:border-white/30
-                      transition-all duration-300
-                    " do %>
-
-          →
-
-        <% end %>
-
-      <% end %>
-
+        </tbody>
+      </table>
     </div>
 
-  <% end %>
-
+    <!-- PAGINATION -->
+    <% if @pagy&.pages.to_i > 1 %>
+      <div class="mt-12 flex items-center justify-center gap-2">
+        <% if @pagy.prev %>
+          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>←<% end %>
+        <% end %>
+        <% @pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <%= link_to item, pagy_url_for(@pagy, item), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 text-[11px] tracking-[0.2em] transition-all duration-300" %>
+          <% elsif item.is_a?(String) %>
+            <div class="w-11 h-11 flex items-center justify-center bg-black text-white text-[11px] tracking-[0.2em] font-medium"><%= item %></div>
+          <% elsif item == :gap %>
+            <div class="w-11 text-center text-gray-400">...</div>
+          <% end %>
+        <% end %>
+        <% if @pagy.next %>
+          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>→<% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </main>
 </div>

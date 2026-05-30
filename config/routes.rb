@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :products
     resources :categories
     resources :orders, only: [:index, :show, :update]
+    resources :users, only: [:index]
   end
 
   # config/routes.rb

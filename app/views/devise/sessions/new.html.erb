@@ -1,15 +1,15 @@
 <% content_for :auth_page, true %>
 
-<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 py-10">
+<div class="min-h-screen bg-white flex items-center justify-center px-4 sm:px-6 py-10">
   <main class="w-full max-w-md">
 
     <!-- Header -->
     <div class="text-center mb-8 sm:mb-10">
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">
+      <h1 class="text-2xl font-bold tracking-tight uppercase text-black">
         Hypee
       </h1>
 
-      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6">
+      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6 text-black font-light tracking-[0.1em]">
         Sign In
       </h2>
 
@@ -19,43 +19,43 @@
     </div>
 
     <!-- Form -->
-    <div class="border border-white/10 p-4 sm:p-8">
+    <div class="border border-black/[0.06] p-4 sm:p-8 bg-white">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-6" }) do |f| %>
 
         <!-- Email -->
         <%= f.email_field :email,
                           placeholder: "Email address",
-                          class: "w-full bg-transparent border-0 border-b border-[#1A1A1A] py-4 px-0 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
+                          class: "w-full bg-transparent border-0 border-b border-black/[0.06] py-4 px-0 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
 
         <!-- Password -->
         <%= f.password_field :password,
                              placeholder: "Password",
-                             class: "w-full bg-transparent border-0 border-b border-[#1A1A1A] py-4 px-0 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
+                             class: "w-full bg-transparent border-0 border-b border-black/[0.06] py-4 px-0 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
 
         <!-- Remember + Forgot -->
         <div class="flex justify-between items-center text-[10px] sm:text-xs uppercase text-gray-400">
           <label class="flex items-center gap-2">
-            <%= f.check_box :remember_me, class: "bg-transparent border-white/20" %>
+            <%= f.check_box :remember_me, class: "bg-transparent border-black/[0.06]" %>
             Remember
           </label>
 
           <%= link_to "Forgot?", new_password_path(resource_name),
-                      class: "underline hover:text-white transition" %>
+                      class: "underline hover:text-black transition" %>
         </div>
 
         <!-- Button -->
         <%= f.submit "Sign In",
-                     class: "w-full bg-white text-black uppercase py-4 mt-4 sm:mt-6 active:scale-95 transition" %>
+                     class: "w-full bg-black text-white uppercase py-4 mt-4 sm:mt-6 active:scale-95 transition" %>
 
       <% end %>
 
       <!-- Divider -->
       <div class="my-6 sm:my-8 relative">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-[#1A1A1A]"></div>
+          <div class="w-full border-t border-black/[0.04]"></div>
         </div>
         <div class="relative text-center">
-          <span class="bg-black px-4 text-[10px] sm:text-xs uppercase text-gray-500">
+          <span class="bg-white px-4 text-[10px] sm:text-xs uppercase text-gray-400">
             Or continue with
           </span>
         </div>
@@ -63,10 +63,10 @@
 
       <!-- Social -->
       <div class="grid grid-cols-2 gap-3">
-        <button class="border border-white/20 py-3 text-xs sm:text-sm uppercase active:scale-95 transition">
+        <button class="border border-black/[0.06] py-3 text-xs sm:text-sm uppercase text-black active:scale-95 transition">
           Google
         </button>
-        <button class="border border-white/20 py-3 text-xs sm:text-sm uppercase active:scale-95 transition">
+        <button class="border border-black/[0.06] py-3 text-xs sm:text-sm uppercase text-black active:scale-95 transition">
           Apple
         </button>
       </div>
@@ -74,9 +74,9 @@
 
     <!-- Footer -->
     <div class="text-center mt-6 sm:mt-8 text-[10px] sm:text-xs uppercase text-gray-400">
-      Don’t have an account?
+      Don't have an account?
       <%= link_to "Create Account", new_registration_path(resource_name),
-                  class: "underline ml-1 hover:text-white transition" %>
+                  class: "underline ml-1 hover:text-black transition" %>
     </div>
 
   </main>

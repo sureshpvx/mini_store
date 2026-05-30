@@ -1,15 +1,15 @@
 <% content_for :auth_page, true %>
 
-<div class="min-h-screen flex items-center justify-center px-4 sm:px-6 py-10">
+<div class="min-h-screen bg-white flex items-center justify-center px-4 sm:px-6 py-10">
   <main class="w-full max-w-md">
 
     <!-- Header -->
     <div class="text-center mb-8 sm:mb-10">
-      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase">
+      <h1 class="text-2xl font-bold tracking-tight uppercase text-black">
         Hypee
       </h1>
 
-      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6">
+      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6 text-black font-light tracking-[0.1em]">
         Create Account
       </h2>
 
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Form -->
-    <div class="border border-white/10 p-4 sm:p-8">
+    <div class="border border-black/[0.06] p-4 sm:p-8 bg-white">
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
 
@@ -30,44 +30,44 @@
                           autofocus: true,
                           autocomplete: "email",
                           placeholder: "Email Address",
-                          class: "w-full bg-[#0A0A0A] border border-[#333333] px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
+                          class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
 
         <!-- Password -->
         <%= f.password_field :password,
                              autocomplete: "new-password",
                              placeholder: "Password",
-                             class: "w-full bg-[#0A0A0A] border border-[#333333] px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
+                             class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
 
         <!-- Confirm Password -->
         <%= f.password_field :password_confirmation,
                              autocomplete: "new-password",
                              placeholder: "Confirm Password",
-                             class: "w-full bg-[#0A0A0A] border border-[#333333] px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-white transition" %>
+                             class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
 
         <!-- Terms -->
         <div class="flex items-start gap-2 text-xs text-gray-400">
           <%= check_box_tag :terms, "1", false,
-                            class: "mt-1 bg-[#0A0A0A] border-[#333333]" %>
+                            class: "mt-1 bg-white border-black/[0.06]" %>
 
           <span>
             I agree to the
-            <a href="#" class="text-white underline hover:opacity-80">Terms</a>
+            <a href="#" class="text-black underline hover:opacity-80">Terms</a>
             &
-            <a href="#" class="text-white underline hover:opacity-80">Privacy Policy</a>
+            <a href="#" class="text-black underline hover:opacity-80">Privacy Policy</a>
           </span>
         </div>
 
         <!-- Submit -->
         <%= f.submit "Create Account",
-                     class: "w-full bg-white text-black uppercase py-4 mt-2 hover:bg-opacity-90 transition" %>
+                     class: "w-full bg-black text-white uppercase py-4 mt-2 hover:bg-gray-800 transition" %>
 
       <% end %>
 
       <!-- Footer -->
-      <div class="text-center mt-6 pt-6 border-t border-[#1A1A1A] text-xs text-gray-400 uppercase">
+      <div class="text-center mt-6 pt-6 border-t border-black/[0.06] text-xs text-gray-400 uppercase">
         Already have an account?
         <%= link_to "Sign In", new_session_path(resource_name),
-                    class: "underline ml-1 hover:text-white transition" %>
+                    class: "underline ml-1 hover:text-black transition" %>
       </div>
 
     </div>

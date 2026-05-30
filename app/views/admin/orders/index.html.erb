@@ -1,0 +1,127 @@
+<%# app/views/admin/orders/index.html.erb %>
+
+<div class="min-h-screen bg-white text-black flex">
+  <%= render "admin/shared/sidebar", active: :orders %>
+
+  <main class="flex-1 px-10 py-10 bg-white">
+    <!-- TOPBAR -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 border-b border-black/[0.06] pb-8">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Fulfillment</p>
+        <h1 class="text-3xl font-light uppercase tracking-[0.1em] text-black">Orders</h1>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="flex flex-wrap gap-4 mt-8 mb-8">
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Total Orders</p>
+        <p class="text-xl font-light text-black"><%= Order.count %></p>
+      </div>
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Paid Revenue</p>
+        <p class="text-xl font-light text-black">
+          <%= number_to_currency(Order.where(payment_status: 1).sum(:total_price), unit: "₹", precision: 0) %>
+        </p>
+      </div>
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Pending</p>
+        <p class="text-xl font-light text-orange-500"><%= Order.where(status: 0).count %></p>
+      </div>
+      <div class="border border-black/[0.06] bg-white px-5 py-3">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">Completed</p>
+        <p class="text-xl font-light text-emerald-600"><%= Order.where(status: 3).count %></p>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="relative overflow-hidden border border-black/[0.06] bg-white">
+      <table class="w-full text-left border-collapse">
+        <thead>
+        <tr class="bg-gray-50/50 border-b border-black/[0.06] text-[10px] uppercase tracking-[0.3em] text-gray-400">
+          <th class="p-6 font-medium">Order</th>
+          <th class="p-6 font-medium">Customer</th>
+          <th class="p-6 font-medium">Date</th>
+          <th class="p-6 font-medium">Items</th>
+          <th class="p-6 font-medium text-right">Total</th>
+          <th class="p-6 font-medium">Status</th>
+          <th class="p-6 font-medium">Payment</th>
+          <th class="p-6 font-medium text-right">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="divide-y divide-black/[0.04]">
+        <% @orders.each do |order| %>
+          <tr class="group hover:bg-gray-50/50 transition-all duration-300">
+            <td class="p-6">
+              <p class="text-sm font-medium text-black">#HYPEE-<%= order.id.to_s.rjust(4, "0") %></p>
+            </td>
+            <td class="p-6">
+              <p class="text-xs text-black"><%= order.shipping_full_name.presence || order.user&.email %></p>
+              <p class="text-[10px] text-gray-400 mt-1"><%= order.shipping_city %></p>
+            </td>
+            <td class="p-6">
+              <p class="text-xs text-black"><%= order.created_at.strftime("%b %d, %Y") %></p>
+              <p class="text-[10px] text-gray-400 mt-1"><%= order.created_at.strftime("%H:%M") %></p>
+            </td>
+            <td class="p-6">
+              <p class="text-xs text-black"><%= order.order_items.sum(:quantity) %> items</p>
+            </td>
+            <td class="p-6 text-right">
+                <span class="text-xs font-light tracking-wide text-black">
+                  <%= number_to_currency(order.total_price, unit: "₹", precision: 0) %>
+                </span>
+            </td>
+            <td class="p-6">
+              <% status_styles = {
+                "pending"    => "text-orange-500 border-orange-500/20",
+                "processing" => "text-blue-500 border-blue-500/20",
+                "shipped"    => "text-purple-500 border-purple-500/20",
+                "delivered"  => "text-emerald-600 border-emerald-600/20",
+                "cancelled"  => "text-red-500 border-red-500/20"
+              } %>
+              <span class="text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 border <%= status_styles[order.status.to_s] || 'text-gray-400 border-gray-400/20' %>">
+                <%= order.status.to_s.humanize %>
+              </span>
+            </td>
+            <td class="p-6">
+              <% pay_styles = {
+                "pending"  => "text-orange-500 border-orange-500/20",
+                "paid"     => "text-emerald-600 border-emerald-600/20",
+                "failed"   => "text-red-500 border-red-500/20",
+                "refunded" => "text-gray-500 border-gray-500/20"
+              } %>
+              <span class="text-[10px] uppercase tracking-[0.15em] px-2 py-0.5 border <%= pay_styles[order.payment_status.to_s] || 'text-gray-400 border-gray-400/20' %>">
+                <%= order.payment_status.to_s.humanize %>
+              </span>
+            </td>
+            <td class="p-6 text-right">
+              <%= link_to "View", admin_order_path(order), class: "text-[10px] uppercase tracking-widest text-gray-400 hover:text-black transition-colors underline" %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <% if @pagy&.pages.to_i > 1 %>
+      <div class="mt-12 flex items-center justify-center gap-2">
+        <% if @pagy.prev %>
+          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>←<% end %>
+        <% end %>
+        <% @pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <%= link_to item, pagy_url_for(@pagy, item), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 text-[11px] tracking-[0.2em] transition-all duration-300" %>
+          <% elsif item.is_a?(String) %>
+            <div class="w-11 h-11 flex items-center justify-center bg-black text-white text-[11px] tracking-[0.2em] font-medium"><%= item %></div>
+          <% elsif item == :gap %>
+            <div class="w-11 text-center text-gray-400">...</div>
+          <% end %>
+        <% end %>
+        <% if @pagy.next %>
+          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>→<% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </main>
+</div>
