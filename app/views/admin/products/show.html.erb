@@ -1,3 +1,20 @@
+<%# app/views/admin/products/show.html.erb - inside the top bar, before the buttons %>
+
+<% if @product.cart_items.any? || @product.order_items.where.not(order_id: Order.delivered.pluck(:id)).any? %>
+  <div class="mb-4 border border-orange-200 bg-orange-50 p-3">
+    <p class="text-[10px] uppercase tracking-[0.2em] text-orange-600 mb-1">Cannot Delete Safely</p>
+    <div class="text-xs text-orange-700 space-y-1">
+      <% if @product.cart_items.any? %>
+        <p>• <%= @product.cart_items.count %> user(s) have this in cart:
+          <%= @product.active_cart_users.map(&:email).join(", ") %></p>
+      <% end %>
+      <% active_count = @product.order_items.where.not(order_id: Order.delivered.pluck(:id)).count %>
+      <% if active_count > 0 %>
+        <p>• <%= active_count %> active order(s) contain this product</p>
+      <% end %>
+    </div>
+  </div>
+<% end %>
 <div class="min-h-screen bg-white text-black">
   <div class="max-w-7xl mx-auto px-6 py-10">
 

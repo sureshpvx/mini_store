@@ -92,20 +92,19 @@ class Admin::ProductsController < Admin::BaseController
     end
   end
 
+  # app/controllers/admin/products_controller.rb
   def destroy
-    # Purge media first so destroy isn't blocked by attachments
-    @product.images.purge_later if @product.images.attached?
-    @product.video.purge_later if @product.video.attached?
+    # Clear from all active carts first
+    @product.cart_items.destroy_all
 
+    # Nullify order references (keeps history, sets product_id to NULL)
     if @product.destroy
-      redirect_to admin_products_path, notice: "Product removed from collection."
+      redirect_to admin_products_path, notice: "Product deleted. Active carts cleared, order history preserved."
     else
       redirect_to admin_products_path, alert: "Cannot delete: #{@product.errors.full_messages.to_sentence}"
     end
-  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError => e
-    redirect_to admin_products_path, alert: "Cannot delete: product is referenced in existing orders or carts."
-  rescue => e
-    redirect_to admin_products_path, alert: "Delete failed: #{e.message}"
+  rescue ActiveRecord::InvalidForeignKey => e
+    redirect_to admin_products_path, alert: "Database constraint blocked deletion. Check order_items table."
   end
 
   private
