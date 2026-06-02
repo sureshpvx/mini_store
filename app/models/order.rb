@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include PgSearch::Model
+  multisearchable against: [:shipping_full_name, :razorpay_order_id, :shipping_phone_number]
   belongs_to :user
 
   has_many :order_items, dependent: :destroy

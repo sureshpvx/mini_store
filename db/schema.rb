@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_02_101751) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_02_115329) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pg_trgm"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -142,6 +143,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_101751) do
     t.string "razorpay_payment_id"
     t.string "razorpay_signature"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.string "searchable_type", null: false
+    t.bigint "searchable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "products", force: :cascade do |t|

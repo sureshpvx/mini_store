@@ -2,6 +2,16 @@
 class Product < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: :slugged
+  include PgSearch::Model
+  multisearchable against: [:name, :description]
+
+  pg_search_scope :search,
+                  against: [:name, :description],
+                  associated_against: { category: :name },
+                  using: {
+                    tsearch: { prefix: true, dictionary: "english" },
+                    trigram: {}
+                  }
 
   has_many_attached :images
   has_one_attached :video

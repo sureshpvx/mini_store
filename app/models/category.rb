@@ -1,5 +1,7 @@
 class Category < ApplicationRecord
   # children (subcategories)
+  include PgSearch::Model
+  multisearchable against: [:name]
   has_many :subcategories,
            class_name: "Category",
            foreign_key: "parent_id",

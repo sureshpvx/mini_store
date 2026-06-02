@@ -113,6 +113,7 @@
     <orderEntry type="library" scope="PROVIDED" name="parallel (v2.0.1, mise: 3.4.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="parser (v3.3.11.1, mise: 3.4.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="pg (v1.6.3, mise: 3.4.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="pg_search (v2.3.7, mise: 3.4.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="pp (v0.6.3, mise: 3.4.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="prettyprint (v0.2.0, mise: 3.4.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="prism (v1.9.0, mise: 3.4.2) [gem]" level="application" />

@@ -93,10 +93,17 @@ class Admin::ProductsController < Admin::BaseController
   end
 
   def destroy
-    @product.destroy
-    redirect_to admin_products_path, notice: "Product removed from collection."
-  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError
-    redirect_to admin_products_path, alert: "Cannot delete: product is in active orders or carts."
+    # Purge media first so destroy isn't blocked by attachments
+    @product.images.purge_later if @product.images.attached?
+    @product.video.purge_later if @product.video.attached?
+
+    if @product.destroy
+      redirect_to admin_products_path, notice: "Product removed from collection."
+    else
+      redirect_to admin_products_path, alert: "Cannot delete: #{@product.errors.full_messages.to_sentence}"
+    end
+  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError => e
+    redirect_to admin_products_path, alert: "Cannot delete: product is referenced in existing orders or carts."
   rescue => e
     redirect_to admin_products_path, alert: "Delete failed: #{e.message}"
   end

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboard#index"
+    get "search", to: "search#index"
     resources :products
     resources :categories
     resources :orders, only: [:index, :show, :update]
@@ -49,6 +50,8 @@ Rails.application.routes.draw do
   get "privacy",   to: "pages#privacy"
   get "terms",     to: "pages#terms"
   get "cookies",   to: "pages#cookies"
+  get "search", to: "search#index"
+
 
   # Newsletter
   post "newsletter", to: "newsletter_subscriptions#create", as: :newsletter_subscriptions

@@ -19,6 +19,13 @@
         <span>Dashboard</span>
         <span class="text-[10px] <%= active == :dashboard ? 'opacity-60' : '' %>">01</span>
       </a>
+<%# search %>
+      <a href="<%= admin_search_path %>"
+         class="flex items-center justify-between px-5 py-4 text-[11px] uppercase tracking-[0.2em] transition <%= active == :search ? 'bg-black text-white' : 'text-gray-400 hover:text-black' %>">
+        <span>Search</span>
+        <span class="text-[10px] <%= active == :search ? 'opacity-60' : '' %>">⌘</span>
+      </a>
+
 
       <%# Catalog %>
       <a href="<%= admin_products_path %>"
