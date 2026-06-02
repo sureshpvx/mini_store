@@ -7,7 +7,16 @@ Rails.application.configure do
   config.log_level = :info
 
   config.action_controller.perform_caching = true
-  config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
+
+  # Gzip all responses
+  config.middleware.use Rack::Deflater
+
+  # Proper cache headers with encoding vary
+  config.public_file_server.headers = {
+    "Cache-Control" => "public, max-age=#{1.year.to_i}, immutable",
+    "Vary" => "Accept-Encoding"
+  }
+
   config.active_storage.service = :cloudinary
   config.assume_ssl = true
   config.force_ssl = true
@@ -15,7 +24,6 @@ Rails.application.configure do
   config.hosts << "www.hypee.shop"
   config.action_controller.forgery_protection_origin_check = false
 
-  # Force all Rails logs to STDOUT so Render captures them
   $stdout.sync = true
   config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
   config.log_tags = [ :request_id ]
@@ -27,7 +35,7 @@ Rails.application.configure do
   config.active_storage.previewers = []
   config.active_storage.variant_processor = nil
   config.active_job.queue_adapter = :async
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: "hypee.shop" }
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
