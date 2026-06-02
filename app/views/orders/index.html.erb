@@ -1,287 +1,187 @@
-<div class="max-w-6xl mx-auto px-6 py-16">
+<!-- app/views/orders/index.html.erb -->
+
+<div class="min-h-screen bg-white">
 
   <!-- HEADER -->
-  <div class="mb-14">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-10 pt-24 pb-16">
 
-    <p class="text-xs uppercase tracking-[0.45em] text-gray-500 mb-4">
-      Account
-    </p>
+    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-4">Account</p>
 
-    <h1 class="text-5xl font-semibold text-white">
+    <h1 class="text-3xl sm:text-4xl font-light uppercase tracking-[0.15em] text-black mb-4">
       My Orders
     </h1>
 
-    <p class="text-gray-500 mt-5 text-lg">
+    <p class="text-gray-400 text-sm font-light leading-relaxed max-w-md">
       Track your purchases and revisit previous orders.
     </p>
 
   </div>
 
-  <% if @orders.any? %>
+  <!-- ORDERS LIST -->
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-10 pb-24">
 
-    <div class="space-y-8">
+    <% if @orders.any? %>
 
-      <% @orders.each do |order| %>
+      <div class="space-y-6">
 
-        <div class="border border-white/10
-                    bg-[#070707]
-                    rounded-[32px]
-                    overflow-hidden">
+        <% @orders.each do |order| %>
 
-          <!-- TOP -->
-          <div class="border-b border-white/10
-                      px-8 py-6
-                      flex flex-col lg:flex-row
-                      lg:items-center
-                      lg:justify-between
-                      gap-6">
+          <div class="border border-black/[0.06]">
 
-            <!-- LEFT -->
-            <div class="flex flex-wrap gap-8">
+            <!-- TOP META -->
+            <div class="border-b border-black/[0.06] px-6 sm:px-8 py-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
 
-              <div>
-                <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                  Order
-                </p>
+              <div class="flex flex-wrap gap-8 sm:gap-10">
 
-                <p class="text-white text-lg font-medium">
-                  #HYPEE-<%= order.id.to_s.rjust(4, "0") %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                  Placed
-                </p>
-
-                <p class="text-gray-300">
-                  <%= order.created_at.strftime("%d %b %Y") %>
-                </p>
-              </div>
-
-              <div>
-                <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                  Items
-                </p>
-
-                <p class="text-gray-300">
-                  <%= order.order_items.sum(:quantity) %>
-                </p>
-              </div>
-
-              <div class="flex gap-8">
-
-                <!-- DELIVERY STATUS -->
                 <div>
-
-                  <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                    Delivery
-                  </p>
-
-                  <p class="
-      capitalize
-      font-medium
-
-      <%=
-                    case order.status
-                    when 'pending'
-                      'text-yellow-400'
-                    when 'processing'
-                      'text-blue-400'
-                    when 'shipped'
-                      'text-purple-400'
-                    when 'delivered'
-                      'text-green-400'
-                    when 'cancelled'
-                      'text-red-400'
-                    end
-                  %>
-    ">
-                    <%= order.status.humanize %>
-                  </p>
-
+                  <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Order</p>
+                  <p class="text-black font-light text-sm tracking-wide">#HYPEE-<%= order.id.to_s.rjust(4, "0") %></p>
                 </div>
 
-                <!-- PAYMENT STATUS -->
                 <div>
+                  <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Placed</p>
+                  <p class="text-gray-500 font-light text-sm"><%= order.created_at.strftime("%d %b %Y") %></p>
+                </div>
 
-                  <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                    Payment
-                  </p>
+                <div>
+                  <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Items</p>
+                  <p class="text-gray-500 font-light text-sm"><%= order.order_items.sum(:quantity) %></p>
+                </div>
 
-                  <p class="
-      capitalize
-      font-medium
+                <div class="flex gap-8 sm:gap-10">
 
-      <%=
-                    case order.payment_status
-                    when 'paid'
-                      'text-green-400'
-                    when 'unpaid'
-                      'text-yellow-400'
-                    when 'failed'
-                      'text-red-400'
-                    when 'refunded'
-                      'text-gray-400'
-                    end
-                  %>
-    ">
-                    <%= order.payment_status.humanize %>
-                  </p>
+                  <div>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Delivery</p>
+                    <p class="text-black font-light text-sm capitalize"><%= order.status.humanize %></p>
+                  </div>
+
+                  <div>
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Payment</p>
+                    <p class="text-black font-light text-sm capitalize"><%= order.payment_status.humanize %></p>
+                  </div>
 
                 </div>
 
               </div>
 
-            </div>
-
-            <!-- RIGHT -->
-            <div class="text-left lg:text-right">
-
-              <p class="text-xs uppercase tracking-[0.35em] text-gray-500 mb-2">
-                Total
-              </p>
-
-              <p class="text-3xl text-white font-light">
-                ₹ <%= order.total_price.to_f.round(2) %>
-              </p>
+              <div class="text-left lg:text-right">
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">Total</p>
+                <p class="text-2xl text-black font-light">₹<%= order.total_price.to_f.round(2) %></p>
+              </div>
 
             </div>
 
-          </div>
+            <!-- PRODUCTS -->
+            <div class="p-6 sm:p-8">
 
-          <!-- PRODUCTS -->
-          <div class="p-8">
+              <div class="space-y-5">
 
-            <div class="space-y-5">
+                <% order.order_items.limit(3).each do |item| %>
 
-              <% order.order_items.limit(3).each do |item| %>
+                  <div class="flex items-center justify-between gap-5">
 
-                <div class="flex items-center justify-between gap-5">
+                    <div class="flex items-center gap-5">
 
-                  <!-- LEFT -->
-                  <div class="flex items-center gap-5">
+                      <div class="w-16 h-20 bg-gray-50 flex-shrink-0 overflow-hidden">
 
-                    <!-- IMAGE -->
-                    <div class="w-20 h-24 rounded-2xl overflow-hidden bg-black">
+                        <% if item.product.images.attached? %>
 
-                      <% if item.product.images.attached? %>
+                          <%= image_tag item.product.images.first,
+                                        class: "w-full h-full object-cover" %>
 
-                        <%= image_tag item.product.images.first,
-                                      class: "w-full h-full object-cover" %>
+                        <% end %>
 
-                      <% end %>
+                      </div>
+
+                      <div>
+
+                        <h3 class="text-black uppercase tracking-[0.15em] text-[11px] font-medium">
+                          <%= item.product.name %>
+                        </h3>
+
+                        <p class="text-gray-400 text-[11px] font-light mt-2">
+                          Qty <span class="text-black ml-1"><%= item.quantity %></span>
+                        </p>
+
+                      </div>
 
                     </div>
 
-                    <!-- INFO -->
                     <div>
 
-                      <h3 class="text-white uppercase tracking-wide">
-                        <%= item.product.name %>
-                      </h3>
-
-                      <p class="text-gray-500 mt-2 text-sm">
-                        Quantity:
-                        <span class="text-gray-300">
-                          <%= item.quantity %>
-                        </span>
-                      </p>
+                      <p class="text-black font-light text-sm">₹<%= item.total_price.to_f.round(2) %></p>
 
                     </div>
 
                   </div>
 
-                  <!-- RIGHT -->
-                  <div>
+                <% end %>
 
-                    <p class="text-white text-lg">
-                      ₹ <%= item.total_price.to_f.round(2) %>
-                    </p>
+              </div>
 
-                  </div>
+              <!-- MORE ITEMS -->
+              <% if order.order_items.count > 3 %>
+
+                <div class="mt-6 pt-4 border-t border-black/[0.06]">
+
+                  <p class="text-gray-400 text-[11px] uppercase tracking-[0.2em]">
+                    + <%= order.order_items.count - 3 %> more items
+                  </p>
 
                 </div>
 
               <% end %>
 
-            </div>
+              <!-- ACTION -->
+              <div class="mt-8">
 
-            <!-- MORE ITEMS -->
-            <% if order.order_items.count > 3 %>
+                <%= link_to order_path(order),
+                            class: "inline-flex items-center justify-center h-12 px-8 border border-black/20 uppercase tracking-[0.25em] text-[11px] text-black hover:bg-black hover:text-white transition-all duration-300" do %>
 
-              <div class="mt-6">
+                  View Full Order
 
-                <p class="text-gray-500 text-sm">
-                  + <%= order.order_items.count - 3 %> more items
-                </p>
+                <% end %>
 
               </div>
-
-            <% end %>
-
-            <!-- ACTION -->
-            <div class="mt-8">
-
-              <%= link_to "View Full Order",
-                          order_path(order),
-                          class: "inline-flex items-center justify-center
-                                 h-14 px-8
-                                 border border-white/15
-                                 rounded-full
-                                 uppercase tracking-[0.35em]
-                                 text-xs text-white
-                                 hover:bg-white hover:text-black
-                                 transition-all duration-500" %>
 
             </div>
 
           </div>
 
-        </div>
-
-      <% end %>
-
-    </div>
-
-  <% else %>
-
-    <!-- EMPTY STATE -->
-    <div class="border border-white/10
-                rounded-[32px]
-                p-16
-                text-center
-                bg-[#070707]">
-
-      <p class="text-xs uppercase tracking-[0.45em] text-gray-500 mb-6">
-        No Orders Yet
-      </p>
-
-      <h2 class="text-4xl text-white font-light mb-5">
-        Your collection journey starts here.
-      </h2>
-
-      <p class="text-gray-500 max-w-xl mx-auto leading-relaxed">
-        Explore premium fashion pieces and place your first order.
-      </p>
-
-      <div class="mt-10">
-
-        <%= link_to "Explore Collection",
-                    products_path,
-                    class: "inline-flex items-center justify-center
-                           h-16 px-10
-                           rounded-full
-                           bg-white text-black
-                           uppercase tracking-[0.35em]
-                           text-sm
-                           hover:opacity-90
-                           transition-all duration-500" %>
+        <% end %>
 
       </div>
 
-    </div>
+    <% else %>
 
-  <% end %>
+      <!-- EMPTY STATE -->
+      <div class="border border-black/[0.06] p-16 sm:p-24 text-center">
+
+        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-6">No Orders Yet</p>
+
+        <h2 class="text-2xl sm:text-3xl text-black font-light uppercase tracking-[0.1em] mb-5">
+          Your collection journey starts here.
+        </h2>
+
+        <p class="text-gray-400 text-sm font-light max-w-xl mx-auto leading-relaxed">
+          Explore premium fashion pieces and place your first order.
+        </p>
+
+        <div class="mt-10">
+
+          <%= link_to products_path,
+                      class: "inline-flex items-center justify-center h-14 px-10 bg-black text-white uppercase tracking-[0.25em] text-[11px] hover:bg-gray-800 transition-all duration-300" do %>
+
+            Explore Collection
+
+          <% end %>
+
+        </div>
+
+      </div>
+
+    <% end %>
+
+  </div>
 
 </div>

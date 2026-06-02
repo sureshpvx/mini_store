@@ -1,59 +1,35 @@
 <turbo-frame id="otp_modal_content">
-
   <div class="max-w-md mx-auto">
 
-    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">
-      Verify OTP
-    </p>
+    <% if local_assigns[:error] %>
+      <div class="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-[11px] uppercase tracking-wider">
+        <%= error %>
+      </div>
+    <% end %>
 
-    <h2 class="text-xl sm:text-2xl font-light uppercase tracking-[0.1em] text-black mb-8">
-      Enter Verification Code
-    </h2>
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Verify OTP</p>
+    <h2 class="text-xl sm:text-2xl font-light uppercase tracking-[0.1em] text-black mb-2">Enter Verification Code</h2>
+    <p class="text-xs text-gray-400 mb-8 tracking-wide">Code sent to <%= session[:otp_phone_number] %></p>
 
-    <%= form_with url: verify_otp_path,
-                  method: :post,
-                  data: {
-                    turbo: false
-                  },
-                  local: true do |f| %>
-
-      <div class="space-y-4">
-
-        <%= f.hidden_field :phone_number,
-                           value: session[:otp_phone_number] %>
+    <%= form_with url: verify_otp_path, method: :post, data: { turbo: false } do |f| %>
+      <div class="space-y-6">
 
         <%= f.text_field :otp,
                          placeholder: "6 Digit OTP",
-                         class: "
-                           w-full h-12
-                           bg-white
-                           border border-black/[0.06]
-                           px-4
-                           text-black text-sm
-                           placeholder:text-gray-400
-                           focus:border-black/20
-                           focus:outline-none
-                           transition
-                         " %>
+                         maxlength: 6,
+                         inputmode: "numeric",
+                         autocomplete: "one-time-code",
+                         class: "w-full h-12 bg-white border border-black/[0.06] px-4 text-center text-black text-lg tracking-[0.5em] font-light placeholder:text-gray-300 focus:border-black/20 focus:outline-none transition" %>
 
         <%= f.submit "Verify OTP",
-                     class: "
-                       w-full h-14
-                       bg-black
-                       text-white
-                       uppercase
-                       tracking-[0.2em]
-                       text-[11px]
-                       hover:bg-gray-800
-                       transition-all
-                       duration-300
-                       cursor-pointer
-                     " %>
+                     class: "w-full h-14 bg-black text-white uppercase tracking-[0.2em] text-[11px] hover:bg-gray-800 transition-all duration-300 cursor-pointer" %>
 
       </div>
-
     <% end %>
 
-  </div>
+    <div id="otp-resend-wrapper" class="mt-8 text-center">
+      <%= render "otp_auth/resend_button", remaining: local_assigns[:remaining] || 0 %>
+    </div>
 
+  </div>
 </turbo-frame>

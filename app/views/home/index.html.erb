@@ -1,22 +1,18 @@
 <%# app/views/home/index.html.erb %>
 
 <!-- ================= HERO SECTION ================= -->
-<section
-  class="relative min-h-screen w-full bg-black overflow-hidden"
-  data-controller="hero-video"
-  data-action="mouseenter->hero-video#play mouseleave->hero-video#pause">
+<section class="relative min-h-screen w-full bg-black overflow-hidden">
 
-  <!-- Video: turbo-permanent keeps it alive across page visits -->
   <video
     id="hero-video"
-    data-hero-video-target="video"
-    data-turbo-permanent
     class="absolute inset-0 w-full h-full object-cover"
-    style="opacity: 0.4"
+    style="opacity: 0.4; will-change: transform;"
+    autoplay
     muted
     loop
     playsinline
-    preload="auto">
+    preload="auto"
+    decoding="async">
     <source src="<%= asset_path('save.mp4') %>" type="video/mp4">
   </video>
 

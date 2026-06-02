@@ -313,7 +313,7 @@
 
 </div>
 
-<% if params[:auto_submit].present? %>
+<% if params[:auto_submit].present? && session[:auto_order_address_id].present? %>
 
   <script>
       document.addEventListener("DOMContentLoaded", () => {

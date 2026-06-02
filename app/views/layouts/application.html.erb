@@ -20,7 +20,11 @@
 <% unless content_for?(:auth_page) %>
   <%= render "shared/header" %>
 <% end %>
-<%= render "shared/flash" %>
+<div id="flash-container" class="fixed top-6 right-6 z-[100] space-y-3">
+  <% flash.each do |type, message| %>
+    <%= render "shared/flash_message", type: type, message: message %>
+  <% end %>
+</div>
 <main class="min-h-screen relative">
 
   <!-- BACKGROUND LAYER -->

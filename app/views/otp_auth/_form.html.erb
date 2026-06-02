@@ -18,19 +18,61 @@
 
       <div class="space-y-4">
 
-        <%= f.telephone_field :phone_number,
-                              placeholder: "Phone Number",
-                              class: "
-                                w-full h-12
-                                bg-white
-                                border border-black/[0.06]
-                                px-4
-                                text-black text-sm
-                                placeholder:text-gray-400
-                                focus:border-black/20
-                                focus:outline-none
-                                transition
-                              " %>
+        <!-- Country Code + Phone Number -->
+        <div class="flex gap-3">
+
+          <!-- Country Code Dropdown -->
+          <div class="relative">
+            <%= f.select :country_code,
+                         [
+                           ["+91 🇮🇳", "+91"],
+                           ["+1 🇺🇸", "+1"],
+                           ["+44 🇬🇧", "+44"],
+                           ["+61 🇦🇺", "+61"],
+                           ["+81 🇯🇵", "+81"],
+                           ["+49 🇩🇪", "+49"],
+                           ["+33 🇫🇷", "+33"],
+                           ["+971 🇦🇪", "+971"],
+                           ["+65 🇸🇬", "+65"],
+                           ["+852 🇭🇰", "+852"]
+                         ],
+                         { selected: "+91" },
+                         class: "
+                  appearance-none
+                  h-12
+                  bg-white
+                  border border-black/[0.06]
+                  pl-4 pr-8
+                  text-black text-sm
+                  focus:border-black/20
+                  focus:outline-none
+                  transition
+                  cursor-pointer
+                "
+            %>
+            <!-- Custom arrow -->
+            <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Phone Number Input -->
+          <%= f.telephone_field :phone_number,
+                                placeholder: "Phone Number",
+                                class: "
+                                  flex-1 h-12
+                                  bg-white
+                                  border border-black/[0.06]
+                                  px-4
+                                  text-black text-sm
+                                  placeholder:text-gray-400
+                                  focus:border-black/20
+                                  focus:outline-none
+                                  transition
+                                " %>
+        </div>
 
         <%= f.submit "Send OTP",
                      class: "

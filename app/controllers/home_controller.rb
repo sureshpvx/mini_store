@@ -1,10 +1,13 @@
-# app/controllers/home_controller.rb
 class HomeController < ApplicationController
   before_action :redirect_admin_to_dashboard, only: [:index]
 
   def index
-    @new_arrivals = Product.order(created_at: :desc).limit(4).active
-
+    @new_arrivals = Product
+                      .active
+                      .includes(:category)
+                      .with_attached_images
+                      .order(created_at: :desc)
+                      .limit(4)
   end
 
   private

@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   root "home#index"
   get  "/otp-login", to: "otp_auth#new"
   post "/send-otp", to: "otp_auth#send_otp"
+  post "/resend-otp", to: "otp_auth#resend_otp"
   post "/verify-otp", to: "otp_auth#verify"
   post "store-checkout-address",
        to: "checkout#store_address",

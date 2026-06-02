@@ -1,0 +1,16 @@
+<div data-controller="countdown" data-countdown-remaining-value="<%= remaining %>" class="text-center">
+
+  <div data-countdown-target="timer" class="text-[10px] uppercase tracking-[0.3em] text-gray-400">
+    Resend in <span data-countdown-target="display" class="font-mono text-black tabular-nums">00:00</span>
+  </div>
+
+  <div data-countdown-target="button" class="hidden">
+    <%= button_to resend_otp_path,
+                  method: :post,
+                  form: { data: { turbo_frame: "otp-resend-wrapper" } },
+                  class: "text-[10px] uppercase tracking-[0.3em] text-black hover:text-gray-600 transition" do %>
+      Resend OTP
+    <% end %>
+  </div>
+
+</div>
