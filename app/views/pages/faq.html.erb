@@ -1,0 +1,33 @@
+<%# app/views/pages/faq.html.erb %>
+<section class="pt-32 pb-24 px-4 sm:px-8 bg-white min-h-screen">
+  <div class="max-w-3xl mx-auto">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-4">Help Center</p>
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-light uppercase tracking-[0.2em] text-black mb-16">
+      FAQ
+    </h1>
+
+    <div class="space-y-0">
+      <% faqs = [
+        { q: "How do I track my order?", a: "Once shipped, you will receive an email and SMS with a tracking link. You can also view tracking under your account Orders section." },
+        { q: "Do you offer Cash on Delivery?", a: "Yes, COD is available on orders up to ₹10,000. A nominal COD fee of ₹50 may apply." },
+        { q: "Can I modify my order after placing it?", a: "We process orders quickly. Contact support within 2 hours of placing your order for any changes." },
+        { q: "Are your products true to size?", a: "Generally yes. Refer to our Size Guide for exact garment measurements. When in doubt, size up for a relaxed silhouette." },
+        { q: "How should I care for my garments?", a: "Wash inside out in cold water. Air dry or tumble on low. Do not bleach structured outerwear." },
+        { q: "Do you ship internationally?", a: "Currently we only ship within India. International shipping is coming soon." }
+      ] %>
+
+      <% faqs.each do |faq| %>
+        <details class="border-t border-black/[0.03] group">
+          <summary class="py-6 text-sm uppercase tracking-[0.2em] text-black cursor-pointer list-none flex justify-between items-center select-none">
+            <%= faq[:q] %>
+            <span class="text-gray-400 text-lg leading-none group-open:rotate-45 transition-transform duration-300 ml-4">+</span>
+          </summary>
+          <p class="pb-8 text-gray-600 text-sm leading-relaxed max-w-2xl">
+            <%= faq[:a] %>
+          </p>
+        </details>
+      <% end %>
+      <div class="border-t border-black/[0.03]"></div>
+    </div>
+  </div>
+</section>

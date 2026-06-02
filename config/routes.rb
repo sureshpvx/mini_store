@@ -40,5 +40,17 @@ Rails.application.routes.draw do
   post "store-checkout-address",
        to: "checkout#store_address",
        as: :store_checkout_address
+  get "contact",   to: "pages#contact"
+  resources :contact_messages, only: [:create]
+  get "shipping",  to: "pages#shipping"
+  get "returns",   to: "pages#returns"
+  get "size-guide",to: "pages#size_guide", as: :size_guide
+  get "faq",       to: "pages#faq"
+  get "privacy",   to: "pages#privacy"
+  get "terms",     to: "pages#terms"
+  get "cookies",   to: "pages#cookies"
+
+  # Newsletter
+  post "newsletter", to: "newsletter_subscriptions#create", as: :newsletter_subscriptions
   get "up" => "rails/health#show", as: :rails_health_check
 end

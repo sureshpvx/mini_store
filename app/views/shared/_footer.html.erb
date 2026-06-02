@@ -1,47 +1,90 @@
-<footer class="text-white border-t border-white/5">
+<<footer class="bg-white text-black border-t border-black/[0.03]">
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-8 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-8 pt-16 pb-8">
 
-    <!-- Brand -->
-    <div>
-      <h3 class="text-xl font-bold tracking-tight mb-6 uppercase">
-        Hypee
-      </h3>
+    <!-- Newsletter -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-12 border-b border-black/[0.03]">
+      <div>
+        <h3 class="text-sm uppercase tracking-[0.2em] font-light mb-2 text-black">Join the Inner Circle</h3>
+        <p class="text-gray-500 text-xs">Early access to drops, exclusive edits, and member-only pricing.</p>
+      </div>
+      <%= form_with url: newsletter_subscriptions_path, method: :post, class: "flex w-full md:w-auto gap-0", data: { turbo: false } do |f| %>
+        <%= f.email_field :email, required: true, placeholder: "Email address",
+                          class: "bg-gray-50 border border-black/10 px-4 py-3 text-xs uppercase tracking-widest text-black placeholder-gray-400 focus:outline-none focus:border-black/30 w-full md:w-80" %>
+        <%= f.submit "Subscribe",
+                     class: "bg-black text-white px-6 py-3 text-xs uppercase tracking-widest font-medium hover:bg-gray-800 transition cursor-pointer" %>
+      <% end %>
+    </div>
 
-      <p class="text-gray-500 text-sm lowercase">
-        define your edge.
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-12">
+
+      <!-- Brand -->
+      <div class="sm:col-span-2 lg:col-span-1">
+        <%= link_to root_path, class: "text-xl font-bold tracking-tight uppercase block mb-4 text-black" do %>
+          Hypee
+        <% end %>
+        <p class="text-gray-500 text-sm leading-relaxed max-w-xs lowercase">
+          define your edge. uncompromising aesthetics for the modern minimalist.
+        </p>
+        <div class="flex gap-4 mt-6">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black transition text-xs uppercase tracking-widest">IG</a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black transition text-xs uppercase tracking-widest">X</a>
+          <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-black transition text-xs uppercase tracking-widest">PN</a>
+        </div>
+      </div>
+
+      <!-- Shop -->
+      <div>
+        <h4 class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">Shop</h4>
+        <div class="flex flex-col gap-3 text-sm">
+          <%= link_to "All Products", products_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "New Arrivals", products_path(filter: "new"), class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Men", products_path(filter: "men"), class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Women", products_path(filter: "women"), class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Accessories", products_path(filter: "accessories"), class: "text-gray-500 hover:text-black transition" %>
+        </div>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <h4 class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">Support</h4>
+        <div class="flex flex-col gap-3 text-sm">
+          <%= link_to "Contact", contact_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Shipping & Delivery", shipping_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Returns & Exchanges", returns_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Size Guide", size_guide_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "FAQ", faq_path, class: "text-gray-500 hover:text-black transition" %>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h4 class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-6">Legal</h4>
+        <div class="flex flex-col gap-3 text-sm">
+          <%= link_to "Privacy Policy", privacy_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Terms of Service", terms_path, class: "text-gray-500 hover:text-black transition" %>
+          <%= link_to "Cookie Policy", cookies_path, class: "text-gray-500 hover:text-black transition" %>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t border-black/[0.03] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-gray-400 text-[10px] uppercase tracking-widest">
+        © <%= Time.current.year %> Hypee. All rights reserved.
       </p>
-    </div>
 
-    <!-- Links -->
-    <div class="flex flex-col gap-3 text-sm">
-      <%= link_to "Shop", "#", class: "text-gray-500 hover:text-white transition" %>
-      <%= link_to "Collections", "#", class: "text-gray-500 hover:text-white transition" %>
-      <%= link_to "Journal", "#", class: "text-gray-500 hover:text-white transition" %>
-    </div>
-
-    <div class="flex flex-col gap-3 text-sm">
-      <%= link_to "Contact", "#", class: "text-gray-500 hover:text-white transition" %>
-      <%= link_to "Shipping", "#", class: "text-gray-500 hover:text-white transition" %>
-      <%= link_to "Returns", "#", class: "text-gray-500 hover:text-white transition" %>
-    </div>
-
-    <div class="flex flex-col gap-3 text-sm">
-      <%= link_to "Privacy", "#", class: "text-gray-500 hover:text-white transition" %>
-      <%= link_to "Terms", "#", class: "text-gray-500 hover:text-white transition" %>
-    </div>
-
-  </div>
-
-  <!-- Bottom Bar -->
-  <div class="border-t border-white/5 py-6 px-4 sm:px-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-xs">
-
-    <p>© <%= Time.current.year %> Hypee. All rights reserved.</p>
-
-    <div class="flex gap-4 mt-3 md:mt-0">
-      <a href="#" class="hover:text-white transition">IG</a>
-      <a href="#" class="hover:text-white transition">TW</a>
-      <a href="#" class="hover:text-white transition">PN</a>
+      <!-- Payment Trust Icons -->
+      <div class="flex items-center gap-3 opacity-60">
+        <span class="text-[10px] uppercase tracking-widest text-gray-400">We Accept</span>
+        <div class="flex gap-2 text-gray-500">
+          <svg class="w-8 h-5" viewBox="0 0 48 32" fill="none"><rect width="48" height="32" rx="4" fill="currentColor"/><circle cx="18" cy="16" r="8" fill="#EB001B"/><circle cx="30" cy="16" r="8" fill="#F79E1B"/><path d="M24 10a8 8 0 000 12 8 8 0 000-12z" fill="#FF5F00"/></svg>
+          <svg class="w-8 h-5" viewBox="0 0 48 32" fill="none"><rect width="48" height="32" rx="4" fill="#1A1F71"/><path d="M20 24l-2-12h4l2 12h-4z" fill="white"/></svg>
+          <span class="text-[8px] border border-gray-300 px-1 py-0.5 rounded text-gray-500">UPI</span>
+        </div>
+      </div>
     </div>
 
   </div>
