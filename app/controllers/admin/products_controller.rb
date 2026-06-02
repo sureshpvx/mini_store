@@ -100,13 +100,13 @@ class Admin::ProductsController < Admin::BaseController
   end
 
   def restore
-    @product = Product.find(params[:id])
+    @product = Product.unscoped.friendly.find(params[:id])
     @product.restore!
     redirect_to admin_products_path, notice: "Product restored to store."
   rescue => e
     redirect_to admin_products_path, alert: "Restore failed: #{e.message}"
   end
-
+  
   private
 
   def attach_media!(files, video_file)
