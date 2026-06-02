@@ -94,31 +94,30 @@ class Admin::ProductsController < Admin::BaseController
 
   # app/controllers/admin/products_controller.rb
   # app/controllers/admin/products_controller.rb
+  # app/controllers/admin/products_controller.rb
   def destroy
     # Collect blocking info BEFORE attempting destroy
-    cart_users = @product.cart_items.includes(cart: :user).map { |ci| ci.cart.user&.email }.compact
-    active_orders = @product.order_items.includes(:order).where.not(orders: { status: [3, 4] }).map do |oi|
+    cart_items = @product.cart_items.includes(cart: :user)
+    cart_users = cart_items.map { |ci| ci.cart.user&.email }.compact
+
+    active_order_items = @product.order_items.includes(:order).where.not(orders: { status: [3, 4] })
+    active_orders = active_order_items.map do |oi|
       "##{oi.order.id} (#{oi.order.status}) - #{oi.order.user&.email || 'Guest'}"
     end
 
-    # Clear carts first (this always works)
-    @product.cart_items.destroy_all if cart_users.any?
-
-    if @product.destroy
-      notice = "Product deleted."
-      notice += " Cleared from #{cart_users.count} cart(s)." if cart_users.any?
-      redirect_to admin_products_path, notice: notice
-    else
-      # Build detailed error message
-      messages = []
-      messages << "In #{cart_users.count} cart(s): #{cart_users.join(', ')}" if cart_users.any?
-      messages << "In #{active_orders.count} active order(s): #{active_orders.join('; ')}" if active_orders.any?
-
-      redirect_to admin_products_path, alert: "Cannot delete: #{messages.join(' | ')}"
+    # If nothing blocks, destroy cleanly
+    if cart_users.empty? && active_orders.empty?
+      @product.destroy
+      redirect_to admin_products_path, notice: "Product deleted."
+      return
     end
-  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError => e
-    # Fallback if database throws before Rails validation
-    redirect_to admin_products_path, alert: "Database blocked deletion. Product is locked by existing orders."
+
+    # Build detailed flash message
+    messages = []
+    messages << "In #{cart_users.count} cart(s): #{cart_users.join(', ')}" if cart_users.any?
+    messages << "In #{active_orders.count} active order(s): #{active_orders.join('; ')}" if active_orders.any?
+
+    redirect_to admin_products_path, alert: "Cannot delete: #{messages.join(' | ')}"
   end
 
   private
