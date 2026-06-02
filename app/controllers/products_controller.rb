@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
 
   def index
 
-    @products = Product.includes(
+    @products = Product.active.includes(
       :category,
       images_attachments: :blob
     )
@@ -65,7 +65,7 @@ class ProductsController < ApplicationController
 
   def show
 
-    @product = Product.includes(
+    @product = Product.active.includes(
       :category,
       images_attachments: :blob
     ).friendly.find(params[:id])

@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
     get "search", to: "search#index"
-    resources :products
+    resources :products do
+      member do
+        patch :restore
+      end
+    end
     resources :categories
     resources :orders, only: [:index, :show, :update]
     resources :users, only: [:index]

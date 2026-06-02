@@ -18,7 +18,7 @@ class Product < ApplicationRecord
   has_one_attached :video, dependent: :purge_later
 
   has_many :cart_items, dependent: :destroy
-  has_many :order_items, dependent: :restrict_with_error
+  has_many :order_items, dependent: :nullify  # Changed from :restrict_with_error
   has_many :orders, through: :order_items
   belongs_to :category
 
@@ -27,30 +27,30 @@ class Product < ApplicationRecord
   validates :stock, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :category_id, presence: true
 
-  # ===== DELETION HELPERS =====
+  # ===== SOFT DELETE =====
 
-  # Check if safe to delete (for UI warnings)
-  def deletable?
-    active_cart_items.none? && active_order_items.none?
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
+  def soft_delete!
+    update!(deleted_at: Time.current, stock: 0)
   end
 
-  # Users who have this in their cart RIGHT NOW
-  def active_cart_users
-    active_cart_items.includes(cart: :user).map { |ci| ci.cart.user }.compact
+  def deleted?
+    deleted_at.present?
   end
 
-  # Non-delivered, non-cancelled orders containing this product
-  def active_orders
-    active_order_items.includes(:order).map(&:order)
+  def restore!
+    update!(deleted_at: nil)
   end
 
-  private
-
-  def active_cart_items
-    cart_items.joins(:cart).where(carts: { user_id: User.select(:id) })
+  # Override destroy to use soft delete by default
+  def destroy
+    soft_delete!
   end
 
-  def active_order_items
-    order_items.joins(:order).where.not(orders: { status: [3, 4] }) # 3=delivered, 4=cancelled
+  # Hard destroy for admin force delete (optional)
+  def hard_destroy!
+    super_destroy
   end
 end

@@ -91,23 +91,20 @@ class Admin::ProductsController < Admin::BaseController
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   def destroy
-    # Collect info for flash message
-    cart_count = @product.cart_items.count
-    order_count = @product.order_items.count
+    @product.soft_delete!
+    redirect_to admin_products_path, notice: "Product archived. Hidden from store, order history intact."
+  rescue => e
+    redirect_to admin_products_path, alert: "Archive failed: #{e.message}"
+  end
 
-    # Attempt destroy with bang (!) so it raises on failure
-    @product.destroy!
-
-    redirect_to admin_products_path, notice: "Product deleted. (#{cart_count} carts, #{order_count} orders affected)"
-
-  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::DeleteRestrictionError => e
-    # This catches dependent: :restrict_with_error
-    redirect_to admin_products_path, alert: "Cannot delete: product is in #{order_count} order(s)"
-
-  rescue ActiveRecord::InvalidForeignKey => e
-    redirect_to admin_products_path, alert: "Database blocked deletion. Product locked by existing records."
+  def restore
+    @product = Product.find(params[:id])
+    @product.restore!
+    redirect_to admin_products_path, notice: "Product restored to store."
+  rescue => e
+    redirect_to admin_products_path, alert: "Restore failed: #{e.message}"
   end
 
   private
