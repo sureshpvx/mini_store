@@ -93,20 +93,32 @@ class Admin::ProductsController < Admin::BaseController
   end
 
   # app/controllers/admin/products_controller.rb
+  # app/controllers/admin/products_controller.rb
   def destroy
-    # Only clear carts
-    @product.cart_items.destroy_all
+    # Collect blocking info BEFORE attempting destroy
+    cart_users = @product.cart_items.includes(cart: :user).map { |ci| ci.cart.user&.email }.compact
+    active_orders = @product.order_items.includes(:order).where.not(orders: { status: [3, 4] }).map do |oi|
+      "##{oi.order.id} (#{oi.order.status}) - #{oi.order.user&.email || 'Guest'}"
+    end
+
+    # Clear carts first (this always works)
+    @product.cart_items.destroy_all if cart_users.any?
 
     if @product.destroy
-      redirect_to admin_products_path, notice: "Product deleted."
+      notice = "Product deleted."
+      notice += " Cleared from #{cart_users.count} cart(s)." if cart_users.any?
+      redirect_to admin_products_path, notice: notice
     else
-      # Check if blocked by order_items
-      if @product.errors[:base].any? { |e| e.include?("Order items") }
-        redirect_to admin_products_path, alert: "Cannot delete: product exists in #{@product.order_items.count} order(s). Archive it instead by setting stock to 0."
-      else
-        redirect_to admin_products_path, alert: "Cannot delete: #{@product.errors.full_messages.to_sentence}"
-      end
+      # Build detailed error message
+      messages = []
+      messages << "In #{cart_users.count} cart(s): #{cart_users.join(', ')}" if cart_users.any?
+      messages << "In #{active_orders.count} active order(s): #{active_orders.join('; ')}" if active_orders.any?
+
+      redirect_to admin_products_path, alert: "Cannot delete: #{messages.join(' | ')}"
     end
+  rescue ActiveRecord::InvalidForeignKey, ActiveRecord::DeleteRestrictionError => e
+    # Fallback if database throws before Rails validation
+    redirect_to admin_products_path, alert: "Database blocked deletion. Product is locked by existing orders."
   end
 
   private
