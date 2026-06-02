@@ -91,33 +91,23 @@ class Admin::ProductsController < Admin::BaseController
       render :edit, status: :unprocessable_entity
     end
   end
-
-  # app/controllers/admin/products_controller.rb
-  # app/controllers/admin/products_controller.rb
-  # app/controllers/admin/products_controller.rb
+  
   def destroy
-    # Collect blocking info BEFORE attempting destroy
-    cart_items = @product.cart_items.includes(cart: :user)
-    cart_users = cart_items.map { |ci| ci.cart.user&.email }.compact
+    # Collect info for flash message
+    cart_count = @product.cart_items.count
+    order_count = @product.order_items.count
 
-    active_order_items = @product.order_items.includes(:order).where.not(orders: { status: [3, 4] })
-    active_orders = active_order_items.map do |oi|
-      "##{oi.order.id} (#{oi.order.status}) - #{oi.order.user&.email || 'Guest'}"
-    end
+    # Attempt destroy with bang (!) so it raises on failure
+    @product.destroy!
 
-    # If nothing blocks, destroy cleanly
-    if cart_users.empty? && active_orders.empty?
-      @product.destroy
-      redirect_to admin_products_path, notice: "Product deleted."
-      return
-    end
+    redirect_to admin_products_path, notice: "Product deleted. (#{cart_count} carts, #{order_count} orders affected)"
 
-    # Build detailed flash message
-    messages = []
-    messages << "In #{cart_users.count} cart(s): #{cart_users.join(', ')}" if cart_users.any?
-    messages << "In #{active_orders.count} active order(s): #{active_orders.join('; ')}" if active_orders.any?
+  rescue ActiveRecord::RecordNotDestroyed, ActiveRecord::DeleteRestrictionError => e
+    # This catches dependent: :restrict_with_error
+    redirect_to admin_products_path, alert: "Cannot delete: product is in #{order_count} order(s)"
 
-    redirect_to admin_products_path, alert: "Cannot delete: #{messages.join(' | ')}"
+  rescue ActiveRecord::InvalidForeignKey => e
+    redirect_to admin_products_path, alert: "Database blocked deletion. Product locked by existing records."
   end
 
   private
