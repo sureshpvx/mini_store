@@ -18,7 +18,7 @@ class Product < ApplicationRecord
   has_one_attached :video, dependent: :purge_later
 
   has_many :cart_items, dependent: :destroy
-  has_many :order_items, dependent: :nullify   # ← YOU WERE MISSING THIS
+  has_many :order_items, dependent: :restrict_with_error
   has_many :orders, through: :order_items
   belongs_to :category
 

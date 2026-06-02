@@ -94,17 +94,19 @@ class Admin::ProductsController < Admin::BaseController
 
   # app/controllers/admin/products_controller.rb
   def destroy
-    # Clear from all active carts first
+    # Only clear carts
     @product.cart_items.destroy_all
 
-    # Nullify order references (keeps history, sets product_id to NULL)
     if @product.destroy
-      redirect_to admin_products_path, notice: "Product deleted. Active carts cleared, order history preserved."
+      redirect_to admin_products_path, notice: "Product deleted."
     else
-      redirect_to admin_products_path, alert: "Cannot delete: #{@product.errors.full_messages.to_sentence}"
+      # Check if blocked by order_items
+      if @product.errors[:base].any? { |e| e.include?("Order items") }
+        redirect_to admin_products_path, alert: "Cannot delete: product exists in #{@product.order_items.count} order(s). Archive it instead by setting stock to 0."
+      else
+        redirect_to admin_products_path, alert: "Cannot delete: #{@product.errors.full_messages.to_sentence}"
+      end
     end
-  rescue ActiveRecord::InvalidForeignKey => e
-    redirect_to admin_products_path, alert: "Database constraint blocked deletion. Check order_items table."
   end
 
   private
