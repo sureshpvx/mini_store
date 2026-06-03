@@ -44,9 +44,14 @@
 
             <% if product.images.attached? %>
 
-              <%= image_tag product.images.first.variant(resize_to_limit: [500, 600]),
-                            loading: "lazy",
-                            class: "w-full h-full object-contain p-6 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out" %>
+              <%= image_tag(
+                    product.images.first.variant(resize_to_limit: [500, 600]),
+                    loading: "lazy",
+                    decoding: "async",
+                    width: 500,
+                    height: 600,
+                    class: "w-full h-full object-contain p-6 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out"
+                  ) %>
 
             <% else %>
 
