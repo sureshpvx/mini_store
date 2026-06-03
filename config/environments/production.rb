@@ -9,7 +9,6 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Gzip all responses
-  config.middleware.use Rack::Deflater
 
   # Proper cache headers with encoding vary
   config.public_file_server.headers = {
@@ -31,9 +30,9 @@ Rails.application.configure do
   config.silence_healthcheck_path = "/up"
   config.active_support.report_deprecations = false
   config.cache_store = :solid_cache_store
+  config.active_storage.variant_processor = :vips
   config.active_storage.analyzers = []
   config.active_storage.previewers = []
-  config.active_storage.variant_processor = nil
   config.active_job.queue_adapter = :async
   config.action_mailer.default_url_options = { host: "hypee.shop" }
   config.i18n.fallbacks = true

@@ -106,7 +106,7 @@ class Admin::ProductsController < Admin::BaseController
   rescue => e
     redirect_to admin_products_path, alert: "Restore failed: #{e.message}"
   end
-  
+
   private
 
   def attach_media!(files, video_file)

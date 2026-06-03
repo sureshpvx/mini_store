@@ -7,7 +7,15 @@
       <div class="space-y-3" data-controller="product-gallery">
 
         <% all_media = [] %>
-        <% @product.images.each { |img| all_media << { type: :image, src: url_for(img), alt: @product.name } } %>
+        <% @product.images.each do |img| %>
+          <% optimized = img.variant(resize_to_limit: [900, 1200]) %>
+
+          <% all_media << {
+            type: :image,
+            src: url_for(optimized),
+            alt: @product.name
+          } %>
+        <% end %>
         <% if @product.video.attached? %>
           <% all_media << { type: :video, src: url_for(@product.video), content_type: @product.video.content_type, alt: "#{@product.name} video" } %>
         <% end %>

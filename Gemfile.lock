@@ -461,6 +461,7 @@ DEPENDENCIES
   rails (~> 8.0.4)
   razorpay (~> 3.2)
   rubocop-rails-omakase
+  ruby-vips
   selenium-webdriver
   solid_cable
   solid_cache
