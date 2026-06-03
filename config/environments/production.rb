@@ -30,7 +30,6 @@ Rails.application.configure do
   config.silence_healthcheck_path = "/up"
   config.active_support.report_deprecations = false
   config.cache_store = :solid_cache_store
-  config.active_storage.variant_processor = :vips
   config.active_storage.analyzers = []
   config.active_storage.previewers = []
   config.active_job.queue_adapter = :async

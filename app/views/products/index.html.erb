@@ -45,7 +45,14 @@
             <% if product.images.attached? %>
 
               <%= image_tag(
-                    product.images.first.variant(resize_to_limit: [500, 600]),
+                    cloudinary_url(
+                      product.images.first.key,
+                      width: 500,
+                      height: 600,
+                      crop: :limit,
+                      quality: "auto",
+                      fetch_format: "auto"
+                    ),
                     loading: "lazy",
                     decoding: "async",
                     width: 500,
