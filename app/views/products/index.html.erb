@@ -1,3 +1,5 @@
+<%# app/views/products/index.html.erb %>
+
 <div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24 bg-white">
 
   <!-- HEADER: Centered -->
@@ -22,7 +24,7 @@
     <span class="block mt-4 text-[10px] text-gray-400 uppercase tracking-[0.25em] font-light">
       Showing
       <span class="text-black">
-        <%= @products.count %>
+        <%= @product_count %>
       </span>
       items
     </span>
@@ -100,6 +102,27 @@
       <% end %>
 
     </div>
+
+    <!-- PAGINATION -->
+    <% if @pagy&.pages.to_i > 1 %>
+      <div class="mt-16 flex items-center justify-center gap-2">
+        <% if @pagy.prev %>
+          <%= link_to pagy_url_for(@pagy, @pagy.prev), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>←<% end %>
+        <% end %>
+        <% @pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <%= link_to item, pagy_url_for(@pagy, item), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 text-[11px] tracking-[0.2em] transition-all duration-300" %>
+          <% elsif item.is_a?(String) %>
+            <div class="w-11 h-11 flex items-center justify-center bg-black text-white text-[11px] tracking-[0.2em] font-medium"><%= item %></div>
+          <% elsif item == :gap %>
+            <div class="w-11 text-center text-gray-400">...</div>
+          <% end %>
+        <% end %>
+        <% if @pagy.next %>
+          <%= link_to pagy_url_for(@pagy, @pagy.next), class: "w-11 h-11 flex items-center justify-center border border-black/[0.06] text-gray-400 hover:text-black hover:border-black/20 transition-all duration-300" do %>→<% end %>
+        <% end %>
+      </div>
+    <% end %>
 
   <% else %>
 

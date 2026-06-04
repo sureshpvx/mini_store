@@ -1,75 +1,15 @@
 class ProductsController < ApplicationController
+  include Pagy::Backend
 
   def index
-
-    @products = Product.active.includes(
-      :category,
-      images_attachments: :blob
+    @pagy, @products = pagy(
+      Product.active.with_attached_images.includes(:category).order(created_at: :desc),
+      limit: 12
     )
-
-    # 🔍 SEARCH
-    if params[:query].present?
-
-      q = "%#{params[:query]}%"
-
-      @products = @products.where(
-        "products.name ILIKE :q
-         OR products.description ILIKE :q",
-        q: q
-      )
-
-    end
-
-    # 🎯 FILTERS
-    case params[:filter]
-
-    when "new"
-
-      @products = @products.where(
-        "products.created_at >= ?",
-        7.days.ago
-      )
-
-    when "men", "women", "accessories"
-
-      parent = Category.find_by(
-        "name ILIKE ?",
-        params[:filter]
-      )
-
-      if parent
-
-        category_ids =
-          [parent.id] +
-          Category.where(
-            parent_id: parent.id
-          ).pluck(:id)
-
-        @products = @products.where(
-          category_id: category_ids
-        )
-
-      end
-
-    when "all"
-      # no filter needed
-
-    end
-
-    # 📌 SORT
-    @products = @products.order(
-      created_at: :desc
-    )
-
+    @product_count = @pagy.count
   end
 
   def show
-
-    @product = Product.active.includes(
-      :category,
-      images_attachments: :blob
-    ).friendly.find(params[:id])
-
+    @product = Product.active.with_attached_images.includes(:category).friendly.find(params[:id])
   end
-
 end

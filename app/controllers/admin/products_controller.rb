@@ -4,10 +4,10 @@ class Admin::ProductsController < Admin::BaseController
 
   def index
     @pagy, @products = pagy(
-      Product.includes(:category, images_attachments: :blob)
-             .order(created_at: :desc),
+      Product.with_attached_images.includes(:category).order(created_at: :desc),
       limit: 10
     )
+    @delivered_order_ids = Order.delivered.pluck(:id)
   end
 
   def show
