@@ -45,22 +45,37 @@
         </div>
       <% end %>
 
-      <%= form_with model: ContactMessage.new, url: contact_messages_path, method: :post, class: "space-y-6", data: { turbo: false } do |f| %>
-        <div>
+      <%= form_with model: ContactMessage.new,
+                    url: contact_messages_path,
+                    method: :post,
+                    html: {
+                      novalidate: true,
+                      class: "space-y-6",
+                      data: { controller: "form-validation", action: "submit->form-validation#validateAll" }
+                    } do |f| %>
+
+        <div data-field-wrapper>
           <%= f.label :name, "Name", class: "block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2" %>
-          <%= f.text_field :name, required: true,
-                           class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition" %>
+          <%= validated_field f, :name,
+                              class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition" %>
         </div>
-        <div>
+
+        <div data-field-wrapper>
           <%= f.label :email, "Email", class: "block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2" %>
-          <%= f.email_field :email, required: true,
-                            class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition" %>
+          <%= validated_field f, :email,
+                              as: :email_field,
+                              data: { validate_type: "email" },
+                              class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition" %>
         </div>
-        <div>
+
+        <div data-field-wrapper>
           <%= f.label :message, "Message", class: "block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2" %>
-          <%= f.text_area :message, rows: 5, required: true,
-                          class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition resize-none" %>
+          <%= validated_field f, :message,
+                              as: :text_area,
+                              rows: 5,
+                              class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition resize-none" %>
         </div>
+
         <%= f.submit "Send Message",
                      class: "w-full bg-black text-white px-8 py-4 text-xs uppercase tracking-[0.2em] hover:bg-gray-800 transition cursor-pointer" %>
       <% end %>

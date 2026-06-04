@@ -30,7 +30,18 @@ class Admin::ProductsController < Admin::BaseController
       @product.errors.add(:images, "must include at least one image or video")
       load_categories
       flash.now[:alert] = "Please attach at least one product image or video."
-      render :new, status: :unprocessable_entity
+      render turbo_stream: [
+        turbo_stream.update(
+          "flash-container",
+          partial: "shared/flashes"
+        ),
+
+        turbo_stream.replace(
+          "modal-content",
+          partial: "admin/products/form",
+          locals: { product: @product }
+        )
+      ], status: :unprocessable_entity
       return
     end
 
@@ -53,7 +64,18 @@ class Admin::ProductsController < Admin::BaseController
     else
       load_categories
       flash.now[:alert] = @product.errors.full_messages.to_sentence.presence || "Failed to create product."
-      render :new, status: :unprocessable_entity
+      render turbo_stream: [
+        turbo_stream.update(
+          "flash-container",
+          partial: "shared/flashes"
+        ),
+
+        turbo_stream.replace(
+          "modal-content",
+          partial: "admin/products/form",
+          locals: { product: @product }
+        )
+      ], status: :unprocessable_entity
     end
   end
 

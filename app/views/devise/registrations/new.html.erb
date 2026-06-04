@@ -5,50 +5,62 @@
 
     <!-- Header -->
     <div class="text-center mb-8 sm:mb-10">
-      <h1 class="text-2xl font-bold tracking-tight uppercase text-black">
-        Hypee
-      </h1>
-
-      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6 text-black font-light tracking-[0.1em]">
-        Create Account
-      </h2>
-
-      <p class="text-gray-400 text-sm">
-        Join Hypee today.
-      </p>
+      <h1 class="text-2xl font-bold tracking-tight uppercase text-black">Hypee</h1>
+      <h2 class="text-xl sm:text-2xl mt-4 sm:mt-6 text-black font-light tracking-[0.1em]">Create Account</h2>
+      <p class="text-gray-400 text-sm">Join Hypee today.</p>
     </div>
 
     <!-- Form -->
     <div class="border border-black/[0.06] p-4 sm:p-8 bg-white">
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+                   html: {
+                     novalidate: true,
+                     class: "space-y-6",
+                     data: { controller: "form-validation", action: "submit->form-validation#validateAll" }
+                   }) do |f| %>
 
-        <%= render "devise/shared/error_messages", resource: resource %>
 
         <!-- Email -->
-        <%= f.email_field :email,
-                          autofocus: true,
-                          autocomplete: "email",
-                          placeholder: "Email Address",
-                          class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        <div data-field-wrapper>
+          <%= validated_field f, :email,
+                              as: :email_field,
+                              required: true,
+                              autofocus: true,
+                              autocomplete: "email",
+                              placeholder: "Email Address",
+                              data: { validate_type: "email" },
+                              class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        </div>
 
         <!-- Password -->
-        <%= f.password_field :password,
-                             autocomplete: "new-password",
-                             placeholder: "Password",
-                             class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        <div data-field-wrapper>
+          <%= validated_field f, :password,
+                              as: :password_field,
+                              required: true,
+                              autocomplete: "new-password",
+                              placeholder: "Password",
+                              data: { min_length: "6" },
+                              class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        </div>
 
         <!-- Confirm Password -->
-        <%= f.password_field :password_confirmation,
-                             autocomplete: "new-password",
-                             placeholder: "Confirm Password",
-                             class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        <div data-field-wrapper>
+          <%= validated_field f, :password_confirmation,
+                              as: :password_field,
+                              required: true,
+                              autocomplete: "new-password",
+                              placeholder: "Confirm Password",
+                              data: { validate_match: "user[password]" },
+                              class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        </div>
 
         <!-- Terms -->
-        <div class="flex items-start gap-2 text-xs text-gray-400">
+        <div data-field-wrapper class="flex flex-wrap items-start gap-2 text-xs text-gray-400">
           <%= check_box_tag :terms, "1", false,
+                            required: true,
+                            data: { form_validation_target: "field", action: "change->form-validation#validateField" },
                             class: "mt-1 bg-white border-black/[0.06]" %>
-
           <span>
             I agree to the
             <%= link_to "Terms", terms_path, class: "text-black underline hover:opacity-80" %>
@@ -66,8 +78,7 @@
       <!-- Footer -->
       <div class="text-center mt-6 pt-6 border-t border-black/[0.06] text-xs text-gray-400 uppercase">
         Already have an account?
-        <%= link_to "Sign In", new_session_path(resource_name),
-                    class: "underline ml-1 hover:text-black transition" %>
+        <%= link_to "Sign In", new_session_path(resource_name), class: "underline ml-1 hover:text-black transition" %>
       </div>
 
     </div>

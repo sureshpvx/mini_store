@@ -12,8 +12,13 @@
 
     <%= form_with url: send_otp_path,
                   method: :post,
-                  data: {
-                    turbo_frame: "otp_modal_content"
+                  html: {
+                    novalidate: true,
+                    data: {
+                      turbo_frame: "otp_modal_content",
+                      controller: "form-validation",
+                      action: "submit->form-validation#validateAll"
+                    }
                   } do |f| %>
 
       <div class="space-y-4">
@@ -38,18 +43,17 @@
                          ],
                          { selected: "+91" },
                          class: "
-                  appearance-none
-                  h-12
-                  bg-white
-                  border border-black/[0.06]
-                  pl-4 pr-8
-                  text-black text-sm
-                  focus:border-black/20
-                  focus:outline-none
-                  transition
-                  cursor-pointer
-                "
-            %>
+                           appearance-none
+                           h-12
+                           bg-white
+                           border border-black/[0.06]
+                           pl-4 pr-8
+                           text-black text-sm
+                           focus:border-black/20
+                           focus:outline-none
+                           transition
+                           cursor-pointer
+                         " %>
             <!-- Custom arrow -->
             <div class="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,19 +63,28 @@
           </div>
 
           <!-- Phone Number Input -->
-          <%= f.telephone_field :phone_number,
-                                placeholder: "Phone Number",
-                                class: "
-                                  flex-1 h-12
-                                  bg-white
-                                  border border-black/[0.06]
-                                  px-4
-                                  text-black text-sm
-                                  placeholder:text-gray-400
-                                  focus:border-black/20
-                                  focus:outline-none
-                                  transition
-                                " %>
+          <div data-field-wrapper class="flex-1">
+            <%= f.telephone_field :phone_number,
+                                  required: true,
+                                  placeholder: "Phone Number",
+                                  data: {
+                                    form_validation_target: "field",
+                                    validate_type: "india-phone",
+                                    required: "true",
+                                    action: "blur->form-validation#validateField input->form-validation#clear input->form-validation#normalize"
+                                  },
+                                  class: "
+                                    flex-1 h-12 w-full
+                                    bg-white
+                                    border border-black/[0.06]
+                                    px-4
+                                    text-black text-sm
+                                    placeholder:text-gray-400
+                                    focus:border-black/20
+                                    focus:outline-none
+                                    transition
+                                  " %>
+          </div>
         </div>
 
         <%= f.submit "Send OTP",

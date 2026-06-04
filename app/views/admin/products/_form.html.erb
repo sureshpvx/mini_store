@@ -1,47 +1,45 @@
 <!-- app/views/admin/products/_form.html.erb -->
 <% product = local_assigns[:product] || @product || Product.new %>
 
-<%= form_with model: [:admin, product], local: true, multipart: true, class: "flex flex-col gap-5" do |f| %>
+<%= form_with model: [:admin, product],
+              local: true,
+              multipart: true,
+              html: {
+                novalidate: true,
+                class: "flex flex-col gap-5",
+                data: { controller: "form-validation", action: "submit->form-validation#validateAll" }
+              } do |f| %>
 
-  <% if product.errors.any? %>
-    <div class="border border-red-500/30 p-4">
-      <p class="text-red-600 text-[10px] tracking-[0.2em] uppercase mb-2">
-        <%= pluralize(product.errors.count, "error") %>
-      </p>
-      <ul class="text-red-500 text-xs space-y-1">
-        <% product.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%# NAME — label left-aligned %>
-  <div class="flex flex-col gap-1">
+  <%# NAME %>
+  <div data-field-wrapper class="flex flex-col gap-1">
     <%= f.label :name, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <%= f.text_field :name, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
+    <%= validated_field f, :name,
+                        class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
   </div>
 
   <%# DESCRIPTION %>
-  <div class="flex flex-col gap-1">
+  <div data-field-wrapper class="flex flex-col gap-1">
     <%= f.label :description, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
-    <%= f.text_area :description, rows: 3, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors resize-none" %>
+    <%= validated_field f, :description, as: :text_area, rows: 3,
+                        class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors resize-none" %>
   </div>
 
   <%# PRICE + STOCK %>
   <div class="grid grid-cols-2 gap-4">
-    <div class="flex flex-col gap-1">
+    <div data-field-wrapper class="flex flex-col gap-1">
       <%= f.label :price, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
-      <%= f.number_field :price, step: 0.01, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
+      <%= validated_field f, :price, as: :number_field, step: "0.01",
+                          class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
     </div>
-    <div class="flex flex-col gap-1">
+    <div data-field-wrapper class="flex flex-col gap-1">
       <%= f.label :stock, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
-      <%= f.number_field :stock, class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
+      <%= validated_field f, :stock, as: :number_field,
+                          class: "bg-gray-50 border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors" %>
     </div>
   </div>
 
   <%# CATEGORY %>
-  <div class="flex flex-col gap-1">
+  <div data-field-wrapper class="flex flex-col gap-1">
     <%= f.label :category_id, "Category", class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
     <%= f.select :category_id,
                  options_for_select(
@@ -51,7 +49,11 @@
                    product.category_id
                  ),
                  { include_blank: "Select Category" },
-                 { class: "bg-white border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors cursor-pointer" } %>
+                 {
+                   required: true,
+                   data: { form_validation_target: "field", action: "blur->form-validation#validateField change->form-validation#clear" },
+                   class: "bg-white border border-black/[0.06] text-black px-3 py-2.5 text-sm focus:border-black focus:outline-none transition-colors cursor-pointer"
+                 } %>
   </div>
 
   <%# EXISTING IMAGES (edit mode) %>
@@ -73,10 +75,18 @@
   <% end %>
 
   <%# IMAGE UPLOAD %>
-  <div class="flex flex-col gap-2">
+  <div data-field-wrapper class="flex flex-col gap-2">
     <%= f.label :images, product.new_record? ? "Images" : "Add More Images", class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase text-left" %>
     <div class="border border-dashed border-black/[0.06] p-6 text-center">
-      <%= f.file_field :images, multiple: true, accept: "image/jpeg,image/png,image/webp",
+      <%= f.file_field :images,
+                       multiple: true,
+                       accept: "image/jpeg,image/png,image/webp",
+                       required: product.new_record?,
+                       data: {
+                         form_validation_target: "field",
+                         required: product.new_record? ? "true" : "false",
+                         action: "change->form-validation#validateField change->form-validation#clear"
+                       },
                        class: "text-gray-400 text-xs file:mr-4 file:py-2 file:px-4 file:border file:border-black/[0.06] file:bg-white file:text-black file:text-xs file:tracking-widest file:uppercase file:cursor-pointer hover:file:border-black transition-colors" %>
     </div>
   </div>

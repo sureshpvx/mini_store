@@ -1,0 +1,8 @@
+<!-- app/views/shared/_flashes.html.erb -->
+
+<% flash.each do |type, message| %>
+  <%= render "shared/flash_message",
+             type: type,
+             message: message,
+             timeout: 4000 %>
+<% end %>
