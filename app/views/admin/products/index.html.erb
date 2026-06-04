@@ -63,7 +63,7 @@
         </thead>
         <tbody class="divide-y divide-black/[0.04]">
         <% @products.each do |product| %>
-          <tr class="group hover:bg-gray-50/50 transition-all duration-300">
+          <tr class="group hover:bg-gray-50/50 transition-all duration-300 cursor-pointer" onclick="window.location.href='<%= admin_product_path(product) %>'">
             <td class="p-6">
               <div class="flex items-center gap-5">
                 <div class="relative w-14 h-16 bg-gray-50 border border-black/[0.04] overflow-hidden">
@@ -107,7 +107,7 @@
                 </span>
             </td>
             <td class="p-6 text-right">
-              <div class="flex justify-end items-center gap-6">
+              <div class="flex justify-end items-center gap-6" onclick="event.stopPropagation()">
                 <div data-controller="modal" data-modal-id="edit-product-<%= product.id %>">
                   <button data-modal-id="edit-product-<%= product.id %>" data-action="click->modal#open" class="relative group/link">
                     <span class="text-[10px] uppercase tracking-widest text-gray-400 group-hover/link:text-black transition-colors">Edit</span>
