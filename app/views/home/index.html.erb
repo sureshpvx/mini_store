@@ -1,55 +1,200 @@
-<%# app/views/home/index.html.erb %>
 
-<!-- ================= HERO SECTION ================= -->
-<section class="relative min-h-screen w-full bg-black overflow-hidden">
+<section class="relative min-h-[95vh] md:min-h-screen overflow-hidden bg-white border-b border-black/[0.03]">
 
-  <video
-    id="hero-video"
-    class="absolute inset-0 w-full h-full object-cover"
-    style="opacity: 0.4; will-change: transform;"
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="none"
-    decoding="async">
-    <source src="<%= asset_path('save.mp4') %>" type="video/mp4">
-  </video>
+  <div class="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
 
-  <!-- Gradient for text readability -->
-  <div class="absolute inset-0 bg-gradient-to-r from-white/60 via-white/20 to-transparent"></div>
+    <div class="grid lg:grid-cols-[0.95fr_1.05fr] items-center min-h-[95vh] gap-12 lg:gap-20">
 
-  <!-- Content -->
-  <div class="relative z-10 flex items-center h-full min-h-screen">
-    <div class="w-full max-w-7xl mx-auto px-6 sm:px-10 pt-20">
-      <div class="max-w-md md:max-w-xl text-left">
+      <!-- ================= LEFT CONTENT ================= -->
+      <div class="relative z-20 pt-32 lg:pt-0 max-w-xl">
 
-        <p class="text-[10px] uppercase tracking-[0.4em] text-black/60 mb-6">
+        <!-- Label -->
+        <p class="text-[10px] uppercase tracking-[0.45em] text-gray-400 mb-8">
           SS / 26 Collection
         </p>
 
-        <h1 class="text-5xl sm:text-6xl lg:text-[7.5rem] font-black uppercase leading-[0.85] mb-8 tracking-tight text-black">
-          DEFINE<br>YOUR<br>EDGE
+        <!-- Heading -->
+        <h1 class="text-[4.5rem] sm:text-[6rem] lg:text-[8rem]
+                   font-black uppercase
+                   leading-[0.82]
+                   tracking-[-0.06em]
+                   text-black mb-8">
+
+          DEFINE<br>
+          YOUR<br>
+          EDGE
+
         </h1>
 
-        <p class="text-black/70 mb-10 text-sm leading-relaxed max-w-sm">
+        <!-- Description -->
+        <p class="text-black/60 text-sm leading-relaxed max-w-sm mb-12 font-light">
           Uncompromising aesthetics for the modern minimalist.
           Structured silhouettes, premium materials, quiet dominance.
         </p>
 
-        <%= link_to products_path(filter: "all"),
-                    class: "inline-flex items-center gap-4 border border-black/30 bg-transparent px-8 py-4 uppercase tracking-[0.25em] text-[11px] text-black hover:bg-black hover:text-white transition-all duration-300" do %>
-          Explore Collection
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
-        <% end %>
+        <!-- CTA -->
+        <div class="flex flex-col sm:flex-row gap-4">
+
+          <%= link_to products_path,
+                      class: "group inline-flex items-center justify-center gap-3
+                               bg-black text-white
+                               px-8 py-4
+                               uppercase text-[11px]
+                               tracking-[0.28em]
+                               font-light
+                               hover:bg-neutral-800
+                               transition duration-300" do %>
+
+            Shop Collection
+
+            <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+
+          <% end %>
+
+        </div>
 
       </div>
+
+      <!-- ================= RIGHT VISUAL ================= -->
+      <div class="relative hidden lg:flex items-center justify-center h-full">
+
+        <!-- Massive Background Text -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+
+          <div class="text-[15rem]
+                font-black
+                uppercase
+                tracking-[-0.08em]
+                text-black/[0.025]
+                leading-none">
+            H
+          </div>
+
+        </div>
+
+        <!-- Vertical SHOP NOW -->
+
+
+        <!-- Editorial Layout -->
+        <div class="relative w-full max-w-[760px] h-[760px]">
+
+          <!-- Group Image -->
+          <div class="absolute top-0 right-0 w-[520px]">
+
+            <%= image_tag "group.jpg",
+                          class: "w-full object-cover" %>
+
+          </div>
+
+          <!-- Boy Image -->
+          <div class="absolute bottom-0 left-0 w-[270px] bg-white p-3">
+
+            <%= image_tag "boyincords.jpg",
+                          class: "w-full object-cover" %>
+
+          </div>
+
+          <!-- Girl Image -->
+          <div class="absolute bottom-14 right-8 w-[220px] bg-white p-3 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
+
+            <%= image_tag "girlinhoodie.jpg",
+                          class: "w-full object-cover" %>
+
+          </div>
+
+          <!-- New Arrival Card -->
+          <div class="absolute bottom-20 left-[220px]
+                bg-white/95 backdrop-blur-sm
+                border border-black/[0.05]
+                px-8 py-6">
+
+            <p class="text-[9px]
+                uppercase
+                tracking-[0.35em]
+                text-gray-400 mb-3">
+              New Arrival
+            </p>
+
+            <h3 class="text-xs
+                 uppercase
+                 tracking-[0.2em]
+                 text-black mb-5">
+              Elevated Streetwear
+            </h3>
+
+            <div class="flex items-center gap-3">
+
+              <div class="w-10 h-px bg-black/20"></div>
+
+              <span class="text-[9px]
+                     uppercase
+                     tracking-[0.25em]
+                     text-black/50">
+          SS / 26
+        </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
     </div>
+
+  </div>
+
+  <!-- ================= BOTTOM INFO ================= -->
+  <div class="absolute bottom-8 left-0 right-0 hidden lg:flex items-center justify-center gap-20">
+
+    <div>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
+        New Arrivals
+      </p>
+
+      <p class="text-3xl font-light tracking-tight text-black">
+        30+
+      </p>
+    </div>
+
+    <div class="w-px h-10 bg-black/[0.08]"></div>
+
+    <div>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
+        Premium Quality
+      </p>
+
+      <p class="text-3xl font-light tracking-tight text-black">
+        100%
+      </p>
+    </div>
+
+    <div class="w-px h-10 bg-black/[0.08]"></div>
+
+    <div>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
+        Timeless Design
+      </p>
+
+      <p class="text-3xl font-light tracking-tight text-black">
+        SS / 26
+      </p>
+    </div>
+
   </div>
 
 </section>
+
 
 <!-- ================= CATEGORIES ================= -->
 <section class="py-16 sm:py-24 px-4 sm:px-10 bg-white">

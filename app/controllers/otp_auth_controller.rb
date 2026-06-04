@@ -59,11 +59,11 @@ class OtpAuthController < ApplicationController
     code   = params[:country_code].to_s.strip
     number = params[:phone_number].to_s.gsub(/\D/, "")
     session[:otp_phone_number] = "#{code} #{number}"
-    # Do NOT touch session[:guest_address_id] here — the phone form doesn't send it
+    session[:otp_context] = params[:context]
   end
 
   def generate_and_send_otp
-    session[:otp]            = rand(100000..999999).to_s
+    session[:otp]              = rand(100000..999999).to_s
     session[:otp_generated_at] = Time.current.to_i
     session[:otp_attempts]     = 0
   end
@@ -94,16 +94,30 @@ class OtpAuthController < ApplicationController
   # --- Error handlers ---
 
   def handle_expired
-    redirect_to checkout_path, alert: "OTP expired. Please request a new one."
+    if login_context?
+      redirect_to new_user_session_path, alert: "OTP expired. Please request a new one."
+    else
+      redirect_to checkout_path, alert: "OTP expired. Please request a new one."
+    end
   end
 
   def handle_max_attempts
-    redirect_to checkout_path, alert: "Too many attempts. Please request a new OTP."
+    if login_context?
+      redirect_to new_user_session_path, alert: "Too many attempts. Please request a new OTP."
+    else
+      redirect_to checkout_path, alert: "Too many attempts. Please request a new OTP."
+    end
   end
 
   def handle_invalid
     remaining = MAX_ATTEMPTS - session[:otp_attempts].to_i
-    redirect_to checkout_path, alert: "Invalid OTP. #{remaining} attempt#{'s' unless remaining == 1} remaining."
+    message = "Invalid OTP. #{remaining} attempt#{'s' unless remaining == 1} remaining."
+
+    if login_context?
+      redirect_to new_user_session_path, alert: message
+    else
+      redirect_to checkout_path, alert: message
+    end
   end
 
   # --- Success flow ---
@@ -120,19 +134,23 @@ class OtpAuthController < ApplicationController
       role:         :customer
     )
 
-    # CAPTURE GUEST CART BEFORE sign_in changes current_cart
     guest_cart = current_cart
-
     sign_in(:user, user)
-
-    # Ensure user has a cart
     user_cart = user.cart || user.create_cart
-
     merge_cart(guest_cart, user_cart)
-    assign_guest_address(user)
 
-    cleanup_session
-    redirect_to checkout_path(auto_submit: true)
+    if login_context?
+      cleanup_session
+      redirect_to root_path, notice: "Signed in!"
+    else
+      assign_guest_address(user)
+      cleanup_session
+      redirect_to checkout_path(auto_submit: true)
+    end
+  end
+
+  def login_context?
+    session[:otp_context] == "login"
   end
 
   def merge_cart(guest_cart, user_cart)
@@ -153,12 +171,8 @@ class OtpAuthController < ApplicationController
   end
 
   def assign_guest_address(user)
-    # CheckoutController stores address as :guest_address_id
     address = Address.find_by(id: session[:guest_address_id])
-
-    # Fallback: unassigned address with same phone number
     address ||= Address.where(user_id: nil, phone_number: user.phone_number).order(created_at: :desc).first
-
     return unless address.present?
 
     address.update!(user: user) if address.user_id.nil?
@@ -170,8 +184,8 @@ class OtpAuthController < ApplicationController
     session.delete(:otp_generated_at)
     session.delete(:otp_attempts)
     session.delete(:otp_phone_number)
+    session.delete(:otp_context)
     session.delete(:guest_address_id)
     session.delete(:cart_id)
-    # NOTE: intentionally NOT deleting :auto_order_address_id
   end
 end

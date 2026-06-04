@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
+  get '/auth/:provider/callback', to: 'oauth_callbacks#create'
+  get '/auth/failure', to: 'oauth_callbacks#failure'
 
   namespace :admin do
     root "dashboard#index"
@@ -40,9 +42,9 @@ Rails.application.routes.draw do
 
   root "home#index"
   get  "/otp-login", to: "otp_auth#new"
-  post "/send-otp", to: "otp_auth#send_otp"
-  post "/resend-otp", to: "otp_auth#resend_otp"
-  post "/verify-otp", to: "otp_auth#verify"
+  post "/send-otp",   to: "otp_auth#send_otp",   as: :send_otp
+  post "/resend-otp", to: "otp_auth#resend_otp", as: :resend_otp
+  post "/verify-otp", to: "otp_auth#verify",     as: :verify_otp
   post "store-checkout-address",
        to: "checkout#store_address",
        as: :store_checkout_address
