@@ -1,55 +1,81 @@
-<%= form_with model: address, local: true do |f| %>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- app/views/addresses/_form.html.erb -->
+<%= form_with model: address, local: true, class: "space-y-6" do |f| %>
 
-    <%= f.text_field :full_name,
-                     placeholder: "Full Name",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+  <% if address.errors.any? %>
+    <div class="border border-red-200 bg-red-50 p-4 mb-6">
+      <p class="text-red-600 text-[10px] tracking-[0.2em] uppercase mb-2">
+        <%= pluralize(address.errors.count, "error") %>
+      </p>
+      <ul class="text-red-500 text-xs space-y-1">
+        <% address.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-    <%= f.text_field :phone_number,
-                     placeholder: "Phone Number",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-    <%= f.text_field :address_line_1,
-                     placeholder: "Address Line 1",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition md:col-span-2" %>
+    <div class="flex flex-col gap-1">
+      <%= f.label :full_name, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :full_name,
+                       placeholder: "Full Name",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
-    <%= f.text_field :address_line_2,
-                     placeholder: "Address Line 2",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition md:col-span-2" %>
+    <div class="flex flex-col gap-1">
+      <%= f.label :phone_number, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :phone_number,
+                       placeholder: "Phone Number",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
-    <%= f.text_field :city,
-                     placeholder: "City",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+    <div class="flex flex-col gap-1 md:col-span-2">
+      <%= f.label :address_line_1, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :address_line_1,
+                       placeholder: "Street Address",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
-    <%= f.text_field :state,
-                     placeholder: "State",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+    <div class="flex flex-col gap-1 md:col-span-2">
+      <%= f.label :address_line_2, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :address_line_2,
+                       placeholder: "Apartment, Suite, etc. (optional)",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
-    <%= f.text_field :postal_code,
-                     placeholder: "Postal Code",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+    <div class="flex flex-col gap-1">
+      <%= f.label :city, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :city,
+                       placeholder: "City",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
-    <%= f.text_field :country,
-                     placeholder: "Country",
-                     value: "India",
-                     class: "h-12 bg-white border border-black/[0.06] px-4 text-black text-sm placeholder:text-gray-400 focus:border-black/20 focus:outline-none transition" %>
+    <div class="flex flex-col gap-1">
+      <%= f.label :state, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :state,
+                       placeholder: "State",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <%= f.label :postal_code, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :postal_code,
+                       placeholder: "Postal Code",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <%= f.label :country, class: "text-gray-400 text-[10px] tracking-[0.2em] uppercase" %>
+      <%= f.text_field :country,
+                       placeholder: "Country",
+                       value: address.country || "India",
+                       class: "bg-white border border-black/[0.06] px-4 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none transition" %>
+    </div>
 
   </div>
 
-  <%= f.submit "Save Address",
-               class: "
-                 mt-8
-                 w-full
-                 h-14
-                 bg-black
-                 text-white
-                 uppercase
-                 tracking-[0.2em]
-                 text-[11px]
-                 hover:bg-gray-800
-                 transition-all
-                 duration-300
-                 cursor-pointer
-               " %>
+  <%= f.submit address.new_record? ? "Save Address" : "Update Address",
+               class: "w-full bg-black text-white h-14 uppercase tracking-[0.2em] text-[11px] hover:bg-gray-800 transition-all duration-300 cursor-pointer mt-8" %>
 
 <% end %>

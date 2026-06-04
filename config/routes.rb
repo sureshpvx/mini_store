@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   get "privacy",   to: "pages#privacy"
   get "terms",     to: "pages#terms"
   get "cookies",   to: "pages#cookies"
+  get "journal",   to: "pages#journal"
   get "search", to: "search#index"
 
 
