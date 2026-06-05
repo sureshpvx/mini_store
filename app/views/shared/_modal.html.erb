@@ -5,7 +5,7 @@
     hidden fixed inset-0 z-[100]
     bg-white/60 backdrop-blur-sm
     overflow-y-auto
-    pt-24 pb-10 px-4 md:px-8
+    pt-16 pb-6 px-3 sm:px-4 md:px-8
   "
   data-action="click->modal#close">
 
@@ -28,8 +28,8 @@
       class="
         flex items-center justify-between
         border-b border-black/[0.06]
-        px-8 md:px-10
-        py-5
+        px-5 sm:px-8 md:px-10
+        py-4 sm:py-5
       ">
 
       <!-- TITLE -->
@@ -57,8 +57,8 @@
     </div>
 
     <!-- SCROLLABLE CONTENT -->
-    <div class="overflow-y-auto max-h-[calc(90vh-110px)]">
-      <div class="p-8 md:p-10">
+    <div class="overflow-y-auto max-h-[calc(85vh-80px)] sm:max-h-[calc(90vh-110px)]">
+      <div class="p-5 sm:p-8 md:p-10">
         <%= yield %>
       </div>
     </div>

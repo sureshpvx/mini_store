@@ -1,7 +1,7 @@
 <% unless current_user&.admin? %>
 
-  <header class="fixed top-0 left-0 right-0 z-50 text-black" data-controller="mobile-menu">
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-5">
+  <header class="fixed top-0 left-0 right-0 z-50 text-black bg-white" data-controller="mobile-menu">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 sm:py-5">
       <!-- ================= DESKTOP ================= -->
       <div class="hidden md:flex items-center justify-between">
         <!-- Logo -->
@@ -28,46 +28,13 @@
         </nav>
         <div data-controller="cart" class="flex items-center gap-5 text-black/70">
           <!-- Search -->
-          <!-- Search Modal Trigger -->
           <div data-controller="search-modal">
             <button data-action="click->search-modal#open" class="hover:text-black transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
-
-            <!-- Overlay -->
-            <div data-search-modal-target="overlay"
-                 data-action="click->search-modal#close"
-                 class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-200"></div>
-
-            <!-- Modal -->
-            <div data-search-modal-target="modal"
-                 class="fixed top-0 left-0 right-0 z-[70] hidden opacity-0 -translate-y-2 transition-all duration-200">
-              <div class="bg-white border-b border-black/[0.06] shadow-lg">
-                <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-5 flex items-center gap-4">
-                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                  </svg>
-
-                  <%= form_with url: search_path, method: :get, class: "flex-1", data: { turbo: false } do |f| %>
-                    <%= f.text_field :q,
-                                     value: params[:q],
-                                     placeholder: "Search products...",
-                                     autocomplete: "off",
-                                     data: {
-                                       search_modal_target: "input",
-                                       action: "keydown->search-modal#submitOnEnter"
-                                     },
-                                     class: "w-full bg-transparent text-sm text-black placeholder-gray-300 focus:outline-none uppercase tracking-widest" %>
-                  <% end %>
-
-                  <button data-action="click->search-modal#close" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-black transition">
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
+            <%= render "shared/search_modal" %>
           </div>
           <!-- Cart -->
           <button data-action="click->cart#open" class="relative hover:text-black transition">
@@ -88,7 +55,6 @@
                   <div class="px-4 py-3 text-gray-500 text-[10px] break-all">
                     <%= current_user.email %>
                   </div>
-                  <%= link_to "Profile", "#", class: "block px-4 py-3 text-gray-600 hover:text-black hover:bg-gray-50" %>
                   <%= link_to "Orders", orders_path, class: "block px-4 py-3 text-gray-600 hover:text-black hover:bg-gray-50" %>
                   <div class="border-t border-black/10 my-1"></div>
                   <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "w-full text-left px-4 py-3 text-gray-600 hover:text-black hover:bg-gray-50 uppercase" %>
@@ -100,118 +66,164 @@
           </div>
         </div>
       </div>
+
       <!-- ================= MOBILE ================= -->
       <div class="flex md:hidden items-center justify-between text-black/70">
-        <!-- LEFT: Search -->
-        <button class="hover:text-black transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <!-- LEFT: Hamburger -->
+        <button data-action="click->mobile-menu#toggle" class="hover:text-black transition p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
         <!-- CENTER: Logo -->
         <%= link_to root_path, class: "text-lg font-bold uppercase tracking-tight text-black" do %>
           Hypee
         <% end %>
-        <!-- RIGHT: Menu -->
-        <button data-action="click->mobile-menu#toggle" class="hover:text-black transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <!-- RIGHT: Search + Cart -->
+        <div class="flex items-center gap-4">
+          <div data-controller="search-modal">
+            <button data-action="click->search-modal#open" class="hover:text-black transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+            <%= render "shared/search_modal" %>
+          </div>
+          <div data-controller="cart">
+            <button data-action="click->cart#open" class="relative hover:text-black transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+              </svg>
+            </button>
+            <%= render "carts/drawer" %>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- ================= MOBILE MENU ================= -->
     <div data-mobile-menu-target="panel" class="hidden fixed inset-0 bg-white z-50 flex flex-col h-screen overflow-hidden">
       <!-- Top bar -->
-      <div class="flex items-center justify-between p-6 border-b border-black/10">
-        <span class="text-lg font-bold uppercase text-black">Menu</span>
-        <button data-action="click->mobile-menu#toggle" class="text-xl text-black">
-          ✕
+      <div class="flex items-center justify-between p-5 border-b border-black/[0.06]">
+        <span class="text-lg font-bold uppercase text-black tracking-tight">Hypee</span>
+        <button data-action="click->mobile-menu#toggle" class="w-10 h-10 flex items-center justify-center text-black">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
         </button>
       </div>
       <!-- Links -->
-      <div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-sm uppercase tracking-widest">
-        <%= link_to "Shop", "#", class: "text-gray-500 hover:text-black" %>
-        <%= link_to "New Arrivals", "#", class: "text-gray-500 hover:text-black" %>
-        <%= link_to "Men", "#", class: "text-gray-500 hover:text-black" %>
-        <%= link_to "Women", "#", class: "text-gray-500 hover:text-black" %>
-        <%= link_to "Collections", "#", class: "text-gray-500 hover:text-black" %>
-        <div class="border-t border-black/10 my-4"></div>
-        <% if user_signed_in? %>
-          <%= link_to "Profile", "#", class: "text-gray-500 hover:text-black" %>
-          <%= link_to "Orders", "#", class: "text-gray-500 hover:text-black" %>
-        <% else %>
-          <%= link_to "Login", new_user_session_path, class: "text-gray-500 hover:text-black" %>
-        <% end %>
+      <div class="flex-1 overflow-y-auto">
+        <div class="p-6 space-y-1">
+          <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-5">Shop</p>
+          <%= link_to "New Arrivals", products_path(filter: "new"),
+                      data: { turbo: false, action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "Men", products_path(filter: "men"),
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "Women", products_path(filter: "women"),
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "Accessories", products_path(filter: "accessories"),
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "All Products", products_path,
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+        </div>
+
+        <div class="px-6 py-4 border-t border-black/[0.06]">
+          <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-5">Support</p>
+          <%= link_to "Contact", contact_path,
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "Shipping", shipping_path,
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <%= link_to "FAQ", faq_path,
+                      data: { action: "click->mobile-menu#toggle" },
+                      class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+        </div>
+
+        <div class="px-6 py-4 border-t border-black/[0.06]">
+          <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-5">Account</p>
+          <% if user_signed_in? %>
+            <%= link_to "My Orders", orders_path,
+                        data: { action: "click->mobile-menu#toggle" },
+                        class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+            <%= link_to "My Addresses", addresses_path,
+                        data: { action: "click->mobile-menu#toggle" },
+                        class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete,
+                           form: { data: { turbo: false } },
+                           class: "block w-full text-left py-3 text-sm uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition bg-transparent border-none cursor-pointer p-0" %>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path,
+                        data: { action: "click->mobile-menu#toggle" },
+                        class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+            <%= link_to "Create Account", new_user_registration_path,
+                        data: { action: "click->mobile-menu#toggle" },
+                        class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="p-6 border-t border-black/[0.06]">
+        <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400">
+          &copy; <%= Time.current.year %> Hypee
+        </p>
       </div>
     </div>
   </header>
 
   <!-- ================= MOBILE BOTTOM NAV ================= -->
-  <div class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-black/10 z-40">
-    <div class="flex items-center justify-between px-8 py-3 text-gray-400">
+  <div class="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white border-t border-black/[0.06] z-40 pb-[env(safe-area-inset-bottom)]">
+    <div class="flex items-center justify-around px-2 py-2">
       <!-- Home -->
-      <button class="flex flex-col items-center gap-1 text-black">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V10z"/>
+      <%= link_to root_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-6.046a.75.75 0 011.092.017l8.954 6.046M3.75 20.25h16.5"/>
         </svg>
-      </button>
-      <!-- Search -->
+        <span class="text-[8px] uppercase tracking-[0.15em]">Home</span>
+      <% end %>
       <!-- Search -->
       <div data-controller="search-modal">
-        <button data-action="click->search-modal#open" class="flex flex-col items-center gap-1 hover:text-black transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7"></circle>
-            <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+        <button data-action="click->search-modal#open" class="flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
           </svg>
+          <span class="text-[8px] uppercase tracking-[0.15em]">Search</span>
         </button>
-
-        <!-- Overlay -->
-        <div data-search-modal-target="overlay"
-             data-action="click->search-modal#close"
-             class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-200"></div>
-
-        <!-- Modal -->
-        <div data-search-modal-target="modal"
-             class="fixed top-0 left-0 right-0 z-[70] hidden opacity-0 -translate-y-2 transition-all duration-200">
-          <div class="bg-white border-b border-black/[0.06] shadow-lg">
-            <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-5 flex items-center gap-4">
-              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-
-              <%= form_with url: search_path, method: :get, class: "flex-1", data: { turbo: false } do |f| %>
-                <%= f.text_field :q,
-                                 value: params[:q],
-                                 placeholder: "Search...",
-                                 autocomplete: "off",
-                                 data: {
-                                   search_modal_target: "input",
-                                   action: "keydown->search-modal#submitOnEnter"
-                                 },
-                                 class: "w-full bg-transparent text-sm text-black placeholder-gray-300 focus:outline-none uppercase tracking-widest" %>
-              <% end %>
-
-              <button data-action="click->search-modal#close" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-black transition">
-                ✕
-              </button>
-            </div>
-          </div>
-        </div>
+        <%= render "shared/search_modal" %>
       </div>
-      <!-- Wishlist -->
-      <button class="flex flex-col items-center gap-1 hover:text-black transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path d="M20.8 4.6c-1.5-1.4-3.8-1.4-5.3 0L12 8l-3.5-3.4c-1.5-1.4-3.8-1.4-5.3 0-1.6 1.5-1.6 4 0 5.5L12 21l8.8-10.9c1.6-1.5 1.6-4 0-5.5z"/>
-        </svg>
-      </button>
-      <!-- Profile -->
-      <button class="flex flex-col items-center gap-1 hover:text-black transition">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <circle cx="12" cy="8" r="4"></circle>
-          <path d="M4 20c0-4 4-6 8-6s8 2 8 6"></path>
-        </svg>
-      </button>
+      <!-- Cart -->
+      <div data-controller="cart">
+        <button data-action="click->cart#open" class="flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3 relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25h3M16.5 10.5H21m0 0l-3-3m3 3l-3 3"/>
+          </svg>
+          <span class="text-[8px] uppercase tracking-[0.15em]">Cart</span>
+        </button>
+        <%= render "carts/drawer" %>
+      </div>
+      <!-- Account -->
+      <% if user_signed_in? %>
+        <%= link_to orders_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/>
+          </svg>
+          <span class="text-[8px] uppercase tracking-[0.15em]">Orders</span>
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/>
+          </svg>
+          <span class="text-[8px] uppercase tracking-[0.15em]">Login</span>
+        <% end %>
+      <% end %>
     </div>
   </div>
 

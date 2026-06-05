@@ -1,6 +1,6 @@
 <%# app/views/products/index.html.erb %>
 
-<div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24 bg-white">
+<div class="max-w-[1440px] mx-auto px-4 sm:px-10 pt-24 pb-28 sm:pt-16 sm:pb-24 bg-white">
 
   <!-- HEADER: Centered -->
   <div class="mb-12 sm:mb-20 text-center">
@@ -33,8 +33,8 @@
 
   <% if @products.any? %>
 
-    <!-- 3 columns max -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <!-- 2 cols on mobile, 3 on desktop -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
 
       <% @products.each do |product| %>
 
@@ -59,7 +59,7 @@
                     decoding: "async",
                     width: 500,
                     height: 600,
-                    class: "w-full h-full object-contain p-6 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out"
+                    class: "w-full h-full object-contain p-4 sm:p-10 group-hover:scale-105 transition-transform duration-700 ease-out"
                   ) %>
 
             <% else %>

@@ -1,0 +1,32 @@
+<!-- Search Modal Overlay -->
+<div data-search-modal-target="overlay"
+     data-action="click->search-modal#close"
+     class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-200"></div>
+
+<!-- Search Modal Panel -->
+<div data-search-modal-target="modal"
+     class="fixed top-0 left-0 right-0 z-[70] hidden opacity-0 -translate-y-2 transition-all duration-200">
+  <div class="bg-white border-b border-black/[0.06] shadow-lg">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-5 flex items-center gap-4">
+      <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+
+      <%= form_with url: search_path, method: :get, class: "flex-1", data: { turbo: false } do |f| %>
+        <%= f.text_field :q,
+                         value: params[:q],
+                         placeholder: "Search products...",
+                         autocomplete: "off",
+                         data: {
+                           search_modal_target: "input",
+                           action: "keydown->search-modal#submitOnEnter"
+                         },
+                         class: "w-full bg-transparent text-sm text-black placeholder-gray-300 focus:outline-none uppercase tracking-widest" %>
+      <% end %>
+
+      <button data-action="click->search-modal#close" class="text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-black transition flex-shrink-0">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

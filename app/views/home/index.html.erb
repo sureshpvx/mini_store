@@ -1,24 +1,24 @@
 
-<section class="relative min-h-[95vh] md:min-h-screen overflow-hidden bg-white border-b border-black/[0.03]">
+<section class="relative min-h-[85vh] sm:min-h-[95vh] lg:min-h-screen overflow-hidden bg-white border-b border-black/[0.03]">
 
-  <div class="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16">
+  <div class="max-w-[1440px] mx-auto px-5 sm:px-10 lg:px-16">
 
-    <div class="grid lg:grid-cols-[0.95fr_1.05fr] items-center min-h-[95vh] gap-12 lg:gap-20">
+    <div class="grid lg:grid-cols-[0.95fr_1.05fr] items-center min-h-[85vh] sm:min-h-[95vh] lg:min-h-screen gap-8 lg:gap-20">
 
       <!-- ================= LEFT CONTENT ================= -->
-      <div class="relative z-20 pt-32 lg:pt-0 max-w-xl">
+      <div class="relative z-20 pt-24 sm:pt-32 lg:pt-0 max-w-xl">
 
         <!-- Label -->
-        <p class="text-[10px] uppercase tracking-[0.45em] text-gray-400 mb-8">
+        <p class="text-[10px] uppercase tracking-[0.45em] text-gray-400 mb-6 sm:mb-8">
           SS / 26 Collection
         </p>
 
         <!-- Heading -->
-        <h1 class="text-[4.5rem] sm:text-[6rem] lg:text-[8rem]
+        <h1 class="text-[3.5rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem]
                    font-black uppercase
                    leading-[0.82]
                    tracking-[-0.06em]
-                   text-black mb-8">
+                   text-black mb-6 sm:mb-8">
 
           DEFINE<br>
           YOUR<br>
@@ -27,13 +27,13 @@
         </h1>
 
         <!-- Description -->
-        <p class="text-black/60 text-sm leading-relaxed max-w-sm mb-12 font-light">
+        <p class="text-black/60 text-sm leading-relaxed max-w-sm mb-8 sm:mb-12 font-light">
           Uncompromising aesthetics for the modern minimalist.
           Structured silhouettes, premium materials, quiet dominance.
         </p>
 
         <!-- CTA -->
-        <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
 
           <%= link_to products_path,
                       class: "group inline-flex items-center justify-center gap-3
@@ -63,12 +63,11 @@
 
       </div>
 
-      <!-- ================= RIGHT VISUAL ================= -->
+      <!-- ================= RIGHT VISUAL (desktop only) ================= -->
       <div class="relative hidden lg:flex items-center justify-center h-full">
 
         <!-- Massive Background Text -->
         <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-
           <div class="text-[15rem]
                 font-black
                 uppercase
@@ -77,37 +76,24 @@
                 leading-none">
             H
           </div>
-
         </div>
-
-        <!-- Vertical SHOP NOW -->
-
 
         <!-- Editorial Layout -->
         <div class="relative w-full max-w-[760px] h-[760px]">
 
           <!-- Group Image -->
           <div class="absolute top-0 right-0 w-[520px]">
-
-            <%= image_tag "group.jpg",
-                          class: "w-full object-cover" %>
-
+            <%= image_tag "group.jpg", class: "w-full object-cover" %>
           </div>
 
           <!-- Boy Image -->
           <div class="absolute bottom-0 left-0 w-[270px] bg-white p-3">
-
-            <%= image_tag "boyincords.jpg",
-                          class: "w-full object-cover" %>
-
+            <%= image_tag "boyincords.jpg", class: "w-full object-cover" %>
           </div>
 
           <!-- Girl Image -->
           <div class="absolute bottom-14 right-8 w-[220px] bg-white p-3 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
-
-            <%= image_tag "girlinhoodie.jpg",
-                          class: "w-full object-cover" %>
-
+            <%= image_tag "girlinhoodie.jpg", class: "w-full object-cover" %>
           </div>
 
           <!-- New Arrival Card -->
@@ -131,16 +117,13 @@
             </h3>
 
             <div class="flex items-center gap-3">
-
               <div class="w-10 h-px bg-black/20"></div>
-
               <span class="text-[9px]
                      uppercase
                      tracking-[0.25em]
                      text-black/50">
           SS / 26
         </span>
-
             </div>
 
           </div>
@@ -149,46 +132,37 @@
 
       </div>
 
-
     </div>
 
   </div>
 
-  <!-- ================= BOTTOM INFO ================= -->
+  <!-- ================= MOBILE HERO IMAGE ================= -->
+  <div class="lg:hidden relative w-full aspect-[4/5] sm:aspect-[16/9] -mt-4">
+    <%= image_tag "group.jpg",
+                  class: "w-full h-full object-cover object-center" %>
+    <div class="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent"></div>
+  </div>
+
+  <!-- ================= BOTTOM INFO (desktop only) ================= -->
   <div class="absolute bottom-8 left-0 right-0 hidden lg:flex items-center justify-center gap-20">
 
     <div>
-      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
-        New Arrivals
-      </p>
-
-      <p class="text-3xl font-light tracking-tight text-black">
-        30+
-      </p>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">New Arrivals</p>
+      <p class="text-3xl font-light tracking-tight text-black">30+</p>
     </div>
 
     <div class="w-px h-10 bg-black/[0.08]"></div>
 
     <div>
-      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
-        Premium Quality
-      </p>
-
-      <p class="text-3xl font-light tracking-tight text-black">
-        100%
-      </p>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">Premium Quality</p>
+      <p class="text-3xl font-light tracking-tight text-black">100%</p>
     </div>
 
     <div class="w-px h-10 bg-black/[0.08]"></div>
 
     <div>
-      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">
-        Timeless Design
-      </p>
-
-      <p class="text-3xl font-light tracking-tight text-black">
-        SS / 26
-      </p>
+      <p class="text-[9px] uppercase tracking-[0.3em] text-gray-400 mb-3">Timeless Design</p>
+      <p class="text-3xl font-light tracking-tight text-black">SS / 26</p>
     </div>
 
   </div>
@@ -197,8 +171,8 @@
 
 
 <!-- ================= CATEGORIES ================= -->
-<section class="py-16 sm:py-24 px-4 sm:px-10 bg-white">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-[1440px] mx-auto">
+<section class="py-12 sm:py-16 md:py-24 px-4 sm:px-10 bg-white">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-[1440px] mx-auto">
 
     <% categories = [
       { name: "Men", image: "men.jpg", filter: "men" },
@@ -208,17 +182,14 @@
 
     <% categories.each do |cat| %>
       <%= link_to products_path(filter: cat[:filter]),
-                  class: "relative group overflow-hidden bg-gray-50 h-[400px] sm:h-[500px] md:h-[600px] block" do %>
+                  class: "relative group overflow-hidden bg-gray-50 h-[220px] sm:h-[400px] md:h-[500px] lg:h-[600px] block" do %>
 
-        <!-- Full-color image, no blur, no grayscale -->
         <%= image_tag cat[:image], loading: "lazy",
                       class: "absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" %>
 
-        <!-- Ultra-subtle bottom gradient so text stays readable -->
         <div class="absolute inset-0 bg-gradient-to-t from-white/70 via-white/10 to-transparent"></div>
 
-        <!-- Minimal bottom text -->
-        <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-8 sm:pb-12">
+        <div class="absolute bottom-0 left-0 right-0 flex justify-center pb-6 sm:pb-12">
           <div class="text-center">
             <h2 class="text-xs sm:text-sm uppercase tracking-[0.35em] font-light text-black mb-3">
               <%= cat[:name] %>
@@ -233,12 +204,12 @@
   </div>
 </section>
 
-<!<!-- ================= NEW ARRIVALS ================= -->
-<section class="py-16 sm:py-24 px-4 sm:px-10 bg-white border-t border-black/[0.03]">
+<!-- ================= NEW ARRIVALS ================= -->
+<section class="py-12 sm:py-16 md:py-24 px-4 sm:px-10 bg-white border-t border-black/[0.03]">
 
   <div class="max-w-[1440px] mx-auto">
 
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12 sm:mb-16">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10 sm:mb-16">
       <div>
         <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Latest Drop</p>
         <h2 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.2em] text-black">
@@ -254,14 +225,14 @@
       <% end %>
     </div>
 
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
       <% @new_arrivals.each do |product| %>
         <%= link_to product_path(product), class: "group flex flex-col" do %>
 
-          <div class="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-4 sm:mb-5 flex items-center justify-center">
+          <div class="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-3 sm:mb-5 flex items-center justify-center">
             <% if product.images.attached? %>
               <%= image_tag product.images.first, loading: "lazy",
-                            class: "w-full h-full object-contain p-4 sm:p-8 group-hover:scale-105 transition-transform duration-700 ease-out" %>
+                            class: "w-full h-full object-contain p-3 sm:p-8 group-hover:scale-105 transition-transform duration-700 ease-out" %>
             <% else %>
               <div class="text-gray-300 uppercase text-[8px] tracking-widest">No Image</div>
             <% end %>
@@ -269,10 +240,10 @@
 
           <div class="flex flex-col gap-1">
             <div class="flex justify-between items-baseline gap-2">
-              <h3 class="uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-light text-black group-hover:text-gray-500 transition truncate">
+              <h3 class="uppercase text-[9px] sm:text-[11px] tracking-[0.2em] font-light text-black group-hover:text-gray-500 transition truncate">
                 <%= product.name %>
               </h3>
-              <span class="text-[10px] sm:text-[11px] text-gray-400 font-light whitespace-nowrap">
+              <span class="text-[9px] sm:text-[11px] text-gray-400 font-light whitespace-nowrap">
                 <%= number_to_currency(product.price, unit: "₹", precision: 0) %>
               </span>
             </div>
@@ -287,7 +258,7 @@
 </section>
 
 <!-- ================= EDITORIAL BANNER ================= -->
-<section class="relative h-[500px] md:h-[600px] flex items-center border-t border-black/[0.03] overflow-hidden bg-white">
+<section class="relative h-[400px] sm:h-[500px] md:h-[600px] flex items-center border-t border-black/[0.03] overflow-hidden bg-white">
 
   <div class="absolute inset-0 w-full md:w-3/5 ml-auto">
     <%= image_tag "girl.jpg", loading: "lazy",
@@ -296,16 +267,16 @@
 
   <div class="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent md:bg-gradient-to-r md:from-white md:via-white/80 md:to-transparent"></div>
 
-  <div class="relative z-10 px-6 sm:px-10 max-w-xl md:max-w-2xl">
+  <div class="relative z-10 px-5 sm:px-10 max-w-xl md:max-w-2xl">
     <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-4">Editorial</p>
-    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-light uppercase mb-6 leading-[1.1] tracking-[0.1em] text-black">
+    <h2 class="text-2xl sm:text-3xl lg:text-5xl font-light uppercase mb-4 sm:mb-6 leading-[1.1] tracking-[0.1em] text-black">
       Crafted<br>For The Bold
     </h2>
-    <p class="text-gray-500 mb-8 text-sm leading-relaxed max-w-md font-light">
+    <p class="text-gray-500 mb-6 sm:mb-8 text-sm leading-relaxed max-w-md font-light">
       Reject the superfluous. Embrace the essential. Our latest collection is an exercise in restraint and precision.
     </p>
     <%= link_to journal_path,
-                class: "inline-flex items-center gap-3 border border-black/30 bg-transparent px-7 py-3.5 uppercase text-[11px] tracking-[0.2em] font-light text-black hover:bg-black hover:text-white transition duration-300" do %>
+                class: "inline-flex items-center gap-3 border border-black/30 bg-transparent px-6 sm:px-7 py-3 sm:py-3.5 uppercase text-[11px] tracking-[0.2em] font-light text-black hover:bg-black hover:text-white transition duration-300" do %>
       Read the Journal
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>

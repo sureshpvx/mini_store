@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-white text-black">
-  <div class="max-w-[1440px] mx-auto px-4 sm:px-10 py-16 sm:py-24">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-10 pt-24 pb-28 sm:pt-16 sm:pb-24">
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
@@ -184,35 +184,39 @@
                         data: { turbo: true },
                         class: "space-y-4" do |f| %>
 
-            <div class="flex items-stretch gap-3">
-              <%# Stepper %>
-              <div class="flex items-center border border-black/20" data-controller="quantity">
-                <button type="button"
-                        class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
-                        data-action="click->quantity#decrement">−</button>
-                <input type="number"
-                       name="quantity"
-                       value="1"
-                       min="1"
-                       max="<%= stock %>"
-                       class="w-10 h-12 bg-transparent text-center text-sm text-black outline-none border-x border-black/10"
-                       data-quantity-target="input"
-                       readonly>
-                <button type="button"
-                        class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
-                        data-action="click->quantity#increment">+</button>
+            <div class="flex flex-col sm:flex-row items-stretch gap-3">
+              <div class="flex items-stretch gap-3">
+                <%# Stepper %>
+                <div class="flex items-center border border-black/20" data-controller="quantity">
+                  <button type="button"
+                          class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
+                          data-action="click->quantity#decrement">−</button>
+                  <input type="number"
+                         name="quantity"
+                         value="1"
+                         min="1"
+                         max="<%= stock %>"
+                         class="w-10 h-12 bg-transparent text-center text-sm text-black outline-none border-x border-black/10"
+                         data-quantity-target="input"
+                         readonly>
+                  <button type="button"
+                          class="w-10 h-12 flex items-center justify-center text-gray-400 hover:text-black transition select-none"
+                          data-action="click->quantity#increment">+</button>
+                </div>
               </div>
 
-              <%# Buy Now — solid black, primary %>
-              <%= button_tag "Buy Now",
-                             type: :submit,
-                             formaction: buy_now_cart_path(product_id: @product.id),
-                             class: "flex-1 h-12 bg-black text-white uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition active:scale-[0.98]" %>
+              <div class="flex flex-1 gap-3">
+                <%# Buy Now — solid black, primary %>
+                <%= button_tag "Buy Now",
+                               type: :submit,
+                               formaction: buy_now_cart_path(product_id: @product.id),
+                               class: "flex-1 h-12 bg-black text-white uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-gray-800 transition active:scale-[0.98]" %>
 
-              <%# Add to Cart — outline, secondary %>
-              <%= button_tag "Add to Cart",
-                             type: :submit,
-                             class: "flex-1 h-12 border border-black/30 text-black uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-black hover:text-white transition active:scale-[0.98]" %>
+                <%# Add to Cart — outline, secondary %>
+                <%= button_tag "Add to Cart",
+                               type: :submit,
+                               class: "flex-1 h-12 border border-black/30 text-black uppercase tracking-[0.2em] text-[11px] font-medium hover:bg-black hover:text-white transition active:scale-[0.98]" %>
+              </div>
             </div>
 
           <% end %>
