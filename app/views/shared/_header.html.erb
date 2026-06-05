@@ -26,7 +26,7 @@
           <%= link_to "ACCESSORIES", products_path(filter: "accessories"),
                       class: "#{params[:filter] == 'accessories' ? active : base}" %>
         </nav>
-        <div data-controller="cart" class="flex items-center gap-5 text-black/70">
+        <div class="flex items-center gap-5 text-black/70">
           <!-- Search -->
           <div data-controller="search-modal">
             <button data-action="click->search-modal#open" class="hover:text-black transition">
@@ -42,8 +42,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
             </svg>
           </button>
-          <!-- CART DRAWER -->
-          <%= render "carts/drawer" %>
           <!-- Auth Dropdown -->
           <div data-controller="dropdown" class="relative">
             <% if user_signed_in? %>
@@ -89,13 +87,12 @@
             </button>
             <%= render "shared/search_modal" %>
           </div>
-          <div data-controller="cart">
+          <div>
             <button data-action="click->cart#open" class="relative hover:text-black transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
               </svg>
             </button>
-            <%= render "carts/drawer" %>
           </div>
         </div>
       </div>
@@ -156,8 +153,8 @@
                         data: { action: "click->mobile-menu#toggle" },
                         class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
             <%= button_to "Logout", destroy_user_session_path, method: :delete,
-                           form: { data: { turbo: false } },
-                           class: "block w-full text-left py-3 text-sm uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition bg-transparent border-none cursor-pointer p-0" %>
+                          form: { data: { turbo: false } },
+                          class: "block w-full text-left py-3 text-sm uppercase tracking-[0.2em] text-red-500 hover:text-red-700 transition bg-transparent border-none cursor-pointer p-0" %>
           <% else %>
             <%= link_to "Sign In", new_user_session_path,
                         data: { action: "click->mobile-menu#toggle" },
@@ -188,26 +185,14 @@
         </svg>
         <span class="text-[8px] uppercase tracking-[0.15em]">Home</span>
       <% end %>
-      <!-- Search -->
-      <div data-controller="search-modal">
-        <button data-action="click->search-modal#open" class="flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-          </svg>
-          <span class="text-[8px] uppercase tracking-[0.15em]">Search</span>
-        </button>
-        <%= render "shared/search_modal" %>
-      </div>
-      <!-- Cart -->
-      <div data-controller="cart">
-        <button data-action="click->cart#open" class="flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3 relative">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25h3M16.5 10.5H21m0 0l-3-3m3 3l-3 3"/>
-          </svg>
-          <span class="text-[8px] uppercase tracking-[0.15em]">Cart</span>
-        </button>
-        <%= render "carts/drawer" %>
-      </div>
+      <!-- Contact -->
+      <%= link_to contact_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25v7.5A2.25 2.25 0 005.25 18h13.5A2.25 2.25 0 0021 15.75v-7.5" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25l-9 6-9-6" />
+        </svg>
+        <span class="text-[8px] uppercase tracking-[0.15em]">Contact</span>
+      <% end %>
       <!-- Account -->
       <% if user_signed_in? %>
         <%= link_to orders_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>

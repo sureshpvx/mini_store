@@ -3,42 +3,38 @@
 <head>
   <title><%= content_for(:title) || "HYPEE — Premium Streetwear" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <%= yield :head %>
-
   <link rel="icon" href="/favicon.ico?v=2" sizes="any">
   <link rel="icon" href="/icon.svg?v=2" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
-
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
 </head>
 
-<body class="text-black min-h-screen antialiased bg-white">
+<body class="text-black min-h-screen antialiased bg-white" data-controller="cart">
 <% unless content_for?(:auth_page) %>
   <%= render "shared/header" %>
 <% end %>
+
+<%# SINGLE DRAWER — shared by desktop & mobile %>
+<%= render "carts/drawer" %>
+
 <div id="flash-container" class="fixed top-6 right-6 z-[9999] space-y-3">
   <% flash.each do |type, message| %>
     <%= render "shared/flash_message", type: type, message: message %>
   <% end %>
 </div>
+
 <main class="min-h-screen relative">
-
-  <!-- BACKGROUND LAYER -->
-
-  <!-- CONTENT -->
   <div class="relative z-10">
     <%= yield %>
   </div>
-
 </main>
 
 <% unless content_for?(:auth_page) %>
   <%= render "shared/footer" %>
 <% end %>
-
 </body>
 </html>
