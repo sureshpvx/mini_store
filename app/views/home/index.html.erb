@@ -1,180 +1,45 @@
 <section class="relative bg-white border-b border-black/[0.03]">
 
-  <div class="max-w-[1440px] mx-auto px-5 sm:px-10 lg:px-16">
+  <!-- ================= IMMERSIVE HERO (all screen sizes) ================= -->
+  <div class="relative min-h-[85vh] lg:min-h-screen overflow-hidden bg-neutral-900">
 
-    <div class="grid lg:grid-cols-[0.95fr_1.05fr] items-center gap-8 lg:gap-20">
-
-      <!-- ================= LEFT CONTENT (desktop only) ================= -->
-      <div class="relative z-20 pt-24 sm:pt-32 lg:pt-0 max-w-xl lg:py-32">
-
-        <!-- Label -->
-        <p class="hidden lg:block text-[10px] uppercase tracking-[0.45em] text-gray-400 mb-6 sm:mb-8">
-          SS / 26 Collection
-        </p>
-
-        <!-- Heading -->
-        <h1 class="hidden lg:block text-[3.5rem] sm:text-[4.5rem] md:text-[6rem] lg:text-[8rem]
-                   font-black uppercase
-                   leading-[0.82]
-                   tracking-[-0.06em]
-                   text-black mb-6 sm:mb-8">
-
-          DEFINE<br>
-          YOUR<br>
-          EDGE
-
-        </h1>
-
-        <!-- Description -->
-        <p class="hidden lg:block text-black/60 text-sm leading-relaxed max-w-sm mb-8 sm:mb-12 font-light">
-          Uncompromising aesthetics for the modern minimalist.
-          Structured silhouettes, premium materials, quiet dominance.
-        </p>
-
-        <!-- CTA -->
-        <div class="hidden lg:flex flex-col sm:flex-row gap-3 sm:gap-4">
-
-          <%= link_to products_path,
-                      class: "group inline-flex items-center justify-center gap-3
-                               bg-black text-white
-                               px-8 py-4
-                               uppercase text-[11px]
-                               tracking-[0.28em]
-                               font-light
-                               hover:bg-neutral-800
-                               transition duration-300" do %>
-
-            Shop Collection
-
-            <svg class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300"
-                 fill="none"
-                 stroke="currentColor"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-
-          <% end %>
-
-        </div>
-
-      </div>
-
-      <!-- ================= RIGHT VISUAL (desktop only) ================= -->
-      <div class="relative hidden lg:flex items-center justify-center h-full py-24">
-
-        <!-- Massive Background Text -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <div class="text-[15rem]
-                font-black
-                uppercase
-                tracking-[-0.08em]
-                text-black/[0.025]
-                leading-none">
-            H
-          </div>
-        </div>
-
-        <!-- Editorial Layout -->
-        <div class="relative w-full max-w-[760px] h-[760px]">
-
-          <!-- Group Image -->
-          <div class="absolute top-0 right-0 w-[520px]">
-            <%= image_tag "group.jpg", class: "w-full object-cover" %>
-          </div>
-
-          <!-- Boy Image -->
-          <div class="absolute bottom-0 left-0 w-[270px] bg-white p-3">
-            <%= image_tag "boyincords.jpg", class: "w-full object-cover" %>
-          </div>
-
-          <!-- Girl Image -->
-          <div class="absolute bottom-14 right-8 w-[220px] bg-white p-3 shadow-[0_10px_40px_rgba(0,0,0,0.04)]">
-            <%= image_tag "girlinhoodie.jpg", class: "w-full object-cover" %>
-          </div>
-
-          <!-- New Arrival Card -->
-          <div class="absolute bottom-20 left-[220px]
-                bg-white/95 backdrop-blur-sm
-                border border-black/[0.05]
-                px-8 py-6">
-
-            <p class="text-[9px]
-                uppercase
-                tracking-[0.35em]
-                text-gray-400 mb-3">
-              New Arrival
-            </p>
-
-            <h3 class="text-xs
-                 uppercase
-                 tracking-[0.2em]
-                 text-black mb-5">
-              Elevated Streetwear
-            </h3>
-
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-px bg-black/20"></div>
-              <span class="text-[9px]
-                     uppercase
-                     tracking-[0.25em]
-                     text-black/50">
-          SS / 26
-        </span>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- ================= CREATIVE MOBILE HERO (mobile only, below lg) ================= -->
-  <div class="lg:hidden relative min-h-[85vh] overflow-hidden bg-neutral-900">
-
-    <!-- Main background: boyincords.jpg -->
+    <!-- Main background: boyincords.jpg — FACE VISIBLE ON DESKTOP -->
     <%= image_tag "boyincords.jpg",
-                  class: "absolute inset-0 w-full h-full object-cover object-top",
+                  class: "absolute inset-0 w-full h-full object-cover object-top lg:object-[50%_10%]",
                   alt: "" %>
 
     <!-- Gradient for text readability -->
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
 
     <!-- Floating polaroid: girlinhoodie.jpg -->
-    <div class="absolute top-20 right-3 w-24 bg-white p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.25)] rotate-3 z-20">
+    <div class="absolute top-20 right-3 lg:top-24 lg:right-12 w-24 lg:w-40 bg-white p-1.5 lg:p-3 shadow-[0_12px_40px_rgba(0,0,0,0.25)] rotate-3 z-20">
       <%= image_tag "girlinhoodie.jpg",
                     class: "w-full aspect-[3/4] object-cover",
                     alt: "" %>
-      <div class="pt-1 pb-0.5 text-center">
-        <span class="text-[7px] uppercase tracking-[0.2em] text-gray-400">SS / 26</span>
+      <div class="pt-1 pb-0.5 lg:pt-2 lg:pb-1 text-center">
+        <span class="text-[7px] lg:text-[9px] uppercase tracking-[0.2em] text-gray-400">SS / 26</span>
       </div>
     </div>
 
     <!-- Live indicator tag -->
-    <div class="absolute top-20 left-3 z-10">
-      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-1.5">
+    <div class="absolute top-20 left-3 lg:top-24 lg:left-12 z-10">
+      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-1.5 lg:px-4 lg:py-2">
         <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-        <span class="text-[9px] uppercase tracking-[0.3em] text-white">New Arrivals</span>
+        <span class="text-[9px] lg:text-[11px] uppercase tracking-[0.3em] text-white">New Arrivals</span>
       </div>
     </div>
 
     <!-- Text & CTA overlaid at bottom -->
-    <div class="absolute bottom-0 left-0 right-0 p-6 pb-24 z-10">
-      <p class="text-[10px] uppercase tracking-[0.5em] text-white/50 mb-3">
+    <div class="absolute bottom-0 left-0 right-0 p-6 pb-24 lg:p-12 lg:pb-16 z-10">
+      <p class="text-[10px] lg:text-xs uppercase tracking-[0.5em] text-white/50 mb-3">
         SS / 26 Collection
       </p>
 
-      <h1 class="text-[3.2rem] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white mb-5">
+      <h1 class="text-[3.2rem] lg:text-[6rem] xl:text-[7rem] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white mb-5 lg:mb-8">
         DEFINE<br>YOUR<br>EDGE
       </h1>
 
-      <p class="text-white/70 text-sm leading-relaxed mb-8 max-w-[280px] font-light">
+      <p class="text-white/70 text-sm lg:text-base leading-relaxed mb-8 lg:mb-10 max-w-[280px] lg:max-w-md font-light">
         Structured silhouettes, premium materials, quiet dominance.
       </p>
 
@@ -196,7 +61,7 @@
       <% end %>
 
       <!-- Micro stats -->
-      <div class="flex items-center justify-center gap-6 mt-6">
+      <div class="flex items-center justify-center lg:justify-start gap-6 mt-6">
         <span class="text-[9px] uppercase tracking-[0.2em] text-white/40">30+ Items</span>
         <div class="w-px h-3 bg-white/20"></div>
         <span class="text-[9px] uppercase tracking-[0.2em] text-white/40">Premium</span>
@@ -229,6 +94,7 @@
   </div>
 
 </section>
+
 <!-- ================= CATEGORIES ================= -->
 <section class="py-12 sm:py-16 md:py-24 px-4 sm:px-10 bg-white">
   <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-[1440px] mx-auto">
