@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     member do
       get :payment
       post :verify_payment
+      get  :payment_cancelled
     end
   end
   post "/checkout", to: "orders#create"

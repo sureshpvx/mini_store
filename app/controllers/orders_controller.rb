@@ -169,6 +169,20 @@ class OrdersController < ApplicationController
     end
   end
 
+  def payment_cancelled
+    order = current_user.orders.find(params[:id])
+    order.update!(status: :cancelled) if order.may_cancel?
+
+    NotificationCreator.call(
+      user: current_user,
+      kind: :order_cancelled,
+      actor: order,
+      url: order_path(order)
+    )
+
+    redirect_to cart_path, alert: "Payment was cancelled."
+  end
+
   def show
     @order = current_user.orders.find(params[:id])
   end
