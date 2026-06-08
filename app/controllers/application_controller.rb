@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::Base
   include Pagy::Backend
   allow_browser versions: :modern
-  helper_method :current_cart
+  helper_method :current_cart, :unread_notifications_count
 
   protected
+
+  def unread_notifications_count
+    return 0 unless user_signed_in?
+    @_unread_notifications_count ||= current_user.notifications.unread.count
+  end
 
   def current_cart
     @current_cart ||= build_current_cart

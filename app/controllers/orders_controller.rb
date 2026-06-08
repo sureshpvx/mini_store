@@ -91,6 +91,13 @@ class OrdersController < ApplicationController
       session.delete(:auto_order_address_id)
       session.delete(:guest_address_id)
 
+      NotificationCreator.call(
+        user: current_user,
+        kind: :order_placed,
+        actor: order,
+        url: order_path(order)
+      )
+
       redirect_to payment_order_path(order),
                   notice: "Order created. Proceed to payment."
 
@@ -124,6 +131,13 @@ class OrdersController < ApplicationController
 
       current_cart.cart_items.destroy_all
 
+      NotificationCreator.call(
+        user: current_user,
+        kind: :payment_confirmed,
+        actor: order,
+        url: order_path(order)
+      )
+
       render json: {
         success: true,
         redirect_url: order_path(order)
@@ -133,6 +147,13 @@ class OrdersController < ApplicationController
 
       order.update!(
         payment_status: :failed
+      )
+
+      NotificationCreator.call(
+        user: current_user,
+        kind: :payment_failed,
+        actor: order,
+        url: order_path(order)
       )
 
       render json: {

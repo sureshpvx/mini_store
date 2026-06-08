@@ -40,6 +40,16 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show]
 
+  resources :notifications, only: [:index] do
+    member do
+      patch :mark_as_read
+    end
+    collection do
+      patch :mark_all_as_read
+      get :count
+    end
+  end
+
   root "home#index"
   get  "/otp-login", to: "otp_auth#new"
   post "/send-otp",   to: "otp_auth#send_otp",   as: :send_otp

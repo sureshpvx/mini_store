@@ -1,0 +1,59 @@
+<div class="max-w-[1440px] mx-auto px-4 sm:px-10 pt-24 pb-28 sm:pt-16 sm:pb-24 bg-white min-h-screen">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-16">
+    <div>
+      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Account</p>
+      <h1 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] text-black">
+        Notifications
+      </h1>
+      <% if @unread_count > 0 %>
+        <p class="text-gray-400 text-sm font-light mt-2">
+          <%= @unread_count %> unread notification<%= @unread_count == 1 ? '' : 's' %>
+        </p>
+      <% end %>
+    </div>
+
+    <% if @unread_count > 0 %>
+      <%= button_to "Mark All as Read",
+                     mark_all_as_read_notifications_path,
+                     method: :patch,
+                     class: "border border-black/30 px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-black hover:bg-black hover:text-white transition duration-300 bg-transparent cursor-pointer font-light" %>
+    <% end %>
+  </div>
+
+  <!-- Notification List -->
+  <% if @notifications.any? %>
+    <div class="border border-black/[0.06] divide-y divide-black/[0.04]">
+      <% @notifications.each do |notification| %>
+        <% if notification.unread? %>
+          <%= link_to mark_as_read_notification_path(notification),
+                      method: :patch,
+                      class: "block hover:bg-gray-50/80 transition" do %>
+            <%= render "notifications/notification", notification: notification %>
+          <% end %>
+        <% else %>
+          <div class="block">
+            <%= render "notifications/notification", notification: notification %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="border border-black/[0.06] p-16 sm:p-24 text-center">
+      <div class="w-14 h-14 border border-black/[0.06] mx-auto flex items-center justify-center mb-6">
+        <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+        </svg>
+      </div>
+      <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-4">No Notifications</p>
+      <h2 class="text-xl sm:text-2xl text-black font-light uppercase tracking-[0.1em] mb-4">
+        You're all caught up
+      </h2>
+      <p class="text-gray-400 text-sm font-light max-w-md mx-auto leading-relaxed">
+        Notifications about your orders will appear here.
+      </p>
+    </div>
+  <% end %>
+</div>
