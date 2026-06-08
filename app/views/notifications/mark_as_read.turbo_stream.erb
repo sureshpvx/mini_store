@@ -1,0 +1,13 @@
+<%= turbo_stream.replace dom_id(@notification) do %>
+  <% if @notification.unread? %>
+    <%= render "notifications/notification", notification: @notification %>
+  <% else %>
+    <%= render "notifications/notification", notification: @notification %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "notification-badge" do %>
+  <span id="notification-badge" class="<%= current_user.notifications.unread.count > 0 ? '' : 'hidden' %> absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-[8px] flex items-center justify-center rounded-full">
+    <%= current_user.notifications.unread.count %>
+  </span>
+<% end %>

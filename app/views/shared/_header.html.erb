@@ -36,6 +36,20 @@
             </button>
             <%= render "shared/search_modal" %>
           </div>
+          <!-- Notifications -->
+          <% if user_signed_in? %>
+            <div data-controller="notification-dropdown" class="relative">
+              <button data-action="click->notification-dropdown#toggle" class="relative hover:text-black transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+                </svg>
+                <span id="notification-badge" class="<%= unread_notifications_count > 0 ? '' : 'hidden' %> absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-[8px] flex items-center justify-center rounded-full">
+                  <%= unread_notifications_count %>
+                </span>
+              </button>
+              <%= render "notifications/dropdown", unread_count: unread_notifications_count %>
+            </div>
+          <% end %>
           <!-- Cart -->
           <button data-action="click->cart#open" class="relative hover:text-black transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -77,7 +91,7 @@
         <%= link_to root_path, class: "text-lg font-bold uppercase tracking-tight text-black" do %>
           Hypee
         <% end %>
-        <!-- RIGHT: Search + Cart -->
+        <!-- RIGHT: Search + Notifications + Cart -->
         <div class="flex items-center gap-4">
           <div data-controller="search-modal">
             <button data-action="click->search-modal#open" class="hover:text-black transition">
@@ -87,6 +101,16 @@
             </button>
             <%= render "shared/search_modal" %>
           </div>
+          <% if user_signed_in? %>
+            <%= link_to notifications_path, class: "relative hover:text-black transition" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+              </svg>
+              <% if unread_notifications_count > 0 %>
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-black rounded-full"></span>
+              <% end %>
+            <% end %>
+          <% end %>
           <div>
             <button data-action="click->cart#open" class="relative hover:text-black transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -149,6 +173,14 @@
             <%= link_to "My Orders", orders_path,
                         data: { action: "click->mobile-menu#toggle" },
                         class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
+            <%= link_to notifications_path,
+                        data: { action: "click->mobile-menu#toggle" },
+                        class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" do %>
+              Notifications
+              <% if unread_notifications_count > 0 %>
+                <span class="ml-2 text-[9px] text-black font-medium">(<%= unread_notifications_count %>)</span>
+              <% end %>
+            <% end %>
             <%= link_to "My Addresses", addresses_path,
                         data: { action: "click->mobile-menu#toggle" },
                         class: "block py-3 text-sm uppercase tracking-[0.2em] text-black/70 hover:text-black transition" %>
@@ -192,6 +224,18 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25l-9 6-9-6" />
         </svg>
         <span class="text-[8px] uppercase tracking-[0.15em]">Contact</span>
+      <% end %>
+      <!-- Notifications -->
+      <% if user_signed_in? %>
+        <%= link_to notifications_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3 relative" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+          </svg>
+          <span class="text-[8px] uppercase tracking-[0.15em]">Alerts</span>
+          <% if unread_notifications_count > 0 %>
+            <span class="absolute top-0 right-2 w-2 h-2 bg-black rounded-full"></span>
+          <% end %>
+        <% end %>
       <% end %>
       <!-- Account -->
       <% if user_signed_in? %>

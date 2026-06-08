@@ -1,0 +1,11 @@
+<% current_user.notifications.newest_first.limit(5).each do |notification| %>
+  <%= turbo_stream.replace dom_id(notification) do %>
+    <%= render "notifications/notification", notification: notification %>
+  <% end %>
+<% end %>
+
+<%= turbo_stream.replace "notification-badge" do %>
+  <span id="notification-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-[8px] flex items-center justify-center rounded-full">
+    0
+  </span>
+<% end %>

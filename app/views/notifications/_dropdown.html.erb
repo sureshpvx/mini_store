@@ -1,0 +1,45 @@
+<%# app/views/notifications/_dropdown.html.erb %>
+<% unread = local_assigns[:unread_count] || 0 %>
+<% recent_notifications = current_user.notifications.newest_first.limit(5) %>
+
+<div data-notification-dropdown-target="panel"
+     class="hidden absolute right-0 mt-4 w-[360px] bg-white border border-black/[0.06] shadow-[0_10px_60px_rgba(0,0,0,0.06)] z-50">
+
+  <!-- Header -->
+  <div class="px-5 py-4 border-b border-black/[0.06] flex items-center justify-between">
+    <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Notifications</p>
+    <% if unread > 0 %>
+      <%= button_to "Mark all read",
+                     mark_all_as_read_notifications_path,
+                     method: :patch,
+                     form: { data: { turbo_frame: "notifications-dropdown" } },
+                     class: "text-[9px] uppercase tracking-[0.2em] text-black/50 hover:text-black transition bg-transparent border-none cursor-pointer p-0 font-light" %>
+    <% end %>
+  </div>
+
+  <!-- List -->
+  <div class="max-h-[400px] overflow-y-auto" data-notification-dropdown-target="list">
+    <% if recent_notifications.any? %>
+      <% recent_notifications.each do |notification| %>
+        <%= link_to mark_as_read_notification_path(notification),
+                    method: :patch,
+                    data: { turbo_method: :patch, turbo_frame: "notification-#{notification.id}" },
+                    class: "block hover:bg-gray-50/80 transition" do %>
+          <%= render "notifications/notification", notification: notification, in_dropdown: true %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="px-5 py-10 text-center">
+        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2">No notifications</p>
+        <p class="text-[10px] text-gray-300 font-light">You're all caught up</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Footer -->
+  <div class="border-t border-black/[0.06] px-5 py-3">
+    <%= link_to "View All Notifications",
+                notifications_path,
+                class: "block text-center text-[10px] uppercase tracking-[0.2em] text-black/50 hover:text-black transition font-light" %>
+  </div>
+</div>
