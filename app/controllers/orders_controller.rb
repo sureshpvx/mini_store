@@ -22,6 +22,17 @@ class OrdersController < ApplicationController
       return
     end
 
+    # ============================================
+    # CHANGE 1: CHECK STOCK BEFORE CREATING ORDER
+    # ============================================
+    cart.cart_items.each do |cart_item|
+      unless cart_item.product.in_stock?(cart_item.quantity)
+        redirect_to cart_path,
+                    alert: "#{cart_item.product.name} is out of stock (only #{cart_item.product.stock} left)"
+        return
+      end
+    end
+
     ActiveRecord::Base.transaction do
 
       address_id =
@@ -105,11 +116,11 @@ class OrdersController < ApplicationController
         razorpay_signature: razorpay_signature
       )
 
-      order.update!(
-        payment_status: :paid,
-        razorpay_payment_id: razorpay_payment_id,
-        razorpay_signature: razorpay_signature
-      )
+      # ============================================
+      # CHANGE 2: REPLACE MANUAL UPDATE WITH confirm_payment!
+      # This deducts stock + updates status to :processing
+      # ============================================
+      order.confirm_payment!(razorpay_payment_id, razorpay_signature)
 
       current_cart.cart_items.destroy_all
 
@@ -128,6 +139,12 @@ class OrdersController < ApplicationController
         success: false
       }, status: :unprocessable_entity
 
+    rescue => e
+      # Stock insufficient after payment (edge case)
+      render json: {
+        success: false,
+        error: "Payment received but inventory issue: #{e.message}. Contact support."
+      }, status: :unprocessable_entity
     end
   end
 

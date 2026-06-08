@@ -14,6 +14,18 @@ class Admin::OrdersController < Admin::BaseController
   end
 
   def update
+    new_status = order_params[:status]
+    if new_status == "cancelled" && !@order.cancelled?
+      begin
+        @order.cancel_and_restore_stock!
+        redirect_to admin_orders_path, notice: "Order cancelled and stock restored."
+        return
+      rescue => e
+        redirect_to admin_orders_path, alert: "Could not cancel: #{e.message}"
+        return
+      end
+    end
+
     if @order.update(order_params)
       redirect_to admin_orders_path, notice: "Order updated"
     else

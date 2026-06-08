@@ -32,6 +32,21 @@ class Product < ApplicationRecord
   scope :active,  -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
 
+
+  def active_cart_users
+    User.joins(cart: :cart_items)
+        .where(cart_items: { product_id: id })
+        .distinct
+  end
+
+  def in_stock?(requested = 1)
+    stock >= requested
+  end
+
+  def low_stock?
+    stock <= 5
+  end
+
   def soft_delete!
     update!(deleted_at: Time.current, stock: 0)
   end
@@ -50,5 +65,22 @@ class Product < ApplicationRecord
 
   def hard_destroy!
     super_destroy
+  end
+
+  def deduct_stock!(amount)
+    with_lock do
+      current = stock || 0
+      if current < amount
+        raise "Only #{current} in stock, requested #{amount}"
+      end
+      update!(stock: current - amount)
+    end
+  end
+
+  # Restore stock on cancellation/refund
+  def restore_stock!(amount)
+    with_lock do
+      update!(stock: (stock || 0) + amount)
+    end
   end
 end

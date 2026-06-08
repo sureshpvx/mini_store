@@ -45,6 +45,42 @@ class Order < ApplicationRecord
 
   before_validation :normalize_shipping_fields
 
+  # app/models/order.rb
+  def confirm_payment!(razorpay_payment_id, razorpay_signature)
+    return if paid?
+
+    transaction do
+      update!(
+        payment_status: :paid,
+        status: :processing,
+        razorpay_payment_id: razorpay_payment_id,
+        razorpay_signature: razorpay_signature
+      )
+
+      order_items.each do |item|
+        item.product.deduct_stock!(item.quantity)
+      end
+    end
+  rescue => e
+    # Payment succeeded but stock failed — flag for manual review
+    update!(payment_status: :paid, status: :pending)
+    raise e
+  end
+
+
+  # Call this for refunds/cancellations
+  # app/models/order.rb — inside cancel_and_restore_stock!
+  def cancel_and_restore_stock!
+    return unless paid?  # Only restore if payment was actually successful
+
+    transaction do
+      order_items.each do |item|
+        item.product.restore_stock!(item.quantity)
+      end
+      update!(status: :cancelled, payment_status: :refunded)
+    end
+  end
+
   private
 
   def normalize_shipping_fields
