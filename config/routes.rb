@@ -60,6 +60,7 @@ Rails.application.routes.draw do
        to: "checkout#store_address",
        as: :store_checkout_address
   get "contact",   to: "pages#contact"
+  get "/sitemap.xml", to: "sitemap#index", defaults: { format: "xml" }
   resources :contact_messages, only: [:create]
   get "shipping",  to: "pages#shipping"
   get "returns",   to: "pages#returns"
