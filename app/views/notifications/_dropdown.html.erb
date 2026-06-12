@@ -1,6 +1,6 @@
 <%# app/views/notifications/_dropdown.html.erb %>
 <% unread = local_assigns[:unread_count] || 0 %>
-<% recent_notifications = current_user.notifications.newest_first.limit(5) %>
+<% recent_notifications = current_user&.notifications&.newest_first&.limit(5) || [] %>
 
 <div data-notification-dropdown-target="panel"
      class="hidden absolute right-0 mt-4 w-[360px] bg-white border border-black/[0.06] shadow-[0_10px_60px_rgba(0,0,0,0.06)] z-50">
@@ -10,10 +10,10 @@
     <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Notifications</p>
     <% if unread > 0 %>
       <%= button_to "Mark all read",
-                     mark_all_as_read_notifications_path,
-                     method: :patch,
-                     form: { data: { turbo_frame: "notifications-dropdown" } },
-                     class: "text-[9px] uppercase tracking-[0.2em] text-black/50 hover:text-black transition bg-transparent border-none cursor-pointer p-0 font-light" %>
+                    mark_all_as_read_notifications_path,
+                    method: :patch,
+                    form: { data: { turbo_frame: "notifications-dropdown" } },
+                    class: "text-[9px] uppercase tracking-[0.2em] text-black/50 hover:text-black transition bg-transparent border-none cursor-pointer p-0 font-light" %>
     <% end %>
   </div>
 
