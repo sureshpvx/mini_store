@@ -21,7 +21,8 @@ Rails.application.configure do
   config.force_ssl = true
   config.hosts << "hypee.shop"
   config.hosts << "www.hypee.shop"
-  config.hosts << ENV["RAILWAY_PUBLIC_DOMAIN"] if ENV["RAILWAY_PUBLIC_DOMAIN"]
+  config.hosts << /.*\.railway\.app/
+
   config.action_controller.forgery_protection_origin_check = false
 
   $stdout.sync = true
