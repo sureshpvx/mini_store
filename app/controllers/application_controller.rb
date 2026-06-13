@@ -7,7 +7,10 @@ class ApplicationController < ActionController::Base
 
   def unread_notifications_count
     return 0 unless user_signed_in?
+    return 0 unless Notification.table_exists?
     @_unread_notifications_count ||= current_user.notifications.unread.count
+  rescue ActiveRecord::StatementInvalid
+    0
   end
 
   def current_cart

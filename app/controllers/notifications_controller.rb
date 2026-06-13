@@ -2,8 +2,13 @@ class NotificationsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @notifications = current_user.notifications.newest_first
-    @unread_count = current_user.notifications.unread.count
+    if Notification.table_exists?
+      @notifications = current_user.notifications.newest_first
+      @unread_count = current_user.notifications.unread.count
+    else
+      @notifications = Notification.none
+      @unread_count = 0
+    end
   end
 
   def mark_as_read

@@ -129,8 +129,11 @@ class OrdersController < ApplicationController
       # ============================================
       order.confirm_payment!(razorpay_payment_id, razorpay_signature)
 
-      OrderConfirmationWorker.perform_async(order.id)
-
+      begin
+        OrderConfirmationWorker.perform_async(order.id)
+      rescue => e
+        Rails.logger.warn "OrderConfirmationWorker could not be enqueued: #{e.message}"
+      end
 
       current_cart.cart_items.destroy_all
 

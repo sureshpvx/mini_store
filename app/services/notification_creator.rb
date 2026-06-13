@@ -9,6 +9,7 @@ class NotificationCreator
   }.freeze
 
   def self.call(user:, kind:, actor: nil, message: nil, url: nil)
+    return unless Notification.table_exists?
     config = KIND_CONFIG[kind.to_sym]
     return unless config
 
@@ -20,6 +21,9 @@ class NotificationCreator
       message: message || default_message_for(kind, actor),
       url: url
     )
+  rescue ActiveRecord::StatementInvalid => e
+    Rails.logger.warn "NotificationCreator failed: #{e.message}"
+    nil
   end
 
   def self.default_message_for(kind, actor)

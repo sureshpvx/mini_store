@@ -68,5 +68,7 @@ class User < ApplicationRecord
 
   def enqueue_welcome_email
     WelcomeEmailWorker.perform_async(id)
+  rescue => e
+    Rails.logger.warn "WelcomeEmailWorker could not be enqueued: #{e.message}"
   end
 end

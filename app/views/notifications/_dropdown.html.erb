@@ -1,6 +1,6 @@
 <%# app/views/notifications/_dropdown.html.erb %>
 <% unread = local_assigns[:unread_count] || 0 %>
-<% recent_notifications = current_user&.notifications&.newest_first&.limit(5) || [] %>
+<% recent_notifications = Notification.table_exists? ? (current_user&.notifications&.newest_first&.limit(5) || []) : [] %>
 
 <div data-notification-dropdown-target="panel"
      class="hidden absolute right-0 mt-4 w-[360px] bg-white border border-black/[0.06] shadow-[0_10px_60px_rgba(0,0,0,0.06)] z-50">
