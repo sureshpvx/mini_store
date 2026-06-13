@@ -26,6 +26,7 @@ class User < ApplicationRecord
   validates :oauth_token,  length: { maximum: 500 }, allow_blank: true
 
   after_create :create_cart_for_customer
+  after_create :enqueue_welcome_email
 
   def self.from_omniauth(auth)
     user = find_by(provider: auth.provider, uid: auth.uid)
@@ -63,5 +64,9 @@ class User < ApplicationRecord
   def create_cart_for_customer
     return unless customer?
     create_cart
+  end
+
+  def enqueue_welcome_email
+    WelcomeEmailWorker.perform_async(id)
   end
 end
