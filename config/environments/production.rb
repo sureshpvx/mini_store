@@ -32,7 +32,7 @@ Rails.application.configure do
   config.cache_store = :solid_cache_store
   config.active_storage.analyzers = []
   config.active_storage.previewers = []
-  config.active_job.queue_adapter = :async
+  config.active_job.queue_adapter = :sidekiq
   config.action_mailer.default_url_options = { host: "hypee.shop" }
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
