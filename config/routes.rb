@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   devise_for :users
   get '/auth/:provider/callback', to: 'oauth_callbacks#create'
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show, :update]
     resources :users, only: [:index]
   end
-
+  mount Sidekiq::Web => '/sidekiq'
   # config/routes.rb
   resource :cart, only: [:show] do
     collection do

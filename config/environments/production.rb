@@ -37,4 +37,11 @@ Rails.application.configure do
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
+
+  # Email settings
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
+  # Links in emails point to your REAL domain
+  config.action_mailer.default_url_options = { host: 'hypee.shop', protocol: 'https' }
 end

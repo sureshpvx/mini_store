@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+      body { font-family: Arial, sans-serif; padding: 20px; color: #333; background: #f5f5f5; }
+      .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+      .header { background: #4f46e5; color: white; padding: 30px; text-align: center; }
+      .content { padding: 30px; }
+      .button { display: inline-block; padding: 12px 24px; background: #4f46e5; color: white; text-decoration: none; border-radius: 6px; margin-top: 20px; }
+      .footer { padding: 20px; text-align: center; color: #999; font-size: 12px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Welcome to Hypee Store! 🎉</h1>
+  </div>
+  <div class="content">
+    <p>Hi <%= @user.email %>,</p>
+    <p>Thanks for joining Hypee Store. We're excited to have you!</p>
+    <p>Start exploring amazing products now:</p>
+    <a href="<%= @url %>" class="button">Login to Your Account</a>
+  </div>
+  <div class="footer">
+    <p>Sent from Hypee Store | hypee.shop</p>
+  </div>
+</div>
+</body>
+</html>

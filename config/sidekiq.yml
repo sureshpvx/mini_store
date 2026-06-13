@@ -1,0 +1,9 @@
+:concurrency: 2
+:queues:
+  - critical
+  - default
+  - mailers
+  - low
+
+:retry: 3
+:timeout: 25

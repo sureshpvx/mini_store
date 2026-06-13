@@ -129,6 +129,9 @@ class OrdersController < ApplicationController
       # ============================================
       order.confirm_payment!(razorpay_payment_id, razorpay_signature)
 
+      OrderConfirmationWorker.perform_async(order.id)
+
+
       current_cart.cart_items.destroy_all
 
       NotificationCreator.call(

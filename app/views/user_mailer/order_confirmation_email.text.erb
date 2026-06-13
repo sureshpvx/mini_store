@@ -1,0 +1,17 @@
+Order Confirmed! 🎉
+
+Hi <%= @user.email %>,
+
+Thank you for your order! We've received your payment and are preparing your items.
+
+Order #<%= @order.id %>
+
+<% @order.order_items.each do |item| %>
+  - <%= item.product.name %> x <%= item.quantity %> = ₹<%= item.price * item.quantity %>
+<% end %>
+
+Total: ₹<%= @order.total_price %>
+
+View your order: <%= @url %>
+
+Hypee Store | hypee.shop
