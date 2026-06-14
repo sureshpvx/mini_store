@@ -4,7 +4,7 @@ Rails.application.config.action_mailer.smtp_settings = {
   password: ENV["MAILTRAP_PASSWORD"],
   address: 'live.smtp.mailtrap.io',
   host: 'live.smtp.mailtrap.io',
-  port: 587,
+  port: 2525,
   authentication: :login,
   enable_starttls_auto: true
 }
