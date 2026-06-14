@@ -79,15 +79,25 @@ export default class extends Controller {
     // Adjust max-height dynamically as rules vanish/appear
     const panel = this.checklistTarget
     if (!panel.classList.contains("hidden")) {
-      // Temporarily set maxHeight to auto to get true scrollHeight
-      const currentHeight = panel.style.maxHeight
-      panel.style.maxHeight = "none"
-      const newHeight = panel.scrollHeight
-      panel.style.maxHeight = currentHeight
-      
-      requestAnimationFrame(() => {
-        panel.style.maxHeight = newHeight + "px"
-      })
+      if (allPassed) {
+        panel.style.maxHeight = "0px"
+        panel.style.opacity = "0"
+        panel.addEventListener("transitionend", () => {
+          if (panel.style.maxHeight === "0px") panel.classList.add("hidden")
+        }, { once: true })
+      } else {
+        panel.classList.remove("hidden")
+        panel.style.opacity = "1"
+        // Temporarily set maxHeight to auto to get true scrollHeight
+        const currentHeight = panel.style.maxHeight
+        panel.style.maxHeight = "none"
+        const newHeight = panel.scrollHeight
+        panel.style.maxHeight = currentHeight
+        
+        requestAnimationFrame(() => {
+          panel.style.maxHeight = newHeight + "px"
+        })
+      }
     }
   }
 
