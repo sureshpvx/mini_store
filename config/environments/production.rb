@@ -35,7 +35,7 @@ Rails.application.configure do
   config.active_storage.analyzers = []
   config.active_storage.previewers = []
   config.active_job.queue_adapter = :sidekiq
-  config.action_mailer.default_url_options = { host: "hypee.shop" }
+  config.action_mailer.default_url_options = { host: "www.hypee.shop" }
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
@@ -45,5 +45,5 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
 
   # Links in emails point to your REAL domain
-  config.action_mailer.default_url_options = { host: 'hypee.shop', protocol: 'https' }
+  config.action_mailer.default_url_options = { host: 'www.hypee.shop', protocol: 'https' }
 end
