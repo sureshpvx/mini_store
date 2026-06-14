@@ -14,13 +14,18 @@
         <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
           <%= f.hidden_field :reset_password_token %>
 
-          <div class="mb-6">
+          <div class="mb-6" data-controller="password-strength">
             <%= f.label :password, "New password", class: "block text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-2" %>
             <% if @minimum_password_length %>
               <p class="text-[10px] text-gray-400 mb-2"><%= @minimum_password_length %> characters minimum</p>
             <% end %>
             <%= f.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "••••••••",
+                                 data: {
+                                   password_strength_target: "input",
+                                   action: "focus->password-strength#show blur->password-strength#hide input->password-strength#validate"
+                                 },
                                  class: "w-full bg-white border border-black/10 px-4 py-3 text-sm text-black placeholder-gray-300 focus:outline-none focus:border-black/30 transition" %>
+            <%= render "devise/shared/password_strength_checklist" %>
           </div>
 
           <div class="mb-8">

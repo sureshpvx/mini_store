@@ -89,7 +89,8 @@ module FormValidationHelper
     actions << "blur->form-validation#validateField"
     actions << "input->form-validation#clear"
     actions << "input->form-validation#normalize" if needs_normalize?(data)
-    data[:action] = actions.join(" ")
+    existing = data[:action].to_s.strip
+    data[:action] = existing.empty? ? actions.join(" ") : "#{existing} #{actions.join(" ")}"
 
     options[:data] = data
 

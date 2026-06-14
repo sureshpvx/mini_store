@@ -34,14 +34,21 @@
         </div>
 
         <!-- Password -->
-        <div data-field-wrapper>
-          <%= validated_field f, :password,
-                              as: :password_field,
-                              required: true,
-                              autocomplete: "new-password",
-                              placeholder: "Password",
-                              data: { min_length: "6" },
-                              class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+        <div data-controller="password-strength">
+          <div data-field-wrapper>
+            <%= validated_field f, :password,
+                                as: :password_field,
+                                required: true,
+                                autocomplete: "new-password",
+                                placeholder: "Password",
+                                data: {
+                                  min_length: "6",
+                                  password_strength_target: "input",
+                                  action: "focus->password-strength#show blur->password-strength#hide input->password-strength#validate"
+                                },
+                                class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+          </div>
+          <%= render "devise/shared/password_strength_checklist" %>
         </div>
 
         <!-- Confirm Password -->

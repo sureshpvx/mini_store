@@ -34,11 +34,16 @@
           <div class="text-sm text-gray-400">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
         <% end %>
 
-        <div class="field">
+        <div class="field" data-controller="password-strength">
           <%= f.label :password, class: "block text-xs uppercase text-gray-400 mb-2" %>
           <p class="text-xs text-gray-400 mb-2"><i>(leave blank if you don't want to change it)</i></p>
           <%= f.password_field :password, autocomplete: "new-password",
+                               data: {
+                                 password_strength_target: "input",
+                                 action: "focus->password-strength#show blur->password-strength#hide input->password-strength#validate"
+                               },
                                class: "w-full bg-gray-50 border border-black/[0.06] px-4 py-4 text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition" %>
+          <%= render "devise/shared/password_strength_checklist" %>
           <% if @minimum_password_length %>
             <p class="text-xs text-gray-400 mt-1"><em><%= @minimum_password_length %> characters minimum</em></p>
           <% end %>
