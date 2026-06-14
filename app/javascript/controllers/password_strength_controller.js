@@ -1,16 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "checklist", "ruleLength", "ruleUppercase", "ruleLowercase", "ruleNumber", "ruleSpecial", "toggle", "eyeIcon"]
+  static targets = ["input", "checklist", "ruleLength", "ruleNumber", "ruleUppercase", "ruleSpecial", "toggle", "eyeIcon"]
 
   connect() {
     this.blurTimeout = null
     this.rules = [
-      { target: "ruleLength",    test: v => v.length >= 6 },
-      { target: "ruleUppercase", test: v => /[A-Z]/.test(v) },
-      { target: "ruleLowercase", test: v => /[a-z]/.test(v) },
+      { target: "ruleLength",    test: v => v.length >= 8 },
       { target: "ruleNumber",    test: v => /[0-9]/.test(v) },
-      { target: "ruleSpecial",   test: v => /[!@#$%^&*]/.test(v) },
+      { target: "ruleUppercase", test: v => /[A-Z]/.test(v) },
+      { target: "ruleSpecial",   test: v => /[!@#$%^&*()]/.test(v) },
     ]
   }
 
@@ -27,6 +26,10 @@ export default class extends Controller {
     }
     const panel = this.checklistTarget
     panel.classList.remove("hidden")
+    
+    // Initial validation to hide/show rules correctly
+    this.validate()
+    
     requestAnimationFrame(() => {
       panel.style.maxHeight = panel.scrollHeight + "px"
       panel.style.opacity = "1"
@@ -52,26 +55,40 @@ export default class extends Controller {
   validate() {
     if (!this.hasChecklistTarget) return
     const value = this.inputTarget.value
+    let allPassed = true
 
     this.rules.forEach(rule => {
       const targetName = `${rule.target}Target`
-      if (!this[`has${rule.target.charAt(0).toUpperCase() + rule.target.slice(1)}Target`]) return
+      const hasTarget = `has${rule.target.charAt(0).toUpperCase() + rule.target.slice(1)}Target`
+      
+      if (!this[hasTarget]) return
 
       const el = this[targetName]
       const passed = rule.test(value)
-      const icon = el.querySelector("[data-icon]")
-      const text = el.querySelector("[data-text]")
 
       if (passed) {
-        icon.innerHTML = this.checkedSVG
-        text.classList.remove("text-gray-400")
-        text.classList.add("text-emerald-600")
+        // Vanish the error when rule is followed
+        el.style.display = "none"
       } else {
-        icon.innerHTML = this.uncheckedSVG
-        text.classList.remove("text-emerald-600")
-        text.classList.add("text-gray-400")
+        // Show the error when rule is not followed
+        el.style.display = "flex"
+        allPassed = false
       }
     })
+
+    // Adjust max-height dynamically as rules vanish/appear
+    const panel = this.checklistTarget
+    if (!panel.classList.contains("hidden")) {
+      // Temporarily set maxHeight to auto to get true scrollHeight
+      const currentHeight = panel.style.maxHeight
+      panel.style.maxHeight = "none"
+      const newHeight = panel.scrollHeight
+      panel.style.maxHeight = currentHeight
+      
+      requestAnimationFrame(() => {
+        panel.style.maxHeight = newHeight + "px"
+      })
+    }
   }
 
   // ── Toggle password visibility ──
@@ -88,20 +105,6 @@ export default class extends Controller {
   }
 
   // ── SVG icons ──
-  get uncheckedSVG() {
-    return `<svg class="w-4 h-4 text-gray-300 shrink-0" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
-      <circle cx="10" cy="10" r="8"/>
-    </svg>`
-  }
-
-  get checkedSVG() {
-    return `<svg class="w-4 h-4 text-emerald-500 shrink-0" viewBox="0 0 20 20" fill="none">
-      <circle cx="10" cy="10" r="8" fill="currentColor" opacity="0.15"/>
-      <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
-      <path d="M6.5 10.5L9 13L14 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`
-  }
-
   get eyeOnSVG() {
     return `<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>`
