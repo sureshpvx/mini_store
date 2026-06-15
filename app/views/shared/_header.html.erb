@@ -1,6 +1,6 @@
 <% unless current_user&.admin? %>
 
-  <header class="fixed top-0 left-0 right-0 z-50 text-black" data-controller="mobile-menu">
+  <header class="fixed top-0 left-0 right-0 z-50 text-black bg-white/80 backdrop-blur-xl border-b border-black/[0.04]" data-controller="mobile-menu">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-8 py-4 sm:py-5">
       <!-- ================= DESKTOP ================= -->
       <div class="hidden md:flex items-center justify-between">
@@ -10,7 +10,7 @@
         <% end %>
         <!-- Nav -->
         <nav class="flex items-center gap-6 text-xs uppercase tracking-widest">
-          <% base = "text-black/70 hover:text-black transition" %>
+          <% base = "text-black/60 hover:text-black transition-colors duration-300" %>
           <% active = "text-black border-b border-black pb-1" %>
 
           <%= link_to "NEW ARRIVALS", products_path(filter: "new"),
@@ -29,7 +29,7 @@
         <div class="flex items-center gap-5 text-black/70">
           <!-- Search -->
           <div data-controller="search-modal">
-            <button data-action="click->search-modal#open" class="hover:text-black transition flex items-center justify-center">
+            <button data-action="click->search-modal#open" class="hover:text-black hover:scale-110 transition-all duration-300 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.35-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -40,7 +40,7 @@
           <!-- Notifications -->
           <div data-controller="notification-dropdown" class="relative">
             <button data-action="click->notification-dropdown#toggle"
-                    class="relative hover:text-black transition flex items-center justify-center">
+                    class="relative hover:text-black hover:scale-110 transition-all duration-300 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
               </svg>
@@ -53,7 +53,7 @@
           </div>
 
           <!-- Cart -->
-          <button data-action="click->cart#open" class="relative hover:text-black transition flex items-center justify-center">
+          <button data-action="click->cart#open" class="relative hover:text-black hover:scale-110 transition-all duration-300 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6h11M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
             </svg>
@@ -211,7 +211,7 @@
   </header>
 
   <!-- ================= MOBILE BOTTOM NAV ================= -->
-  <div class="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white border-t border-black/[0.06] z-40 pb-[env(safe-area-inset-bottom)]">
+  <div class="md:hidden fixed bottom-0 left-0 right-0 w-full bg-white/80 backdrop-blur-xl border-t border-black/[0.04] z-40 pb-[env(safe-area-inset-bottom)]">
     <div class="flex items-center justify-around px-2 py-2">
       <!-- Home -->
       <%= link_to root_path, class: "flex flex-col items-center gap-0.5 text-black/40 hover:text-black transition py-1 px-3" do %>
