@@ -82,3 +82,4 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem "sidekiq", "~> 8.1"
+gem "mailtrap"
