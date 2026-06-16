@@ -39,3 +39,4 @@
 .env
 
 /config/credentials/production.key
+.DS_Store
