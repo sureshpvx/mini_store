@@ -14,19 +14,6 @@
     <!-- Gradient for text readability -->
     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
 
-    <!-- Floating polaroid: girlinhoodie.jpg (link to Women category products) -->
-    <%= link_to products_path(filter: "women"), class: "absolute top-20 right-3 lg:top-24 lg:right-12 w-24 lg:w-40 bg-white p-1.5 lg:p-3 shadow-[0_12px_40px_rgba(0,0,0,0.25)] rotate-3 z-20" do %>
-      <%= image_tag "girlinhoodie.jpg",
-                    class: "w-full aspect-[3/4] object-cover",
-                    alt: "",
-                    width: 400,
-                    height: 533,
-                    loading: "eager" %>
-      <div class="pt-1 pb-0.5 lg:pt-2 lg:pb-1 text-center">
-        <span class="text-[7px] lg:text-[9px] uppercase tracking-[0.2em] text-gray-400">SS / 26</span>
-      </div>
-    <% end %>
-
     <!-- Live indicator tag -->
     <div class="absolute top-20 left-3 lg:top-24 lg:left-12 z-10">
       <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-2 py-1.5 lg:px-4 lg:py-2">
