@@ -6,8 +6,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
-  <link rel="icon" href="/icon.svg?v=2" type="image/svg+xml">
+  <%= favicon_link_tag 'favicon.ico' if Rails.root.join('app/assets/images/favicon.ico').exist? %>
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 
   <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
