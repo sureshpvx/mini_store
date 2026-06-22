@@ -5,8 +5,6 @@
   <!-- HEADER: Centered -->
   <div class="mb-12 sm:mb-20 text-center">
 
-
-
     <h1 class="text-3xl sm:text-4xl font-extralight uppercase tracking-[0.08em] text-black">
       <%= params[:filter]&.titleize || "All Products" %>
     </h1>
@@ -30,6 +28,41 @@
   </div>
 
   <% if @products.any? %>
+
+    <!-- TRENDING SECTION -->
+    <% if @trending&.any? %>
+      <div class="mb-12 sm:mb-16">
+        <div class="flex items-center gap-4 mb-6">
+          <h2 class="text-[11px] uppercase tracking-[0.25em] text-gray-400 font-light">Trending</h2>
+          <div class="flex-1 h-px bg-black/[0.06]"></div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+          <% @trending.each do |product| %>
+            <%= link_to product_path(product), class: "group flex flex-col" do %>
+              <div class="relative aspect-[3/4] bg-gray-50 overflow-hidden mb-3">
+                <% if product.images.attached? %>
+                  <%= image_tag(
+                        cloudinary_url(
+                          product.images.first.key,
+                          width: 400,
+                          height: 500,
+                          crop: :limit,
+                          quality: "auto",
+                          fetch_format: "auto"
+                        ),
+                        loading: "lazy",
+                        class: "w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                      ) %>
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center text-gray-400 uppercase text-[10px] tracking-[0.3em]">No Image</div>
+                <% end %>
+              </div>
+              <h3 class="uppercase text-[10px] tracking-[0.15em] font-medium text-black truncate"><%= product.name %></h3>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <!-- 2 cols on mobile, 3 on desktop -->
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
@@ -84,6 +117,7 @@
               </span>
 
             </div>
+
 
             <% if product.description.present? %>
 

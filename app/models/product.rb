@@ -28,10 +28,8 @@ class Product < ApplicationRecord
             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :category_id, presence: true
 
-
   scope :active,  -> { where(deleted_at: nil) }
   scope :deleted, -> { where.not(deleted_at: nil) }
-
 
   def active_cart_users
     User.joins(cart: :cart_items)
@@ -77,10 +75,17 @@ class Product < ApplicationRecord
     end
   end
 
-  # Restore stock on cancellation/refund
   def restore_stock!(amount)
     with_lock do
       update!(stock: (stock || 0) + amount)
     end
+  end
+
+  def record_view!(session)
+    return if session[:viewed_products]&.include?(id)
+
+    increment!(:views_count)
+    session[:viewed_products] ||= []
+    session[:viewed_products] << id
   end
 end

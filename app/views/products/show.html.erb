@@ -150,6 +150,9 @@
         </div>
 
         <p class="text-[10px] text-gray-400 tracking-wide">(Inclusive of All Taxes)</p>
+        <p class="text-[10px] text-gray-400 tracking-wide">
+          <%= @product.views_count %> <%= @product.views_count == 1 ? 'view' : 'views' %>
+        </p>
 
         <%# Description — always open %>
         <% if @product.description.present? %>
