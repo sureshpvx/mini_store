@@ -28,7 +28,7 @@
       <% @notifications.each do |notification| %>
         <% if notification.unread? %>
           <%= link_to mark_as_read_notification_path(notification),
-                      method: :patch,
+                      data: { turbo_method: :patch },
                       class: "block hover:bg-gray-50/80 transition" do %>
             <%= render "notifications/notification", notification: notification %>
           <% end %>

@@ -17,8 +17,10 @@ class NotificationsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_back fallback_location: notifications_path }
+      format.html { redirect_to(@notification.url.presence || notifications_path) }
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to notifications_path, alert: "Notification not found"
   end
 
   def mark_all_as_read
