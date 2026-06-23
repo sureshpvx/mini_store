@@ -19,12 +19,13 @@ class CartsController < ApplicationController
 
   def add_item
     product = Product.find(params[:product_id])
+    quantity = params[:quantity].to_i > 0 ? params[:quantity].to_i : 1
     cart_item = current_cart.cart_items.find_or_initialize_by(product: product)
 
     if cart_item.new_record?
-      cart_item.quantity = 1
+      cart_item.quantity = quantity
     else
-      cart_item.quantity += 1
+      cart_item.quantity += quantity
     end
 
     cart_item.save!
