@@ -1,0 +1,15 @@
+<%# app/views/notifications/_notification_row.html.erb %>
+<%# This wrapper has a stable ID for turbo_stream.replace to target %>
+<div id="notification-row-<%= notification.id %>">
+  <% if notification.unread? %>
+    <%= link_to mark_as_read_notification_path(notification),
+                data: { turbo_method: :patch },
+                class: "block hover:bg-gray-50/80 transition" do %>
+      <%= render "notifications/notification", notification: notification %>
+    <% end %>
+  <% else %>
+    <div class="block">
+      <%= render "notifications/notification", notification: notification %>
+    </div>
+  <% end %>
+</div>

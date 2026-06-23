@@ -1,7 +1,7 @@
 <div class="max-w-[1440px] mx-auto px-4 sm:px-10 pt-24 pb-28 sm:pt-16 sm:pb-24 bg-white min-h-screen">
 
   <!-- Header -->
-  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-16">
+  <div id="notifications-header" class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-16">
     <div>
       <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Account</p>
       <h1 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] text-black">
@@ -26,17 +26,7 @@
   <% if @notifications.any? %>
     <div class="border border-black/[0.06] divide-y divide-black/[0.04]">
       <% @notifications.each do |notification| %>
-        <% if notification.unread? %>
-          <%= link_to mark_as_read_notification_path(notification),
-                      data: { turbo_method: :patch },
-                      class: "block hover:bg-gray-50/80 transition" do %>
-            <%= render "notifications/notification", notification: notification %>
-          <% end %>
-        <% else %>
-          <div class="block">
-            <%= render "notifications/notification", notification: notification %>
-          </div>
-        <% end %>
+        <%= render "notifications/notification_row", notification: notification %>
       <% end %>
     </div>
   <% else %>
@@ -57,3 +47,4 @@
     </div>
   <% end %>
 </div>
+

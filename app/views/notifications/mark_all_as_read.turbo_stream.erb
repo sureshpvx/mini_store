@@ -1,11 +1,38 @@
-<% current_user.notifications.newest_first.limit(5).each do |notification| %>
+<%# Replace each notification row on the index page %>
+<% current_user.notifications.newest_first.limit(20).each do |notification| %>
+  <%= turbo_stream.replace "notification-row-#{notification.id}" do %>
+    <%= render "notifications/notification_row", notification: notification %>
+  <% end %>
   <%= turbo_stream.replace dom_id(notification) do %>
     <%= render "notifications/notification", notification: notification %>
   <% end %>
 <% end %>
 
+<%# Update the notifications page header %>
+<%= turbo_stream.replace "notifications-header" do %>
+  <div id="notifications-header" class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-16">
+    <div>
+      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-3">Account</p>
+      <h1 class="text-2xl sm:text-3xl font-light uppercase tracking-[0.1em] text-black">
+        Notifications
+      </h1>
+    </div>
+  </div>
+<% end %>
+
+<%# Desktop header badge %>
 <%= turbo_stream.replace "notification-badge" do %>
   <span id="notification-badge" class="hidden absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-[8px] flex items-center justify-center rounded-full">
     0
   </span>
+<% end %>
+
+<%# Mobile header badge %>
+<%= turbo_stream.replace "mobile-notification-badge" do %>
+  <span id="mobile-notification-badge" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-black rounded-full"></span>
+<% end %>
+
+<%# Bottom nav badge %>
+<%= turbo_stream.replace "bottomnav-notification-badge" do %>
+  <span id="bottomnav-notification-badge" class="hidden absolute top-0 right-2 w-2 h-2 bg-black rounded-full"></span>
 <% end %>
