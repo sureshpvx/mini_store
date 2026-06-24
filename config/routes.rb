@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index]
   end
   mount Sidekiq::Web => '/sidekiq'
-  # config/routes.rb
+
   resource :cart, only: [:show] do
     collection do
       post   :add_item
@@ -74,8 +74,11 @@ Rails.application.routes.draw do
   get "journal",   to: "pages#journal"
   get "search", to: "search#index"
 
-
   # Newsletter
   post "newsletter", to: "newsletter_subscriptions#create", as: :newsletter_subscriptions
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Voice AI bot routes
+  get 'voice', to: 'voice#index'
+  post 'voice/message', to: 'voice#message'
 end

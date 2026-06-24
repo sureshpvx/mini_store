@@ -104,6 +104,9 @@ GEM
       ostruct
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
+    crack (1.0.1)
+      bigdecimal
+      rexml
     crass (1.0.6)
     csv (3.3.5)
     date (3.5.1)
@@ -116,6 +119,7 @@ GEM
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
+    diff-lcs (1.6.2)
     dotenv (3.2.0)
     dotenv-rails (3.2.0)
       dotenv (= 3.2.0)
@@ -126,6 +130,7 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
+    event_stream_parser (1.0.0)
     faraday (2.14.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -150,6 +155,12 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
+    groq (0.3.2)
+      activesupport (> 5)
+      event_stream_parser (~> 1.0)
+      faraday (>= 1.10.0)
+      json
+    hashdiff (1.2.1)
     hashie (5.1.0)
       logger
     httparty (0.24.2)
@@ -361,6 +372,23 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rexml (3.4.4)
+    rspec-core (3.13.6)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.8)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (8.0.4)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (>= 3.13.0, < 5.0.0)
+      rspec-expectations (>= 3.13.0, < 5.0.0)
+      rspec-mocks (>= 3.13.0, < 5.0.0)
+      rspec-support (>= 3.13.0, < 5.0.0)
+    rspec-support (3.13.7)
     rubocop (1.86.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -469,6 +497,10 @@ GEM
       actionview (>= 8.0.0)
       bindex (>= 0.4.0)
       railties (>= 8.0.0)
+    webmock (3.26.2)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket (1.2.11)
     websocket-driver (0.8.0)
       base64
@@ -498,6 +530,7 @@ DEPENDENCIES
   devise (~> 5.0)
   dotenv-rails (~> 3.2)
   friendly_id (~> 5.7)
+  groq
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
@@ -513,6 +546,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 8.0.4)
   razorpay (~> 3.2)
+  rspec-rails
   rubocop-rails-omakase
   ruby-vips
   selenium-webdriver
@@ -526,6 +560,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   web-console
+  webmock
 
 BUNDLED WITH
    2.6.2

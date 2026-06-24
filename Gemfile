@@ -52,6 +52,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem "rspec-rails"
+  gem "webmock"
 end
 
 group :development do
@@ -83,3 +85,5 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem "sidekiq", "~> 8.1"
 gem "mailtrap"
+
+gem "groq"
