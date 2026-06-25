@@ -4,28 +4,28 @@ require 'json'
 class AiClient
   WEBSITE_CONTEXT = <<~CONTEXT
     You are the AI shopping assistant for HYPE — a premium streetwear e-commerce store.
-    
+
     CRITICAL RULES — NEVER BREAK THESE:
     1. NEVER invent product names, prices, or descriptions. Only use real data from the system.
     2. NEVER make up cart contents or order details. Always use real database queries.
     3. If you don't have real product data, say "Let me search for you" — do NOT make up products.
     4. NEVER use dollar signs ($) — all prices are in Indian Rupees (₹).
     5. NEVER hallucinate product lists. If the system doesn't provide products, admit it.
-    
+
     About HYPE:
     - Premium streetwear brand with minimalist aesthetics
     - Products: Men, Women, and Accessories categories
     - 30+ items in the collection
     - New Arrivals drop regularly (SS/26 Collection currently active)
     - All products are premium quality
-    
+
     Store Policies:
     - Shipping & Delivery available
     - Returns & Exchanges accepted
     - Size Guide available on the website
     - Contact page for support
     - FAQ page for common questions
-    
+
     IMPORTANT — You have REAL abilities through the backend system:
     - You CAN add products to the customer's cart
     - You CAN search for products and show results
@@ -34,14 +34,14 @@ class AiClient
     - You CAN show product details
     - You CAN show order status, payment status, and tracking details
     - You CAN show shipping address and delivery info
-    
+
     When a customer asks you to perform an action (like adding to cart), 
     CONFIRM that you will do it. Do NOT say "I can't" or "I don't have the ability".
     The backend handles the actual action before your response is shown.
-    
+
     If you can't find a specific product, suggest alternatives or ask the customer
     to be more specific about what they're looking for.
-    
+
     Keep responses brief (2-3 sentences max) since they may be spoken aloud.
     If you don't know something specific, direct users to the Contact page or FAQ.
   CONTEXT
@@ -179,6 +179,8 @@ class AiClient
       /^add (the |a )?\w+/,                         # "add the hoodie", "add a tee"
       /add .+ (please|now|quickly|asap)$/,           # "add dark fashion please"
       /^(add|buy|get) (first|second|third|last|this|that|the) (product|item|one)/,  # "add first product"
+      /^(add|buy|get|grab|order)\s+(another|more|extra|2|3|4|5|two|three|four|five)/,  # "add two more", "add another"
+      /^(another|more|extra)\s+(one|two|three|four|five|please)/,  # "another one", "two more"
     ]
     patterns.any? { |pat| p.match?(pat) }
   end
@@ -254,17 +256,25 @@ class AiClient
   # ─── ACTION HANDLERS ────────────────────────────────────────────────
 
   def handle_add_to_cart(prompt)
+    # FIX: Parse quantity first (e.g., "add two more", "add 3", "another one")
+    quantity = parse_quantity(prompt)
+
     product_name = extract_product_name(prompt, :add)
 
-    # Handle "add that/this/it" — use last mentioned product from session
-    if product_name.blank? || product_name.length < 2 || %w[it that this same].include?(product_name)
+    # FIX: Handle pronoun references with quantity ("add two more of those", "add another one")
+    # If product name is empty, too short, or just a pronoun/number → use last product
+    if product_name.blank? || product_name.length < 2 ||
+       %w[it that this same another more extra one two three four five].include?(product_name) ||
+       product_name.match?(/^(\d+|more|another|extra)$/)
+
       last_product = find_last_mentioned_product
       if last_product
-        added = add_product_to_cart(last_product)
+        added = add_product_to_cart(product, quantity: quantity)
         if added
           @action_performed = 'cart_updated'
           @cart_count = cart.reload.cart_items.sum(:quantity)
-          return "✅ Added '#{last_product.name}' (₹#{last_product.price.to_i}) to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
+          total_qty = cart.cart_items.find_by(product: last_product)&.quantity || quantity
+          return "✅ Added #{quantity > 1 ? quantity.to_s + ' more' : 'another'} '#{last_product.name}' (₹#{last_product.price.to_i}) to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
         end
       end
       return nil # Let AI handle
@@ -273,11 +283,11 @@ class AiClient
     product = Product.active.search(product_name).first
 
     if product
-      added = add_product_to_cart(product)
+      added = add_product_to_cart(product, quantity: quantity)
       if added
         @action_performed = 'cart_updated'
         @cart_count = cart.reload.cart_items.sum(:quantity)
-        return "✅ Added '#{product.name}' (₹#{product.price.to_i}) to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
+        return "✅ Added '#{product.name}' (₹#{product.price.to_i}) #{quantity > 1 ? 'x' + quantity.to_s : ''} to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
       else
         return "I found '#{product.name}' but couldn't add it to cart right now. You can add it manually: [View Product](/products/#{product.slug})"
       end
@@ -287,7 +297,7 @@ class AiClient
       product = Product.active.search(short_name).first if short_name.length >= 3
 
       if product
-        added = add_product_to_cart(product)
+        added = add_product_to_cart(product, quantity: quantity)
         if added
           @action_performed = 'cart_updated'
           @cart_count = cart.reload.cart_items.sum(:quantity)
@@ -437,6 +447,9 @@ class AiClient
     unless user
       return "Please [sign in](/otp-login) to view your orders. I'll be able to show your order history, payment status, and tracking once you're logged in!"
     end
+
+    # FIX: Sync payment status from Razorpay before showing
+    sync_payment_status_from_razorpay
 
     # Check if user is asking about a specific order by number/ID
     order_id = extract_order_id(user_prompt)
@@ -659,17 +672,51 @@ class AiClient
 
   # ─── CART OPERATIONS ────────────────────────────────────────────────
 
-  def add_product_to_cart(product)
+  # FIX: Accept quantity parameter, default to 1
+  def add_product_to_cart(product, quantity: 1)
     return false unless cart
     return false unless product.in_stock?
 
     cart_item = cart.cart_items.find_or_initialize_by(product: product)
-    cart_item.quantity = (cart_item.quantity || 0) + 1
+    cart_item.quantity = (cart_item.quantity || 0) + quantity
     cart_item.save!
     true
   rescue => e
     Rails.logger.error "Add to cart error: #{e.message}"
     false
+  end
+
+  # ─── QUANTITY PARSING ───────────────────────────────────────────────
+  # FIX: New method to parse quantity from user prompts
+  def parse_quantity(prompt)
+    p = prompt.downcase.strip
+
+    # Direct number words
+    number_words = {
+      'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5,
+      'six' => 6, 'seven' => 7, 'eight' => 8, 'nine' => 9, 'ten' => 10,
+      'a' => 1, 'an' => 1, 'another' => 1, 'one more' => 1, 'another one' => 1
+    }
+
+    # Check for explicit digits first
+    digit_match = p.match(/\b(add|buy|get|grab|order)?\s*(\d+)\b/)
+    return digit_match[2].to_i if digit_match && digit_match[2].to_i > 0
+
+    # Check for number words
+    number_words.each do |word, qty|
+      # Match as whole word or in phrases like "add two more"
+      if p.match?(/\b#{Regexp.escape(word)}\b/)
+        return qty
+      end
+    end
+
+    # Check for "more" or "another" without explicit number → default to 1
+    # but if preceded by a number word, it was already caught above
+    if p.match?(/\b(more|another|extra)\b/)
+      return 1
+    end
+
+    1 # Default
   end
 
   # ─── NAME EXTRACTION ────────────────────────────────────────────────
@@ -696,6 +743,7 @@ class AiClient
                        'i want', 'i need', 'i would like', 'i wanna',
                        'this particular', 'yes', 'sure', 'okay', 'ok',
                        'the ', 'a ', 'an ', 'some ', 'that ', 'this ',
+                       'another ', 'more ', 'extra ', 'of ', 'those ', 'these ',
                      ]
                    when :remove
                      [
@@ -726,6 +774,10 @@ class AiClient
     # Remove trailing punctuation
     result = result.gsub(/[?.!,]+$/, '').strip
 
+    # FIX: Remove standalone numbers that remain after stripping phrases
+    result = result.gsub(/^\d+\s*/, '').strip
+    result = result.gsub(/\s+\d+$/, '').strip
+
     result.presence
   end
 
@@ -752,6 +804,60 @@ class AiClient
     nil
   rescue => e
     Rails.logger.error "Find last product error: #{e.message}"
+    nil
+  end
+
+  # ─── PAYMENT SYNC ─────────────────────────────────────────────────────
+  # FIX: New method to sync payment status from Razorpay before displaying
+  def sync_payment_status_from_razorpay
+    return unless user
+
+    user.orders.where(payment_status: 0).where.not(razorpay_order_id: nil).find_each do |order|
+      begin
+        # Check Razorpay API for actual payment status
+        razorpay_order = fetch_razorpay_order(order.razorpay_order_id)
+
+        if razorpay_order && razorpay_order['status'] == 'paid'
+          order.update!(
+            payment_status: 1,
+            status: 'confirmed'
+          )
+          Rails.logger.info "Synced order ##{order.id} payment_status to paid via Razorpay"
+        elsif razorpay_order && razorpay_order['status'] == 'attempted' && razorpay_order['amount_paid'].to_i > 0
+          # Partial or failed payment attempt
+          Rails.logger.warn "Order ##{order.id} has attempted payment but not fully paid"
+        end
+      rescue => e
+        Rails.logger.error "Failed to sync Razorpay status for order ##{order.id}: #{e.message}"
+      end
+    end
+  rescue => e
+    Rails.logger.error "Payment sync error: #{e.message}"
+  end
+
+  # FIX: Helper to fetch Razorpay order status
+  def fetch_razorpay_order(razorpay_order_id)
+    return nil if razorpay_order_id.blank?
+    return nil if ENV['RAZORPAY_KEY_ID'].blank? || ENV['RAZORPAY_KEY_SECRET'].blank?
+
+    require 'base64'
+
+    uri = URI("https://api.razorpay.com/v1/orders/#{razorpay_order_id}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.open_timeout = 10
+    http.read_timeout = 15
+
+    request = Net::HTTP::Get.new(uri)
+    auth = Base64.strict_encode64("#{ENV['RAZORPAY_KEY_ID']}:#{ENV['RAZORPAY_KEY_SECRET']}")
+    request['Authorization'] = "Basic #{auth}"
+
+    response = http.request(request)
+
+    return JSON.parse(response.body) if response.is_a?(Net::HTTPSuccess)
+    nil
+  rescue => e
+    Rails.logger.error "Razorpay fetch error: #{e.message}"
     nil
   end
 
