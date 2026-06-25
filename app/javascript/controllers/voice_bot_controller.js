@@ -53,7 +53,7 @@ export default class extends Controller {
     this.recognition.onstart = () => {
       this.isRecording = true
       this.micBtnTarget.classList.add("animate-pulse", "bg-red-500")
-      this.micBtnTarget.classList.remove("bg-blue-500")
+      this.micBtnTarget.classList.remove("bg-black")
       this.showStatus("🎤 Listening... Speak now", "bg-red-500 text-white")
     }
 
@@ -90,16 +90,33 @@ export default class extends Controller {
   stopRecording() {
     this.isRecording = false
     this.micBtnTarget.classList.remove("animate-pulse", "bg-red-500")
-    this.micBtnTarget.classList.add("bg-blue-500")
+    this.micBtnTarget.classList.add("bg-black")
     if (this.recognition) this.recognition.stop()
   }
 
   addMessage(speaker, text, classes) {
     const div = document.createElement("div")
     div.className = `p-3 rounded-xl text-sm leading-relaxed break-words ${classes}`
-    div.innerHTML = `<span class="font-bold">${speaker}:</span> ${text}`
+    
+    // Format the text — convert markdown links and bold text to HTML
+    const formattedText = this.formatMessage(text)
+    div.innerHTML = `<span class="font-bold">${speaker}:</span> ${formattedText}`
     this.conversationTarget.appendChild(div)
     this.conversationTarget.scrollTop = this.conversationTarget.scrollHeight
+  }
+
+  formatMessage(text) {
+    // Convert markdown links [text](url) to clickable <a> tags
+    let formatted = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, 
+      '<a href="$2" class="underline font-semibold hover:opacity-80 transition-opacity" target="_self">$1</a>')
+    
+    // Convert **bold** to <strong>
+    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    
+    // Convert newlines to <br>
+    formatted = formatted.replace(/\n/g, '<br>')
+    
+    return formatted
   }
 
   callAI(text) {
@@ -121,6 +138,12 @@ export default class extends Controller {
       if (data.error) throw new Error(data.error)
       this.addMessage("Bot", data.reply, "bg-gray-200 text-gray-900 mr-8")
       this.speak(data.reply)
+      
+      // Handle cart actions — update badge and notify cart drawer
+      if (data.action === "cart_updated") {
+        this.updateCartBadge(data.cart_count)
+        this.refreshCartDrawer()
+      }
     })
     .catch(error => {
       console.error("Error:", error)
@@ -129,9 +152,41 @@ export default class extends Controller {
     })
   }
 
+  updateCartBadge(count) {
+    // Update cart badge in the navbar
+    const badges = document.querySelectorAll('[data-cart-count]')
+    badges.forEach(badge => {
+      badge.textContent = count
+      badge.classList.remove('hidden')
+    })
+
+    // Also try common cart badge selectors
+    const cartBadge = document.querySelector('.cart-badge, .cart-count, #cart-count')
+    if (cartBadge) {
+      cartBadge.textContent = count
+      cartBadge.classList.remove('hidden')
+    }
+  }
+
+  refreshCartDrawer() {
+    // Fetch fresh cart content and update the turbo frame
+    const cartFrame = document.querySelector('turbo-frame#cart_content')
+    if (cartFrame) {
+      cartFrame.src = '/cart'
+      cartFrame.reload()
+    }
+  }
+
   speak(text) {
+    // Strip markdown for speech
+    const cleanText = text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')  // Remove markdown links, keep text
+      .replace(/\*\*([^*]+)\*\*/g, '$1')         // Remove bold markers
+      .replace(/[✅🗑️🛒📦🟡🟢🚚❌🔵⚠️🛍️]/g, '') // Remove emojis
+      .replace(/\n/g, '. ')                       // Convert newlines to pauses
+
     this.synthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(text)
+    const utterance = new SpeechSynthesisUtterance(cleanText)
     utterance.lang = "en-IN"
     utterance.rate = 1.0
     utterance.pitch = 1.0

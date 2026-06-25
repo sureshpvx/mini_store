@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboard#index"
+    resources :chat_logs, only: [:index]
     get "search", to: "search#index"
     resources :products do
       member do

@@ -1,0 +1,48 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Chat Analytics</h1>
+  
+  <div class="grid grid-cols-3 gap-4 mb-8">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <p class="text-gray-500 text-sm">Today's Chats</p>
+      <p class="text-3xl font-bold text-blue-600"><%= @today_count %></p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <p class="text-gray-500 text-sm">Resolution Rate</p>
+      <p class="text-3xl font-bold text-green-600"><%= @resolution_rate %>%</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <p class="text-gray-500 text-sm">Total Chats</p>
+      <p class="text-3xl font-bold text-purple-600"><%= @chat_logs.total_count rescue ChatLog.count %></p>
+    </div>
+  </div>
+
+  <h2 class="text-xl font-semibold mb-4">Recent Conversations</h2>
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-sm font-medium text-gray-500">Time</th>
+          <th class="px-4 py-3 text-sm font-medium text-gray-500">User</th>
+          <th class="px-4 py-3 text-sm font-medium text-gray-500">Message</th>
+          <th class="px-4 py-3 text-sm font-medium text-gray-500">Response</th>
+          <th class="px-4 py-3 text-sm font-medium text-gray-500">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @chat_logs.each do |log| %>
+          <tr>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= log.created_at.strftime('%H:%M') %></td>
+            <td class="px-4 py-3 text-sm text-gray-600"><%= log.user&.email || 'Guest' %></td>
+            <td class="px-4 py-3 text-sm text-gray-900 max-w-xs truncate"><%= log.message %></td>
+            <td class="px-4 py-3 text-sm text-gray-900 max-w-xs truncate"><%= log.response %></td>
+            <td class="px-4 py-3 text-sm">
+              <span class="px-2 py-1 rounded-full text-xs <%= log.source == 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                <%= log.source %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
