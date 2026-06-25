@@ -54,6 +54,8 @@ class AiClient
     @cart = cart
     @user = user
     @last_product = nil
+    @action_performed = nil
+    @cart_count = nil
   end
 
   def generate(user_prompt)
@@ -134,6 +136,7 @@ class AiClient
                            "Products: Database unavailable"
                          end
                        rescue => e
+                         Rails.logger.error "Build LLM context products error: #{e.message}"
                          "Products: Error loading"
                        end
 
@@ -166,44 +169,44 @@ class AiClient
   def add_to_cart_request?(prompt)
     p = prompt.downcase.strip
     patterns = [
-      /add .* (to|in) (my )?(cart|bag|basket)/,
-      /put .* (in|into) (my )?(cart|bag|basket)/,
-      /(buy|purchase|get|grab|order) (the |a |an |this |that |some )?[\w\s]+/,
-      /i (want|need|would like|wanna) (the |a |an |this |that |some )?[\w\s]+ (please)?$/,
-      /cart (the |this |that )?/,
-      /add (it|this|that|the same) (to|in)/,
-      /yes.*(add|cart|buy|want)/,
-      /add (it|that|this) (please)?$/,
-      /^(add|yes),? (please|add|that|it|this)/,
-      /^add [\w\s]{3,}$/,                          # "add dark fashion", "add hoodie"
-      /^add (the |a )?\w+/,                         # "add the hoodie", "add a tee"
-      /add .+ (please|now|quickly|asap)$/,           # "add dark fashion please"
-      /^(add|buy|get) (first|second|third|last|this|that|the) (product|item|one)/,  # "add first product"
-      /^(add|buy|get|grab|order)\s+(another|more|extra|2|3|4|5|two|three|four|five)/,  # "add two more", "add another"
-      /^(another|more|extra)\s+(one|two|three|four|five|please)/,  # "another one", "two more"
+      /add\b.*\b(to|in)\b.*\b(cart|bag|basket)/,
+      /put\b.*\b(in|into)\b.*\b(cart|bag|basket)/,
+      /\b(buy|purchase|get|grab|order)\b.*\b(the|a|an|this|that|some)?\b[\w\s]{2,}/,
+      /i\b(want|need|would like|wanna)\b.*\b(the|a|an|this|that|some)?\b[\w\s]{2,}/,
+      /cart\b.*\b(the|this|that)?\b/,
+      /add\b\s*(it|this|that|the same)\b.*\b(to|in)/,
+      /yes\b.*\b(add|cart|buy|want)/,
+      /add\b\s*(it|that|this)\b(\s*please)?$/,
+      /^(add|yes),?\s*(please|add|that|it|this)$/,
+      /\Aadd\b[\w\s]{3,}\z/,                          # "add dark fashion", "add hoodie"
+      /\Aadd\b\s*(the |a )?\w+/,                         # "add the hoodie", "add a tee"
+      /add\b.*\b(please|now|quickly|asap)\z/,           # "add dark fashion please"
+      /\A(add|buy|get)\b\s*(first|second|third|last|this|that|the)\b\s*(product|item|one)/,  # "add first product"
+      /\A(add|buy|get|grab|order)\b\s*(another|more|extra|\d+|two|three|four|five)/,  # "add two more", "add another"
+      /\A(another|more|extra)\b\s*(one|two|three|four|five|please)/,  # "another one", "two more"
     ]
     patterns.any? { |pat| p.match?(pat) }
   end
 
   def remove_from_cart_request?(prompt)
     p = prompt.downcase.strip
-    p.match?(/(remove|delete|take out|drop|clear) .* (from )?(my )?(cart|bag|basket)/) ||
-      p.match?(/remove (it|this|that|them|these|those|all|everything) (from )?(my )?(cart|bag)?/) ||
-      p.match?(/^(remove|delete|clear) (the |a |my )?[\w\s]+ (from cart|from bag)?$/) ||
-      p.match?(/empty (my )?(cart|bag|basket)/) ||
-      p.match?(/clear (my )?(cart|bag|basket)/) ||
-      p.match?(/(remove|delete|take out|drop)\s+(them|all|everything|these|those)/)
+    p.match?(/(remove|delete|take out|drop|clear)\b.*\b(from)?\b.*\b(my )?(cart|bag|basket)/) ||
+      p.match?(/remove\b\s*(it|this|that|them|these|those|all|everything)\b.*\b(from )?(my )?(cart|bag)?/) ||
+      p.match?(/\A(remove|delete|clear)\b\s*(the |a |my )?[\w\s]+\b(from cart|from bag)?\z/) ||
+      p.match?(/empty\b.*\b(my )?(cart|bag|basket)/) ||
+      p.match?(/clear\b.*\b(my )?(cart|bag|basket)/) ||
+      p.match?(/(remove|delete|take out|drop)\b\s*(them|all|everything|these|those)/)
   end
 
   def view_cart_request?(prompt)
     p = prompt.downcase.strip
-    p.match?(/(show|view|open|check|see|what'?s in) (my |the )?(cart|card|bag|basket)/) ||
-      p.match?(/^(my )?(cart|card|bag) ?(items|contents|stuff)?$/) ||
-      p.match?(/what (do i|i) have in (my )?(cart|card|bag)/) ||
-      p.match?(/cart (items|contents|summary|details)/) ||
-      p.match?(/(products|items|things) (i |you |i'?ve )?(added|put) (in|to)/) ||
-      p.match?(/added.*(cart|card|bag)/) ||
-      p.match?(/in (my |the )?card$/)
+    p.match?(/(show|view|open|check|see|what'?s in)\b.*\b(my |the )?(cart|card|bag|basket)/) ||
+      p.match?(/\A(my )?(cart|card|bag)\b\s*(items|contents|stuff)?\z/) ||
+      p.match?(/what\b(do i|i)\bhave\b.*\b(in )?(my )?(cart|card|bag)/) ||
+      p.match?(/cart\b\s*(items|contents|summary|details)/) ||
+      p.match?(/(products|items|things)\b.*\b(i |you |i'?ve )?(added|put)\b.*\b(in|to)/) ||
+      p.match?(/added\b.*\b(cart|card|bag)/) ||
+      p.match?(/in\b.*\b(my |the )?card\z/)
   end
 
   def list_products_request?(prompt)
@@ -211,44 +214,44 @@ class AiClient
     # Don't match if user is asking about their cart contents
     return false if p.match?(/(added|put|my cart|my card|my bag|i have|in cart|in card)/)
 
-    p.match?(/list (all |the |your )?(products|items|collection|catalog)/) ||
-      p.match?(/show (me )?(all |the |your )?(products|items|collection|catalog)/) ||
-      p.match?(/what (products|items|things) (do you|you) (have|sell|offer)/) ||
-      p.match?(/what('?s| is) (in |your )?(stock|collection|catalog)/) ||
-      p.match?(/browse (products|items|collection)/) ||
-      p.match?(/^(all )?(products|items|catalog|collection)$/)
+    p.match?(/list\b.*\b(all |the |your )?(products|items|collection|catalog)/) ||
+      p.match?(/show\b.*\b(me )?(all |the |your )?(products|items|collection|catalog)/) ||
+      p.match?(/what\b(products|items|things)\b.*\b(do you|you)\b.*\b(have|sell|offer)/) ||
+      p.match?(/what('?s| is)\b.*\b(in |your )?(stock|collection|catalog)/) ||
+      p.match?(/browse\b.*\b(products|items|collection)/) ||
+      p.match?(/\A(all )?(products|items|catalog|collection)\z/)
   end
 
   def product_details_request?(prompt)
     p = prompt.downcase.strip
-    p.match?(/(tell me|more) (about|details|info) (the |a )?/) ||
-      p.match?(/details (of|for|about|on) (the |a )?/) ||
-      p.match?(/what (is|are) (the )?.+ (like|about|made of)/) ||
-      p.match?(/describe (the |a )?/) ||
-      p.match?(/how much (is|does|for) (the |a )?/)
+    p.match?(/(tell me|more)\b.*\b(about|details|info)\b.*\b(the |a )?/) ||
+      p.match?(/details\b.*\b(of|for|about|on)\b.*\b(the |a )?/) ||
+      p.match?(/what\b(is|are)\b.*\b(the )?.+\b(like|about|made of)/) ||
+      p.match?(/describe\b.*\b(the |a )?/) ||
+      p.match?(/how much\b(is|does|for)\b.*\b(the |a )?/)
   end
 
   def order_status_request?(prompt)
     p = prompt.downcase.strip
-    p.match?(/my order/) ||
-      p.match?(/order (status|history|tracking|details|info)/) ||
-      p.match?(/track (my )?(order|package|delivery)/) ||
-      p.match?(/where('?s| is) my (order|package|delivery)/) ||
-      p.match?(/past orders/) ||
-      p.match?(/order history/) ||
-      p.match?(/payment (status|details|info|paid|unpaid|refund)/) ||
-      p.match?(/is my order paid/) ||
-      p.match?(/did my payment go through/) ||
+    p.match?(/my\b.*\border/) ||
+      p.match?(/order\b.*\b(status|history|tracking|details|info)/) ||
+      p.match?(/track\b.*\b(my )?(order|package|delivery)/) ||
+      p.match?(/where('?s| is)\b.*\bmy\b.*\b(order|package|delivery)/) ||
+      p.match?(/past\b.*\borders/) ||
+      p.match?(/order\b.*\bhistory/) ||
+      p.match?(/payment\b.*\b(status|details|info|paid|unpaid|refund)/) ||
+      p.match?(/is\b.*\bmy\b.*\border\b.*\bpaid/) ||
+      p.match?(/did\b.*\bmy\b.*\bpayment\b.*\bgo through/) ||
       p.match?(/razorpay/) ||
-      p.match?(/shipping (address|details|info)/) ||
-      p.match?(/when will my order arrive/) ||
-      p.match?(/delivery (status|time|date)/)
+      p.match?(/shipping\b.*\b(address|details|info)/) ||
+      p.match?(/when\b.*\bwill\b.*\bmy\b.*\border\b.*\barrive/) ||
+      p.match?(/delivery\b.*\b(status|time|date)/)
   end
 
   def product_search_request?(prompt)
     keywords = %w[find search show looking\ for want need hoodie t-shirt tee shirt
                    pants jeans jacket accessories cap hat bag sunglasses belt
-                   sneakers shoes boots shorts sweatshirt crewneck polo]
+                   sneakers shoes boots shorts sweatshirt crewneck polo dress]
     p = prompt.downcase
     keywords.any? { |kw| p.include?(kw) }
   end
@@ -256,30 +259,30 @@ class AiClient
   # ─── ACTION HANDLERS ────────────────────────────────────────────────
 
   def handle_add_to_cart(prompt)
-    # FIX: Parse quantity first (e.g., "add two more", "add 3", "another one")
-    quantity = parse_quantity(prompt)
+    return nil unless cart
 
+    quantity = parse_quantity(prompt)
     product_name = extract_product_name(prompt, :add)
 
-    # FIX: Handle pronoun references with quantity ("add two more of those", "add another one")
-    # If product name is empty, too short, or just a pronoun/number → use last product
+    # Handle pronoun/ambiguous references — use last mentioned product
     if product_name.blank? || product_name.length < 2 ||
        %w[it that this same another more extra one two three four five].include?(product_name) ||
-       product_name.match?(/^(\d+|more|another|extra)$/)
+       product_name.match?(/\A(\d+|more|another|extra)\z/)
 
       last_product = find_last_mentioned_product
       if last_product
-        added = add_product_to_cart(product, quantity: quantity)
+        added = add_product_to_cart(last_product, quantity: quantity)
         if added
           @action_performed = 'cart_updated'
           @cart_count = cart.reload.cart_items.sum(:quantity)
-          total_qty = cart.cart_items.find_by(product: last_product)&.quantity || quantity
-          return "✅ Added #{quantity > 1 ? quantity.to_s + ' more' : 'another'} '#{last_product.name}' (₹#{last_product.price.to_i}) to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
+          item_qty = cart.cart_items.find_by(product: last_product)&.quantity || quantity
+          return "✅ Added #{quantity > 1 ? quantity.to_s + ' more of ' : 'another '}'#{last_product.name}' (₹#{last_product.price.to_i}) to your cart. You now have #{@cart_count} total item#{'s' if @cart_count != 1} in cart. [View Cart](/cart)"
         end
       end
       return nil # Let AI handle
     end
 
+    # Search for product by name
     product = Product.active.search(product_name).first
 
     if product
@@ -287,12 +290,13 @@ class AiClient
       if added
         @action_performed = 'cart_updated'
         @cart_count = cart.reload.cart_items.sum(:quantity)
-        return "✅ Added '#{product.name}' (₹#{product.price.to_i}) #{quantity > 1 ? 'x' + quantity.to_s : ''} to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
+        item_qty = cart.cart_items.find_by(product: product)&.quantity || quantity
+        return "✅ Added #{quantity > 1 ? quantity.to_s + ' of ' : ''}'#{product.name}' (₹#{product.price.to_i}) to your cart. You now have #{@cart_count} total item#{'s' if @cart_count != 1} in cart. [View Cart](/cart)"
       else
         return "I found '#{product.name}' but couldn't add it to cart right now. You can add it manually: [View Product](/products/#{product.slug})"
       end
     else
-      # Try fuzzy search with shorter name
+      # Try fuzzy search with shorter name (first 2 words)
       short_name = product_name.split.first(2).join(' ')
       product = Product.active.search(short_name).first if short_name.length >= 3
 
@@ -301,7 +305,7 @@ class AiClient
         if added
           @action_performed = 'cart_updated'
           @cart_count = cart.reload.cart_items.sum(:quantity)
-          return "✅ I found '#{product.name}' and added it to your cart! You now have #{@cart_count} item#{'s' if @cart_count != 1}. [View Cart](/cart)"
+          return "✅ I found '#{product.name}' and added it to your cart. You now have #{@cart_count} total item#{'s' if @cart_count != 1} in cart. [View Cart](/cart)"
         end
       end
 
@@ -315,24 +319,23 @@ class AiClient
     p = prompt.downcase.strip
 
     # 1. Empty/clear entire cart
-    if p.match?(/(empty|clear) (my )?(cart|bag|basket|all)/)
+    if p.match?(/(empty|clear)\b.*\b(my )?(cart|bag|basket|all)/)
       count = cart.cart_items.count
       cart.cart_items.destroy_all
-      cart.reload  # FIX: force reload
+      cart.reload
       @action_performed = 'cart_updated'
       @cart_count = 0
       return "🗑️ Cart cleared! Removed #{count} item#{'s' if count != 1}. Your cart is now empty."
     end
 
     # 2. Remove all / them / everything / these / those / it (pronoun-based bulk removal)
-    # FIX: Check for pronouns BEFORE extracting product name
     pronouns = %w[them it this that these those all everything]
     has_pronoun = pronouns.any? { |pr| p.match?(/(?:^|\s)#{Regexp.escape(pr)}(?:\s|$)/) }
 
-    if has_pronoun || p.match?(/^(remove|delete|take out|drop)\s+(all|everything)/)
+    if has_pronoun || p.match?(/\A(remove|delete|take out|drop)\b\s*(all|everything)/)
       count = cart.cart_items.count
       cart.cart_items.destroy_all
-      cart.reload  # FIX: force reload
+      cart.reload
       @action_performed = 'cart_updated'
       @cart_count = 0
       return "🗑️ Removed #{count} item#{'s' if count != 1} from your cart. Your cart is now empty."
@@ -352,7 +355,7 @@ class AiClient
       if cart_item
         name = cart_item.product.name
         cart_item.destroy
-        cart.reload  # FIX: force reload
+        cart.reload
         @action_performed = 'cart_updated'
         @cart_count = cart.cart_items.sum(:quantity)
         return "🗑️ Removed '#{name}' from your cart. You have #{@cart_count} item#{'s' if @cart_count != 1} left. [View Cart](/cart)"
@@ -368,7 +371,6 @@ class AiClient
   end
 
   def handle_view_cart
-    # FIX: Force reload to get fresh data from DB
     cart.reload unless cart.new_record?
 
     unless cart && cart.cart_items.any?
@@ -376,7 +378,6 @@ class AiClient
     end
 
     items = cart.cart_items.includes(:product)
-    # FIX: Calculate total directly from items, not cached method
     total = items.sum { |ci| ci.product.price * ci.quantity }.to_i
     count = items.sum(:quantity)
 
@@ -448,7 +449,7 @@ class AiClient
       return "Please [sign in](/otp-login) to view your orders. I'll be able to show your order history, payment status, and tracking once you're logged in!"
     end
 
-    # FIX: Sync payment status from Razorpay before showing
+    # Sync payment status from Razorpay before showing
     sync_payment_status_from_razorpay
 
     # Check if user is asking about a specific order by number/ID
@@ -672,9 +673,8 @@ class AiClient
 
   # ─── CART OPERATIONS ────────────────────────────────────────────────
 
-  # FIX: Accept quantity parameter, default to 1
   def add_product_to_cart(product, quantity: 1)
-    return false unless cart
+    return false unless cart && product
     return false unless product.in_stock?
 
     cart_item = cart.cart_items.find_or_initialize_by(product: product)
@@ -687,7 +687,7 @@ class AiClient
   end
 
   # ─── QUANTITY PARSING ───────────────────────────────────────────────
-  # FIX: New method to parse quantity from user prompts
+
   def parse_quantity(prompt)
     p = prompt.downcase.strip
 
@@ -698,20 +698,19 @@ class AiClient
       'a' => 1, 'an' => 1, 'another' => 1, 'one more' => 1, 'another one' => 1
     }
 
-    # Check for explicit digits first
+    # Check for explicit digits first — look for digits after action words or standalone
     digit_match = p.match(/\b(add|buy|get|grab|order)?\s*(\d+)\b/)
     return digit_match[2].to_i if digit_match && digit_match[2].to_i > 0
 
-    # Check for number words
+    # Check for number words — but be careful not to match inside other words
     number_words.each do |word, qty|
-      # Match as whole word or in phrases like "add two more"
+      # Match as whole word with word boundaries
       if p.match?(/\b#{Regexp.escape(word)}\b/)
         return qty
       end
     end
 
     # Check for "more" or "another" without explicit number → default to 1
-    # but if preceded by a number word, it was already caught above
     if p.match?(/\b(more|another|extra)\b/)
       return 1
     end
@@ -724,7 +723,7 @@ class AiClient
   def extract_product_name(prompt, context = :add)
     p = prompt.downcase.strip
 
-    # FIX: If user refers to pronouns for bulk removal, return empty so caller handles contextually
+    # If user refers to pronouns for bulk removal, return empty so caller handles contextually
     pronouns = %w[them it this that these those all everything]
     if context == :remove && pronouns.any? { |pr| p.include?(pr) }
       return ""  # Let handle_remove_from_cart deal with pronouns
@@ -741,7 +740,7 @@ class AiClient
                        'into cart', 'into my cart', 'into bag', 'into my bag',
                        'please', 'can you', 'could you', 'would you',
                        'i want', 'i need', 'i would like', 'i wanna',
-                       'this particular', 'yes', 'sure', 'okay', 'ok',
+                       'this particular', 'yes ', 'sure ', 'okay ', 'ok ',
                        'the ', 'a ', 'an ', 'some ', 'that ', 'this ',
                        'another ', 'more ', 'extra ', 'of ', 'those ', 'these ',
                      ]
@@ -774,7 +773,7 @@ class AiClient
     # Remove trailing punctuation
     result = result.gsub(/[?.!,]+$/, '').strip
 
-    # FIX: Remove standalone numbers that remain after stripping phrases
+    # Remove standalone numbers that remain after stripping phrases
     result = result.gsub(/^\d+\s*/, '').strip
     result = result.gsub(/\s+\d+$/, '').strip
 
@@ -786,10 +785,12 @@ class AiClient
   def find_last_mentioned_product
     return @last_product if @last_product
 
-    # FIX: Look at recent chat logs for this user only, limit to 3
+    # Look at recent chat logs for this user only, limit to 3
+    return nil unless user
+
     recent_logs = ChatLog.where(user: user).order(created_at: :desc).limit(3)
 
-    # FIX: Extract product names from responses using a simpler regex
+    # Extract product names from responses using a simpler regex
     recent_logs.each do |log|
       next unless log.response
 
@@ -808,7 +809,7 @@ class AiClient
   end
 
   # ─── PAYMENT SYNC ─────────────────────────────────────────────────────
-  # FIX: New method to sync payment status from Razorpay before displaying
+
   def sync_payment_status_from_razorpay
     return unless user
 
@@ -835,7 +836,7 @@ class AiClient
     Rails.logger.error "Payment sync error: #{e.message}"
   end
 
-  # FIX: Helper to fetch Razorpay order status
+  # Helper to fetch Razorpay order status
   def fetch_razorpay_order(razorpay_order_id)
     return nil if razorpay_order_id.blank?
     return nil if ENV['RAZORPAY_KEY_ID'].blank? || ENV['RAZORPAY_KEY_SECRET'].blank?
@@ -867,7 +868,7 @@ class AiClient
     api_key = ENV['GROQ_API_KEY']
     model = ENV.fetch('GROQ_MODEL', 'llama-3.3-70b-versatile')
 
-    full_context = build_llm_context  # ← USES THE NEW METHOD
+    full_context = build_llm_context
 
     uri = URI('https://api.groq.com/openai/v1/chat/completions')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -884,7 +885,7 @@ class AiClient
         { role: 'system', content: full_context },
         { role: 'user', content: user_prompt }
       ],
-      temperature: 0.3,  # ← LOWERED to reduce hallucination
+      temperature: 0.3,  # Lowered to reduce hallucination
       max_tokens: 500
     }.to_json
 
@@ -904,7 +905,7 @@ class AiClient
   end
 
   def call_ollama(user_prompt)
-    full_context = build_llm_context  # ← USES THE NEW METHOD
+    full_context = build_llm_context
 
     uri = URI(ENV.fetch('OLLAMA_URL', 'http://localhost:11434/api/generate'))
     http = Net::HTTP.new(uri.host, uri.port)
