@@ -5,6 +5,13 @@ class AiClient
   WEBSITE_CONTEXT = <<~CONTEXT
     You are the AI shopping assistant for HYPE — a premium streetwear e-commerce store.
     
+    CRITICAL RULES — NEVER BREAK THESE:
+    1. NEVER invent product names, prices, or descriptions. Only use real data from the system.
+    2. NEVER make up cart contents or order details. Always use real database queries.
+    3. If you don't have real product data, say "Let me search for you" — do NOT make up products.
+    4. NEVER use dollar signs ($) — all prices are in Indian Rupees (₹).
+    5. NEVER hallucinate product lists. If the system doesn't provide products, admit it.
+    
     About HYPE:
     - Premium streetwear brand with minimalist aesthetics
     - Products: Men, Women, and Accessories categories
@@ -25,6 +32,8 @@ class AiClient
     - You CAN show cart contents
     - You CAN remove items from cart
     - You CAN show product details
+    - You CAN show order status, payment status, and tracking details
+    - You CAN show shipping address and delivery info
     
     When a customer asks you to perform an action (like adding to cart), 
     CONFIRM that you will do it. Do NOT say "I can't" or "I don't have the ability".
@@ -35,9 +44,6 @@ class AiClient
     
     Keep responses brief (2-3 sentences max) since they may be spoken aloud.
     If you don't know something specific, direct users to the Contact page or FAQ.
-    
-    CRITICAL RULE: NEVER make up cart contents. If asked about cart, ALWAYS say you will check.
-    CRITICAL RULE: NEVER invent product names or prices. Always use real data.
   CONTEXT
 
   class Error < StandardError; end
@@ -79,9 +85,9 @@ class AiClient
       return result if result
     end
 
-    # 6. Order status (logged-in users only)
+    # 6. Order status / payment / tracking (logged-in users only)
     if order_status_request?(user_prompt)
-      return handle_order_status
+      return handle_order_status(user_prompt)
     end
 
     # 7. Product search
@@ -109,6 +115,38 @@ class AiClient
   private
 
   attr_reader :cart, :user
+
+  def build_llm_context
+    # Cart state
+    cart_context = if cart && cart.cart_items.any?
+                     items = cart.cart_items.includes(:product).map { |i| "#{i.product.name} (₹#{i.product.price.to_i}) x#{i.quantity}" }.join(", ")
+                     "Cart: #{items} | Total: #{cart.cart_items.sum(:quantity)} items"
+                   else
+                     "Cart: Empty"
+                   end
+
+    # Real products from DB (sample)
+    products_context = begin
+                         sample = Product.active.limit(5).pluck(:name, :price)
+                         if sample.any?
+                           "Real products: " + sample.map { |n, p| "#{n} (₹#{p.to_i})" }.join(", ")
+                         else
+                           "Products: Database unavailable"
+                         end
+                       rescue => e
+                         "Products: Error loading"
+                       end
+
+    # Order state
+    order_context = if user && user.orders.any?
+                      recent = user.orders.order(created_at: :desc).first
+                      "Last order: ##{recent.id} — #{recent.status.titleize} — ₹#{recent.total_price.to_i}"
+                    else
+                      "Orders: None"
+                    end
+
+    "#{WEBSITE_CONTEXT}\n\nCURRENT STATE:\n#{cart_context}\n#{products_context}\n#{order_context}\n\nRULE: Use ONLY the real data above. NEVER invent products or prices."
+  end
 
   def determine_provider
     return :groq if ENV['GROQ_API_KEY'].present?
@@ -191,11 +229,18 @@ class AiClient
   def order_status_request?(prompt)
     p = prompt.downcase.strip
     p.match?(/my order/) ||
-      p.match?(/order (status|history|tracking|details)/) ||
+      p.match?(/order (status|history|tracking|details|info)/) ||
       p.match?(/track (my )?(order|package|delivery)/) ||
       p.match?(/where('?s| is) my (order|package|delivery)/) ||
       p.match?(/past orders/) ||
-      p.match?(/order history/)
+      p.match?(/order history/) ||
+      p.match?(/payment (status|details|info|paid|unpaid|refund)/) ||
+      p.match?(/is my order paid/) ||
+      p.match?(/did my payment go through/) ||
+      p.match?(/razorpay/) ||
+      p.match?(/shipping (address|details|info)/) ||
+      p.match?(/when will my order arrive/) ||
+      p.match?(/delivery (status|time|date)/)
   end
 
   def product_search_request?(prompt)
@@ -263,15 +308,21 @@ class AiClient
     if p.match?(/(empty|clear) (my )?(cart|bag|basket|all)/)
       count = cart.cart_items.count
       cart.cart_items.destroy_all
+      cart.reload  # FIX: force reload
       @action_performed = 'cart_updated'
       @cart_count = 0
       return "🗑️ Cart cleared! Removed #{count} item#{'s' if count != 1}. Your cart is now empty."
     end
 
-    # 2. Remove all / them / everything / these / those (pronoun-based bulk removal)
-    if p.match?(/(remove|delete|take out|drop)\s+(them|all|everything|these|those)/)
+    # 2. Remove all / them / everything / these / those / it (pronoun-based bulk removal)
+    # FIX: Check for pronouns BEFORE extracting product name
+    pronouns = %w[them it this that these those all everything]
+    has_pronoun = pronouns.any? { |pr| p.match?(/(?:^|\s)#{Regexp.escape(pr)}(?:\s|$)/) }
+
+    if has_pronoun || p.match?(/^(remove|delete|take out|drop)\s+(all|everything)/)
       count = cart.cart_items.count
       cart.cart_items.destroy_all
+      cart.reload  # FIX: force reload
       @action_performed = 'cart_updated'
       @cart_count = 0
       return "🗑️ Removed #{count} item#{'s' if count != 1} from your cart. Your cart is now empty."
@@ -291,9 +342,9 @@ class AiClient
       if cart_item
         name = cart_item.product.name
         cart_item.destroy
+        cart.reload  # FIX: force reload
         @action_performed = 'cart_updated'
-        # FIX: Reload cart after destroy to get accurate count
-        @cart_count = cart.reload.cart_items.sum(:quantity)
+        @cart_count = cart.cart_items.sum(:quantity)
         return "🗑️ Removed '#{name}' from your cart. You have #{@cart_count} item#{'s' if @cart_count != 1} left. [View Cart](/cart)"
       end
     end
@@ -382,17 +433,38 @@ class AiClient
     response
   end
 
-  def handle_order_status
+  def handle_order_status(user_prompt)
     unless user
-      return "Please [sign in](/otp-login) to view your orders. I'll be able to show your order history and tracking once you're logged in!"
+      return "Please [sign in](/otp-login) to view your orders. I'll be able to show your order history, payment status, and tracking once you're logged in!"
     end
 
+    # Check if user is asking about a specific order by number/ID
+    order_id = extract_order_id(user_prompt)
+
+    if order_id
+      order = user.orders.find_by(id: order_id)
+      return "I couldn't find order ##{order_id}. Check your [order history](/orders) for all your orders." unless order
+      return format_single_order(order)
+    end
+
+    # Show recent orders summary
     orders = user.orders.order(created_at: :desc).limit(5)
 
     if orders.empty?
       return "You don't have any orders yet. Browse our [products](/products) and find something amazing! 🛍️"
     end
 
+    # Check if asking about payment specifically
+    if user_prompt.downcase.match?(/payment|paid|unpaid|refund|razorpay/)
+      return format_payment_summary(orders)
+    end
+
+    # Check if asking about shipping/delivery
+    if user_prompt.downcase.match?(/shipping|delivery|address|where|arrive|when/)
+      return format_shipping_summary(orders)
+    end
+
+    # General order status
     response = "📦 Your recent orders:\n\n"
     orders.each_with_index do |order, i|
       status_emoji = case order.status
@@ -403,10 +475,158 @@ class AiClient
                      when 'cancelled' then '❌'
                      else '🔵'
                      end
-      response += "#{i + 1}. Order ##{order.id} — ₹#{order.total_price.to_i} #{status_emoji} #{order.status.titleize}\n"
+
+      payment_status = case order.payment_status
+                       when 0 then '⏳ Unpaid'
+                       when 1 then '✅ Paid'
+                       when 2 then '💰 Refunded'
+                       else '❓ Unknown'
+                       end
+
+      response += "#{i + 1}. Order ##{order.id} — ₹#{order.total_price.to_i} #{status_emoji} #{order.status.titleize} | #{payment_status}\n"
     end
-    response += "\n[View all orders](/orders)"
+    response += "\nSay \"order details [number]\" for full info, or [view all orders](/orders)"
     response
+  end
+
+  # ─── ORDER FORMATTING HELPERS ───────────────────────────────────────
+
+  def format_single_order(order)
+    status_emoji = case order.status
+                   when 'pending' then '🟡'
+                   when 'confirmed' then '🟢'
+                   when 'shipped' then '🚚'
+                   when 'delivered' then '✅'
+                   when 'cancelled' then '❌'
+                   else '🔵'
+                   end
+
+    payment_status = case order.payment_status
+                     when 0 then '⏳ Unpaid — Complete payment to confirm'
+                     when 1 then '✅ Paid — Order confirmed'
+                     when 2 then '💰 Refunded'
+                     else '❓ Unknown'
+                     end
+
+    payment_icon = case order.payment_status
+                   when 0 then '⚠️'
+                   when 1 then '✅'
+                   when 2 then '💰'
+                   else '❓'
+                   end
+
+    response = "**Order ##{order.id}** #{status_emoji}\n\n"
+    response += "📊 Status: #{order.status.titleize}\n"
+    response += "#{payment_icon} Payment: #{payment_status}\n"
+    response += "💵 Total: ₹#{order.total_price.to_i}\n\n"
+
+    # Order items
+    response += "🛍️ Items:\n"
+    order.order_items.includes(:product).each_with_index do |item, i|
+      response += "  #{i + 1}. #{item.product.name} — ₹#{item.price.to_i} × #{item.quantity}\n"
+    end
+
+    # Payment details
+    response += "\n💳 Payment Details:\n"
+    if order.razorpay_order_id.present?
+      response += "  Razorpay Order ID: `#{order.razorpay_order_id}`\n"
+    end
+    if order.razorpay_payment_id.present?
+      response += "  Razorpay Payment ID: `#{order.razorpay_payment_id}`\n"
+    end
+    if order.razorpay_signature.present?
+      response += "  Payment Signature: Verified ✅\n"
+    end
+
+    # Shipping address
+    if order.shipping_full_name.present?
+      response += "\n📍 Shipping Address:\n"
+      response += "  #{order.shipping_full_name}\n"
+      response += "  #{order.shipping_address_line_1}\n"
+      response += "  #{order.shipping_address_line_2}\n" if order.shipping_address_line_2.present?
+      response += "  #{order.shipping_city}, #{order.shipping_state} — #{order.shipping_postal_code}\n"
+      response += "  #{order.shipping_country}\n"
+      response += "  📞 #{order.shipping_phone_number}\n" if order.shipping_phone_number.present?
+    end
+
+    # Actionable next steps based on status
+    response += "\n"
+    case order.status
+    when 'pending'
+      response += "⚠️ Your order is pending. [Complete payment](/orders/#{order.id}/payment) to confirm."
+    when 'confirmed'
+      response += "✅ Your order is confirmed! We'll ship it soon. You'll get tracking updates via email."
+    when 'shipped'
+      response += "🚚 Your order is on the way! Check your email for tracking details."
+    when 'delivered'
+      response += "✅ Delivered! Need help? [Contact support](/contact)."
+    when 'cancelled'
+      response += "❌ This order was cancelled. Need help? [Contact support](/contact)."
+    end
+
+    response
+  end
+
+  def format_payment_summary(orders)
+    response = "💳 Payment Summary:\n\n"
+
+    orders.each_with_index do |order, i|
+      payment_status = case order.payment_status
+                       when 0 then '⏳ Unpaid'
+                       when 1 then '✅ Paid'
+                       when 2 then '💰 Refunded'
+                       else '❓ Unknown'
+                       end
+
+      response += "#{i + 1}. Order ##{order.id} — ₹#{order.total_price.to_i} — #{payment_status}\n"
+
+      if order.razorpay_order_id.present?
+        response += "   Razorpay ID: `#{order.razorpay_order_id}`\n"
+      end
+    end
+
+    unpaid = orders.select { |o| o.payment_status == 0 }
+    if unpaid.any?
+      response += "\n⚠️ You have #{unpaid.count} unpaid order#{'s' if unpaid.count != 1}. [Complete payment now](/orders)."
+    end
+
+    response
+  end
+
+  def format_shipping_summary(orders)
+    response = "📍 Shipping & Delivery:\n\n"
+
+    orders.each_with_index do |order, i|
+      response += "**Order ##{order.id}** — #{order.status.titleize}\n"
+
+      if order.shipping_full_name.present?
+        response += "  To: #{order.shipping_full_name}\n"
+        response += "  #{order.shipping_address_line_1}, #{order.shipping_city}\n"
+        response += "  #{order.shipping_state} — #{order.shipping_postal_code}\n"
+      else
+        response += "  📦 Shipping address not set yet. Update in [order details](/orders/#{order.id}).\n"
+      end
+
+      case order.status
+      when 'pending'
+        response += "  ⏳ Awaiting payment confirmation before shipping.\n"
+      when 'confirmed'
+        response += "  📦 Preparing for shipment. Tracking will be shared soon.\n"
+      when 'shipped'
+        response += "  🚚 In transit! Check your email for tracking link.\n"
+      when 'delivered'
+        response += "  ✅ Delivered to your address.\n"
+      end
+      response += "\n"
+    end
+
+    response
+  end
+
+  def extract_order_id(prompt)
+    # Extract order number from phrases like "order 123", "order #123", "123"
+    match = prompt.match(/order\s*#?\s*(\d+)/i) || prompt.match(/\b(\d{3,})\b/)
+    match ? match[1].to_i : nil
   end
 
   # ─── PRODUCT SEARCH ─────────────────────────────────────────────────
@@ -541,14 +761,7 @@ class AiClient
     api_key = ENV['GROQ_API_KEY']
     model = ENV.fetch('GROQ_MODEL', 'llama-3.3-70b-versatile')
 
-    # FIX: Include current cart state in context so LLM doesn't hallucinate
-    cart_context = if cart && cart.cart_items.any?
-                     "User's current cart: #{cart.cart_items.map { |i| "#{i.product.name} x#{i.quantity}" }.join(', ')} (Total: #{cart.total_items} items)"
-                   else
-                     "User's cart is currently empty."
-                   end
-
-    full_context = WEBSITE_CONTEXT + "\n\nCURRENT CART STATE:\n#{cart_context}\n\nIMPORTANT: Do NOT make up cart contents. Use the current cart state above."
+    full_context = build_llm_context  # ← USES THE NEW METHOD
 
     uri = URI('https://api.groq.com/openai/v1/chat/completions')
     http = Net::HTTP.new(uri.host, uri.port)
@@ -565,7 +778,7 @@ class AiClient
         { role: 'system', content: full_context },
         { role: 'user', content: user_prompt }
       ],
-      temperature: 0.7,
+      temperature: 0.3,  # ← LOWERED to reduce hallucination
       max_tokens: 500
     }.to_json
 
@@ -585,14 +798,7 @@ class AiClient
   end
 
   def call_ollama(user_prompt)
-    # FIX: Include current cart state in context
-    cart_context = if cart && cart.cart_items.any?
-                     "User's current cart: #{cart.cart_items.map { |i| "#{i.product.name} x#{i.quantity}" }.join(', ')} (Total: #{cart.total_items} items)"
-                   else
-                     "User's cart is currently empty."
-                   end
-
-    full_context = WEBSITE_CONTEXT + "\n\nCURRENT CART STATE:\n#{cart_context}\n\nIMPORTANT: Do NOT make up cart contents. Use the current cart state above."
+    full_context = build_llm_context  # ← USES THE NEW METHOD
 
     uri = URI(ENV.fetch('OLLAMA_URL', 'http://localhost:11434/api/generate'))
     http = Net::HTTP.new(uri.host, uri.port)
